@@ -4,9 +4,15 @@ const statusMessage = document.querySelector("#status-message");
 const progressLabel = document.querySelector("#progress-label");
 const progressBar = document.querySelector("#progress-bar");
 const progressTrack = document.querySelector(".progress-track");
-
 let pollFailureCount = 0;
 let pollTimer = null;
+
+function initThemeToggle() {
+  const api = window.__fitscoreTheme;
+  if (!api) return;
+  // Click is handled by inline onclick in base.html (avoids double-toggle / cache issues).
+  api.apply(api.read());
+}
 
 const statusNames = {
   queued: "Na fila",
@@ -267,4 +273,5 @@ function initCriteriaEditor(root = document) {
   });
 }
 
+initThemeToggle();
 initCriteriaEditor();

@@ -1,7 +1,7 @@
 [project]
 name = "professional-profile-analyser"
-version = "0.2.0"
-description = "MVP web para avaliar candidatos de tecnologia contra vagas usando arquivos JSON e LLM local opcional."
+version = "0.3.0"
+description = "FitScore — avaliação de fit candidato × vaga (repo técnico: professional-profile-analyser)."
 requires-python = ">=3.10"
 dependencies = [
   "fastapi>=0.112",

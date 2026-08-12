@@ -2,27 +2,9 @@
 {% block content %}
 <section class="hero">
   <div>
-    <p class="eyebrow">MVP local em JSON</p>
-    <h1>Avaliação de candidatos para vagas de tecnologia</h1>
-    <p>Cadastre a vaga, envie o currículo e gere um score ponderado por habilidades.</p>
-  </div>
-  <div class="status-stack">
-    <div class="status {{ 'ok' if llm_configured else 'warn' }}">
-      LLM local: {{ "configurada" if llm_configured else "não configurada, usando heurística" }}
-      {% if local_model %}<span class="hint"> · {{ local_model }}</span>{% endif %}
-    </div>
-    <div class="status {{ 'ok' if openai_configured else 'warn' }}">
-      OpenAI: {{ "configurada" if openai_configured else "sem API key" }}
-      {% if openai_model %}<span class="hint"> · {{ openai_model }}</span>{% endif %}
-    </div>
-    <div class="status ok">
-      Default: {{ llm_provider_default }}
-      {% if llm_usage_totals and llm_usage_totals.calls %}
-      · custo est. ${{ (llm_usage_totals.estimated_cost_usd or 0) | round(4) }}
-      ({{ llm_usage_totals.total_tokens or 0 }} tokens)
-      {% endif %}
-      · <a href="/api/llm/usage">ver usage</a>
-    </div>
+    <p class="eyebrow">FitScore</p>
+    <h1>Fit de candidatos para vagas de tecnologia</h1>
+    <p>Cadastre a vaga, envie o currículo e gere um score ponderado por habilidades e contexto de atuação.</p>
   </div>
 </section>
 <section class="grid">
@@ -30,6 +12,6 @@
   <a class="card" href="/candidates/new"><strong>Novo currículo</strong><span>{{ candidates|length }} cadastrados</span></a>
   <a class="card" href="/scores"><strong>Gerar score</strong><span>{{ scores|length }} avaliações</span></a>
   <a class="card" href="/settings"><strong>Parâmetros</strong><span>Negócio, sistema, domínio e prompts</span></a>
-  <a class="card" href="/external-apis"><strong>APIs Externas</strong><span>Plano e uso Tavily / Firecrawl / OpenAI</span></a>
+  <a class="card" href="/external-apis"><strong>APIs Externas</strong><span>Uso e planos de integrações</span></a>
 </section>
 {% endblock %}

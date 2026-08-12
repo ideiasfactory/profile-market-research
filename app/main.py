@@ -59,7 +59,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 OPENAPI_GPT_SLIM_PATH = REPO_ROOT / "llm-tools" / "tool-openwebui" / "openapi.slim.3.0.json"
 OPENAPI_GPT_SLIM_STATIC = Path(__file__).resolve().parent / "static" / "openapi-gpt-slim.json"
 
-app = FastAPI(title="Professional Profile Analyser")
+app = FastAPI(title="FitScore")
 
 # Open WebUI User Tool Servers fetch OpenAPI + call APIs from the browser (CORS required).
 # Global Tool Servers call from the Open WebUI container (no CORS needed).

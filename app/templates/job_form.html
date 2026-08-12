@@ -7,7 +7,7 @@
   <input type="hidden" name="analysis_json" id="analysis_json" value="">
 
   {% if job.cloned_from %}
-  <p class="hint">Esta vaga foi clonada de <a href="/jobs/{{ job.cloned_from }}">{{ job.cloned_from }}</a>. Selecione o provedor LLM e use “Salvar e reanalisar” para comparar a avaliação (ex.: OpenAI).</p>
+  <p class="hint">Esta vaga foi clonada de <a href="/jobs/{{ job.cloned_from }}">{{ job.cloned_from }}</a>. Selecione o motor de análise e use “Salvar e reanalisar” para comparar resultados.</p>
   {% endif %}
 
   <section class="panel form-section">
@@ -56,12 +56,12 @@
         {% endfor %}
       </select>
     </label>
-    <label>Provedor LLM (análise)
+    <label>Motor de análise
       <select name="llm_provider">
-        <option value="local" {{ "selected" if llm_provider_default == "local" else "" }}>Local (Ollama)</option>
-        <option value="openai" {{ "selected" if llm_provider_default == "openai" else "" }}>OpenAI</option>
+        <option value="local" {{ "selected" if llm_provider_default == "local" else "" }}>Local</option>
+        <option value="openai" {{ "selected" if llm_provider_default == "openai" else "" }}>Cloud</option>
       </select>
-      <span class="field-help">Usado ao salvar e reanalisar a JD (tiers/pesos). OpenAI usa prompts discriminativos em <code>prompts/openai/</code> e registra custo estimado em usage. Compensation Intelligence permanece no LLM local.</span>
+      <span class="field-help">Usado ao salvar e reanalisar a vaga (critérios e pesos). Ajustes finos de provedores ficam em Parâmetros e APIs Externas.</span>
     </label>
   </section>
 
@@ -70,7 +70,7 @@
     <div class="title-row compact">
       <div>
         <h2>Requisitos e critérios</h2>
-        <p class="hint">Edite tiers (Must-have / Core / Supporting / Differentials / Soft), pesos e grupos. A LLM recomenda; você decide o final.</p>
+        <p class="hint">Edite tiers (Must-have / Core / Supporting / Differentials / Soft), pesos e grupos. A análise sugere; você decide o final.</p>
       </div>
     </div>
 
@@ -137,7 +137,7 @@
   <div class="form-actions">
     {% if is_edit %}
     <button type="submit" class="js-save-mode" data-mode="save">Salvar critérios</button>
-    <button type="submit" class="button secondary js-save-mode" data-mode="reanalyse">Salvar e reanalisar com LLM</button>
+    <button type="submit" class="button secondary js-save-mode" data-mode="reanalyse">Salvar e reanalisar</button>
     {% else %}
     <button type="submit" class="js-save-mode" data-mode="reanalyse">Salvar e analisar vaga</button>
     {% endif %}

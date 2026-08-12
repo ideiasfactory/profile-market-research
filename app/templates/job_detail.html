@@ -11,7 +11,7 @@
   </div>
 </div>
 {% if job.cloned_from %}
-<p class="hint">Clonada a partir de <a href="/jobs/{{ job.cloned_from }}">{{ job.cloned_from }}</a>. Use “Salvar e reanalisar” com outro provedor LLM para comparar Local vs OpenAI.</p>
+<p class="hint">Clonada a partir de <a href="/jobs/{{ job.cloned_from }}">{{ job.cloned_from }}</a>. Use “Salvar e reanalisar” com outro motor de análise para comparar resultados.</p>
 {% endif %}
 <section class="panel">
   <p><strong>Perfil:</strong> {{ job.profile }} · <strong>Senioridade:</strong> {{ job.seniority }} · <strong>Local:</strong> {{ job.work_location }}</p>
@@ -31,15 +31,8 @@
   {% if job.analysis.llm_provider or job.analysis.prompt_set or job.analysis.weight_policy %}
   <p class="hint">
     Análise:
-    {% if job.analysis.llm_provider %}{{ job.analysis.llm_provider }}{% else %}—{% endif %}
-    {% if job.analysis.llm_model %} · {{ job.analysis.llm_model }}{% endif %}
-    {% if job.analysis.prompt_set %} · prompts {{ job.analysis.prompt_set }}{% endif %}
-    {% if job.analysis.weight_policy %} · pesos {{ job.analysis.weight_policy }}{% endif %}
+    {% if job.analysis.llm_provider %}{{ "Cloud" if job.analysis.llm_provider == "openai" else ("Local" if job.analysis.llm_provider == "local" else job.analysis.llm_provider) }}{% else %}—{% endif %}
     {% if job.analysis.analyzed_at %} · {{ job.analysis.analyzed_at }}{% endif %}
-    {% if job.analysis.audit and job.analysis.audit.usage %}
-    · custo est. ${{ (job.analysis.audit.usage.estimated_cost_usd or 0) | round(4) }}
-    ({{ job.analysis.audit.usage.total_tokens or 0 }} tokens)
-    {% endif %}
   </p>
   {% endif %}
   {% if job.analysis.role_intent %}<p><strong>Role intent:</strong> {{ job.analysis.role_intent }}</p>{% endif %}

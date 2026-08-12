@@ -1,4 +1,6 @@
-# Professional Profile Analyser
+# FitScore
+
+**FitScore** é o nome de produto da ferramenta de avaliação de fit candidato × vaga (repo técnico: `professional_profile_analyser`). Identidade genérica, com temas claro/escuro na UI — ver [ADR-023](docs/adr/ADR-023-fitscore-product-identity.md).
 
 MVP leve para cadastrar vagas, currículos e gerar score de aderência de candidatos a oportunidades de tecnologia.
 
