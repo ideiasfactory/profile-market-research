@@ -1,0 +1,34 @@
+Recalibre os pesos/tiers das skills da vaga abaixo. Retorne JSON estrito no formato:
+{{
+  "must_have": [{{"name": "Oracle Integration Cloud", "weight": 10, "tier": "MUST_HAVE", "group": "OIC Platform"}}],
+  "core_skills": [{{"name": "Arquitetura de Integração", "weight": 8, "tier": "CORE", "group": "Architecture"}}],
+  "supporting_skills": [{{"name": "Observabilidade", "weight": 4, "tier": "SUPPORTING", "group": "Ops"}}],
+  "differentials": [{{"name": "Kafka", "weight": 2, "tier": "DIFFERENTIAL", "group": "Messaging"}}],
+  "soft_skills": [{{"name": "Comunicação", "weight": 4, "tier": "SOFT", "group": "Behavioral"}}]
+}}
+
+Regras obrigatórias:
+1. Use APENAS skills presentes em current_skills. Não invente nomes novos.
+2. Inclua TODAS as skills de current_skills exatamente uma vez (pode mover de lista/tier).
+3. Preserve o campo name com a grafia canônica de current_skills.
+4. Faixas permitidas (pesos relativos 1–10, mais discriminativos que o clamp legado):
+   - MUST_HAVE: 7–10 (crítico para a vaga; sem isto o perfil não sustenta)
+   - CORE: 4–9 (central, mas não necessariamente eliminatório)
+   - SUPPORTING: 2–6 (relevante, secundário)
+   - DIFFERENTIAL: 1–4 (nice-to-have)
+   - SOFT: 1–6 (comportamental)
+5. Diferencie pesos DENTRO do mesmo tier quando a importância relativa for distinta (ex.: OIC=10 e outra must-have=8).
+6. group: preserve ou refine o grupo semântico; string curta.
+7. ideal_candidate_context (se houver) ajuda a ênfase de tiers/pesos, sem inventar skills.
+8. Ignore atributos protegidos (idade, gênero, etnia, religião, etc.).
+
+Título: {title}
+Perfil: {profile}
+Senioridade: {seniority}
+Descrição: {description}
+Contexto do candidato ideal (opcional): {ideal_candidate_context}
+Job description:
+{job_description}
+
+current_skills (JSON — único conjunto permitido):
+{current_skills_json}

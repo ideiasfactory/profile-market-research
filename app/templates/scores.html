@@ -20,6 +20,7 @@
     <label>Modelo de score
       <select name="scoring_model">
         <option value="v2" {{ "selected" if scoring_model_default == "v2" else "" }}>v2 — hierárquico</option>
+        <option value="v3" {{ "selected" if scoring_model_default == "v3" else "" }}>v3 — pesos LLM</option>
         <option value="v1" {{ "selected" if scoring_model_default == "v1" else "" }}>v1 — média ponderada flat</option>
       </select>
     </label>
@@ -31,7 +32,7 @@
     </label>
     <button>Gerar / reprocessar score</button>
   </form>
-  <p class="hint">Scores existentes não são recalculados automaticamente. Reprocessar arquiva o resultado anterior no histórico (comparativo Local vs OpenAI sem perda). Compensation continua no LLM local.</p>
+  <p class="hint">Scores existentes não são recalculados automaticamente. Reprocessar arquiva o resultado anterior no histórico (comparativo Local vs OpenAI sem perda). O modelo <strong>v3</strong> recalibra pesos com o provedor LLM selecionado (Local ou OpenAI) sem alterar os critérios salvos na vaga; OpenAI registra custo em usage. Compensation continua no LLM local.</p>
 </section>
 {% if selected %}
 <section class="panel">
@@ -61,13 +62,16 @@
   </p>
   {% if selected.audit and selected.audit.usage %}
   <p class="hint">
-    Custo estimado OpenAI: ${{ (selected.audit.usage.estimated_cost_usd or 0) | round(4) }}
-    · {{ selected.audit.usage.total_tokens or 0 }} tokens
+    Tokens ({{ selected.llm_provider or selected.audit.llm_provider or 'llm' }}):
+    {{ selected.audit.usage.total_tokens or 0 }} total
     · {{ selected.audit.usage.calls or 0 }} calls
+    {% if (selected.audit.usage.estimated_cost_usd or 0) > 0 %}
+    · custo est. API ${{ (selected.audit.usage.estimated_cost_usd or 0) | round(4) }}
+    {% endif %}
   </p>
   {% elif selected.estimated_cost_usd is defined and selected.estimated_cost_usd is not none %}
   <p class="hint">
-    Custo estimado OpenAI: ${{ (selected.estimated_cost_usd or 0) | round(4) }}
+    Custo estimado API: ${{ (selected.estimated_cost_usd or 0) | round(4) }}
     {% if selected.total_tokens %}· {{ selected.total_tokens }} tokens{% endif %}
   </p>
   {% endif %}

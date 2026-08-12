@@ -117,15 +117,21 @@ class LocalLLM:
         job_id: str | None = None,
         candidate_id: str | None = None,
     ) -> dict[str, Any] | None:
-        del operation, job_id, candidate_id  # local provider does not meter tokens
         if not self.configured:
             return None
+
+        from app.llm_usage import estimate_cost_usd, record_usage_event
 
         request_timeout = self.timeout if timeout is None else timeout
         temp = self.temperature if temperature is None else temperature
         attempts = self.max_parse_retries if retries is None else max(0, retries)
         last_raw = ""
         parse_error = ""
+        last_usage: dict[str, int] = {
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_tokens": 0,
+        }
 
         for attempt in range(attempts + 1):
             retry_hint = ""
@@ -135,13 +141,26 @@ class LocalLLM:
                     "Responda novamente com JSON estrito apenas, sem markdown."
                 )
             try:
-                raw = await self._raw_completion(
+                raw, usage = await self._raw_completion(
                     system,
                     prompt + retry_hint,
                     timeout=request_timeout,
                     temperature=temp,
                 )
             except Exception as exc:
+                record_usage_event(
+                    provider=self.provider_name,
+                    model=self.model,
+                    operation=operation or "unknown",
+                    job_id=job_id,
+                    candidate_id=candidate_id,
+                    prompt_tokens=0,
+                    completion_tokens=0,
+                    total_tokens=0,
+                    estimated_cost_usd=0.0,
+                    attempts=attempt + 1,
+                    ok=False,
+                )
                 return {
                     "parsed": None,
                     "raw": "",
@@ -150,11 +169,35 @@ class LocalLLM:
                     "temperature": temp,
                     "error": str(exc),
                     "attempts": attempt + 1,
+                    "prompt_tokens": 0,
+                    "completion_tokens": 0,
+                    "total_tokens": 0,
+                    "estimated_cost_usd": 0.0,
                 }
 
+            last_usage = usage
             last_raw = raw or ""
             parsed = _parse_json_object(last_raw)
             if isinstance(parsed, dict):
+                cost = estimate_cost_usd(
+                    self.model,
+                    usage["prompt_tokens"],
+                    usage["completion_tokens"],
+                    provider=self.provider_name,
+                )
+                record_usage_event(
+                    provider=self.provider_name,
+                    model=self.model,
+                    operation=operation or "unknown",
+                    job_id=job_id,
+                    candidate_id=candidate_id,
+                    prompt_tokens=usage["prompt_tokens"],
+                    completion_tokens=usage["completion_tokens"],
+                    total_tokens=usage["total_tokens"],
+                    estimated_cost_usd=cost,
+                    attempts=attempt + 1,
+                    ok=True,
+                )
                 return {
                     "parsed": parsed,
                     "raw": last_raw[:20000],
@@ -163,9 +206,32 @@ class LocalLLM:
                     "temperature": temp,
                     "error": None,
                     "attempts": attempt + 1,
+                    "prompt_tokens": usage["prompt_tokens"],
+                    "completion_tokens": usage["completion_tokens"],
+                    "total_tokens": usage["total_tokens"],
+                    "estimated_cost_usd": cost,
                 }
             parse_error = "json_parse_failed"
 
+        cost = estimate_cost_usd(
+            self.model,
+            last_usage["prompt_tokens"],
+            last_usage["completion_tokens"],
+            provider=self.provider_name,
+        )
+        record_usage_event(
+            provider=self.provider_name,
+            model=self.model,
+            operation=operation or "unknown",
+            job_id=job_id,
+            candidate_id=candidate_id,
+            prompt_tokens=last_usage["prompt_tokens"],
+            completion_tokens=last_usage["completion_tokens"],
+            total_tokens=last_usage["total_tokens"],
+            estimated_cost_usd=cost,
+            attempts=attempts + 1,
+            ok=False,
+        )
         return {
             "parsed": None,
             "raw": last_raw[:20000],
@@ -174,6 +240,10 @@ class LocalLLM:
             "temperature": temp,
             "error": parse_error,
             "attempts": attempts + 1,
+            "prompt_tokens": last_usage["prompt_tokens"],
+            "completion_tokens": last_usage["completion_tokens"],
+            "total_tokens": last_usage["total_tokens"],
+            "estimated_cost_usd": cost,
         }
 
     async def _raw_completion(
@@ -183,7 +253,7 @@ class LocalLLM:
         *,
         timeout: float,
         temperature: float,
-    ) -> str:
+    ) -> tuple[str, dict[str, int]]:
         async with httpx.AsyncClient(timeout=timeout) as client:
             if self._is_ollama_generate_url:
                 response = await client.post(
@@ -197,7 +267,16 @@ class LocalLLM:
                     },
                 )
                 response.raise_for_status()
-                return str(response.json().get("response", "") or "")
+                data = response.json()
+                content = str(data.get("response", "") or "")
+                prompt_tokens = int(data.get("prompt_eval_count") or 0)
+                completion_tokens = int(data.get("eval_count") or 0)
+                total_tokens = prompt_tokens + completion_tokens
+                return content, {
+                    "prompt_tokens": prompt_tokens,
+                    "completion_tokens": completion_tokens,
+                    "total_tokens": total_tokens,
+                }
 
             response = await client.post(
                 self.url,
@@ -212,7 +291,17 @@ class LocalLLM:
                 },
             )
             response.raise_for_status()
-            return str(response.json()["choices"][0]["message"]["content"] or "")
+            data = response.json()
+            content = str(data["choices"][0]["message"]["content"] or "")
+            usage_raw = data.get("usage") if isinstance(data.get("usage"), dict) else {}
+            prompt_tokens = int(usage_raw.get("prompt_tokens") or 0)
+            completion_tokens = int(usage_raw.get("completion_tokens") or 0)
+            total_tokens = int(usage_raw.get("total_tokens") or (prompt_tokens + completion_tokens))
+            return content, {
+                "prompt_tokens": prompt_tokens,
+                "completion_tokens": completion_tokens,
+                "total_tokens": total_tokens,
+            }
 
     @property
     def _is_ollama_generate_url(self) -> bool:

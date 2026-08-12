@@ -12,7 +12,7 @@
   </div>
 </section>
 
-<p class="hint">Consulta em {{ usage.fetched_at[:19].replace('T', ' ') }} UTC. Tavily: <code>GET /usage</code>. Firecrawl: <code>GET /v1/team/credit-usage</code> (fallback v2). OpenAI: <code>data/llm_usage.jsonl</code> → <a href="/api/llm/usage">GET /api/llm/usage</a>.</p>
+  <p class="hint">Consulta em {{ usage.fetched_at[:19].replace('T', ' ') }} UTC. Tavily: <code>GET /usage</code>. Firecrawl: <code>GET /v1/team/credit-usage</code> (fallback v2). LLM (OpenAI + Local): <code>data/llm_usage.jsonl</code> → <a href="/api/llm/usage">GET /api/llm/usage</a>.</p>
 
 <section class="grid two">
   {% for provider in usage.providers %}

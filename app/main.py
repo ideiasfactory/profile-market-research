@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import copy
 import json
 import os
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -30,7 +32,8 @@ from app.llm_usage import summarize_usage
 from app.logging_config import configure_logging
 from app.resume_ingest import resolve_resume_content
 from app.scoring_config import SCORING_MODEL, active_scoring_model
-from app.services import analyse_job, build_score_chart_data, extract_candidate, normalize_job_analysis, score_candidate
+from app.services import analyse_job, build_score_chart_data, extract_candidate, score_candidate
+from app.job_understanding import normalize_job_analysis, normalize_stored_job_analysis
 from app.storage import candidates_store, domains_store, find_by_id, jobs_store, new_id, scores_store, upsert
 from app.prompt_store import (
     get_managed_prompt,
@@ -114,6 +117,47 @@ def redirect(path: str) -> RedirectResponse:
     return RedirectResponse(path, status_code=303)
 
 
+def _clone_job_title(title: str, existing_titles: set[str]) -> str:
+    base = re.sub(r"\s*\(cópia(?:\s+\d+)?\)\s*$", "", (title or "").strip(), flags=re.IGNORECASE)
+    base = base.strip() or (title or "").strip() or "Vaga"
+    candidate = f"{base} (cópia)"
+    if candidate not in existing_titles:
+        return candidate
+    index = 2
+    while f"{base} (cópia {index})" in existing_titles:
+        index += 1
+    return f"{base} (cópia {index})"
+
+
+def build_cloned_job(
+    source: dict[str, Any],
+    *,
+    now: str | None = None,
+    existing_titles: set[str] | None = None,
+) -> dict[str, Any]:
+    """Deep-copy a job with a new id for A/B analysis (e.g. Local vs OpenAI)."""
+    stamp = now or now_iso()
+    titles = existing_titles if existing_titles is not None else set()
+    analysis = copy.deepcopy(source.get("analysis") or {})
+    return {
+        "id": new_id(),
+        "title": _clone_job_title(str(source.get("title") or ""), titles),
+        "description": source.get("description") or "",
+        "profile": source.get("profile") or "",
+        "seniority": source.get("seniority") or "",
+        "job_description": source.get("job_description") or "",
+        "ideal_candidate_context": source.get("ideal_candidate_context") or "",
+        "compensation_type": source.get("compensation_type") or "pj_hour",
+        "compensation_min": source.get("compensation_min") or 0,
+        "compensation_max": source.get("compensation_max") or 0,
+        "work_location": source.get("work_location") or "Remoto",
+        "analysis": analysis,
+        "cloned_from": source.get("id"),
+        "created_at": stamp,
+        "updated_at": stamp,
+    }
+
+
 def _progress(task_id: str, progress: int, message: str, status: str = "running") -> None:
     task_store.update(task_id, progress=progress, message=message, status=status)
 
@@ -146,12 +190,18 @@ async def run_analyse_job_task(task_id: str, fields: dict[str, Any]) -> None:
         if save_mode == "save":
             _progress(task_id, 40, "Salvando critérios editados")
             manual = fields.get("analysis")
+            existing_meta = (existing or {}).get("analysis") if isinstance((existing or {}).get("analysis"), dict) else {}
             if isinstance(manual, dict):
-                payload["analysis"] = normalize_job_analysis(manual)
-            elif existing and existing.get("analysis"):
-                payload["analysis"] = normalize_job_analysis(existing.get("analysis"))
+                # Keep prior analysis audit / policy when operator edits criteria manually.
+                merged = dict(existing_meta)
+                merged.update(manual)
+                if existing_meta.get("weight_policy") and "weight_policy" not in manual:
+                    merged["weight_policy"] = existing_meta["weight_policy"]
+                payload["analysis"] = normalize_stored_job_analysis(merged)
+            elif existing_meta:
+                payload["analysis"] = normalize_stored_job_analysis(existing_meta)
             else:
-                payload["analysis"] = normalize_job_analysis({})
+                payload["analysis"] = normalize_stored_job_analysis({})
             message = "Vaga e critérios salvos com sucesso"
         else:
             _progress(task_id, 35, f"Analisando vaga com LLM ({provider})")
@@ -637,9 +687,25 @@ def edit_job(request: Request, job_id: str):
     return job_form(request, job)
 
 
+@app.post("/jobs/{job_id}/clone")
+def clone_job(job_id: str):
+    jobs = jobs_store.read()
+    source = find_by_id(jobs, job_id)
+    if not source:
+        raise HTTPException(status_code=404, detail="Vaga não encontrada.")
+    existing_titles = {str(job.get("title") or "") for job in jobs}
+    cloned = build_cloned_job(source, existing_titles=existing_titles)
+    upsert(jobs, cloned)
+    jobs_store.write(jobs)
+    return redirect(f"/jobs/{cloned['id']}/edit")
+
+
 def job_form(request: Request, job: dict[str, Any] | None = None):
     job_data = job or {}
-    analysis = normalize_job_analysis(job_data.get("analysis"))
+    raw_analysis = job_data.get("analysis") or {}
+    analysis = normalize_stored_job_analysis(raw_analysis)
+    last_provider = str(raw_analysis.get("llm_provider") or "").strip().lower()
+    provider_default = last_provider if last_provider in {"local", "openai"} else active_llm_provider()
     return templates.TemplateResponse(
         request,
         "job_form.html",
@@ -648,7 +714,7 @@ def job_form(request: Request, job: dict[str, Any] | None = None):
             "domains": domains_store.read(),
             "analysis": analysis,
             "is_edit": bool(job_data.get("id")),
-            "llm_provider_default": active_llm_provider(),
+            "llm_provider_default": provider_default,
         },
     )
 
@@ -681,7 +747,16 @@ async def save_job(
             parsed = json.loads(analysis_json or "{}")
         except json.JSONDecodeError as exc:
             raise HTTPException(status_code=400, detail="JSON de critérios inválido.") from exc
-        analysis = normalize_job_analysis(parsed)
+        analysis = normalize_stored_job_analysis(parsed)
+        # Preserve policy/audit from existing job when editing criteria.
+        if item_id:
+            existing = find_by_id(jobs_store.read(), item_id)
+            prev = (existing or {}).get("analysis") if existing else None
+            if isinstance(prev, dict):
+                for key in ("weight_policy", "llm_provider", "llm_model", "audit", "analyzed_at", "prompt_set"):
+                    if prev.get(key) is not None and analysis.get(key) is None:
+                        analysis[key] = prev[key]
+                analysis = normalize_stored_job_analysis(analysis)
 
     fields = {
         "item_id": item_id,
@@ -709,7 +784,7 @@ def job_detail(request: Request, job_id: str):
     job = find_by_id(jobs_store.read(), job_id)
     if not job:
         return redirect("/jobs")
-    job = {**job, "analysis": normalize_job_analysis(job.get("analysis"))}
+    job = {**job, "analysis": normalize_stored_job_analysis(job.get("analysis"))}
     return templates.TemplateResponse(request, "job_detail.html", {"job": job})
 
 

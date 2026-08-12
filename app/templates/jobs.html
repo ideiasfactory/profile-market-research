@@ -6,10 +6,15 @@
 </div>
 <div class="list">
   {% for job in jobs %}
-  <a class="list-item" href="/jobs/{{ job.id }}">
-    <strong>{{ job.title }}</strong>
-    <span>{{ job.profile }} · {{ job.seniority }} · {{ job.work_location }}</span>
-  </a>
+  <div class="list-item job-list-item">
+    <a href="/jobs/{{ job.id }}">
+      <strong>{{ job.title }}</strong>
+      <span>{{ job.profile }} · {{ job.seniority }} · {{ job.work_location }}{% if job.cloned_from %} · clonada{% endif %}</span>
+    </a>
+    <form method="post" action="/jobs/{{ job.id }}/clone" class="inline-form">
+      <button type="submit" class="button secondary">Clonar</button>
+    </form>
+  </div>
   {% else %}
   <p>Nenhuma vaga cadastrada.</p>
   {% endfor %}

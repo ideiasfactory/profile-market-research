@@ -6,7 +6,7 @@ from typing import Any
 
 import httpx
 
-from app.llm_usage import summarize_usage
+from app.llm_usage import summarize_usage, summarize_usage_for_provider
 from app.system_settings import get_system_value
 
 
@@ -216,30 +216,44 @@ def _sorted_usage_rows(bucket: dict[str, dict[str, Any]]) -> list[dict[str, Any]
     return rows
 
 
-def fetch_openai_usage() -> dict[str, Any]:
-    """Local metering from Chat Completions usage (not OpenAI Billing Admin API)."""
-    api_key = (os.getenv("OPENAI_API_KEY") or "").strip()
-    model = (os.getenv("OPENAI_MODEL") or "gpt-4.1").strip() or "gpt-4.1"
-    default_provider = (os.getenv("LLM_PROVIDER") or "local").strip().lower()
-    summary = summarize_usage()
+def _metered_llm_provider_card(provider: str) -> dict[str, Any]:
+    """Build UI card from local append-only metering (openai or local)."""
+    key = (provider or "").strip().lower()
+    summary = summarize_usage_for_provider(key)
     totals = summary.get("totals") or {}
-    configured = bool(api_key)
+    if key == "openai":
+        api_key = (os.getenv("OPENAI_API_KEY") or "").strip()
+        model = (os.getenv("OPENAI_MODEL") or "gpt-4.1").strip() or "gpt-4.1"
+        configured = bool(api_key)
+        plan_name = f"Chat Completions · modelo default {model}"
+        includes = (
+            "Tokens e custo estimado USD a partir das respostas `usage` "
+            "(append-only em data/llm_usage.jsonl, provider=openai) — não é a Billing Admin API."
+        )
+        reset_note = "Custo estimado via OPENAI_PRICE_*_PER_1M / tabela por modelo."
+        error = None if configured else "API key não configurada"
+    else:
+        model = (os.getenv("LOCAL_LLM_MODEL") or "qwen2.5:14b").strip() or "qwen2.5:14b"
+        url = (os.getenv("LOCAL_LLM_URL") or "").strip()
+        configured = bool(url)
+        plan_name = f"Ollama / local · modelo default {model}"
+        includes = (
+            "Tokens a partir de prompt_eval_count/eval_count (Ollama) ou usage "
+            "(endpoint compatível). Custo API estimado = US$ 0 por padrão "
+            "(on-prem); opcional LOCAL_LLM_PRICE_*_PER_1M."
+        )
+        reset_note = f"LOCAL_LLM_URL: {url or '—'}."
+        error = None if configured else "LOCAL_LLM_URL não configurada"
 
     return {
-        "provider": "openai",
+        "provider": key,
         "kind": "llm_tokens",
         "configured": configured,
         "ok": True,
-        "error": None if configured else "API key não configurada",
-        "plan_name": f"Chat Completions · modelo default {model}",
-        "includes": (
-            "Tokens e custo estimado a partir das respostas `usage` "
-            "(append-only em data/llm_usage.jsonl) — não é a Billing Admin API."
-        ),
-        "reset_note": (
-            f"LLM_PROVIDER default: {default_provider}. "
-            "Custo estimado via OPENAI_PRICE_*_PER_1M / tabela por modelo."
-        ),
+        "error": error,
+        "plan_name": plan_name,
+        "includes": includes,
+        "reset_note": reset_note,
         "docs_url": "/api/llm/usage",
         "used": totals.get("total_tokens"),
         "limit": None,
@@ -267,11 +281,22 @@ def fetch_openai_usage() -> dict[str, Any]:
     }
 
 
+def fetch_openai_usage() -> dict[str, Any]:
+    """Local metering for OpenAI Chat Completions (not Billing Admin API)."""
+    return _metered_llm_provider_card("openai")
+
+
+def fetch_local_llm_usage() -> dict[str, Any]:
+    """Local metering for Ollama / on-prem LLM calls."""
+    return _metered_llm_provider_card("local")
+
+
 async def fetch_all_external_api_usage() -> dict[str, Any]:
     tavily = await fetch_tavily_usage()
     firecrawl = await fetch_firecrawl_usage()
     openai = fetch_openai_usage()
+    local_llm = fetch_local_llm_usage()
     return {
         "fetched_at": _utc_now().isoformat(),
-        "providers": [tavily, firecrawl, openai],
+        "providers": [tavily, firecrawl, openai, local_llm],
     }

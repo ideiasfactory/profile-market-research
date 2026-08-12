@@ -7,12 +7,13 @@ import unittest
 from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from app.llm import OpenAILLM, active_llm_provider, get_llm
+from app.llm import LocalLLM, OpenAILLM, active_llm_provider, get_llm
 from app.llm_usage import (
     aggregate_usage,
     estimate_cost_usd,
     record_usage_event,
     summarize_usage,
+    summarize_usage_for_provider,
     usage_from_audit_payload,
 )
 
@@ -40,10 +41,52 @@ class LlmUsageCostTests(unittest.TestCase):
         self.assertAlmostEqual(cost, 10.0, places=5)
 
     def test_estimate_cost_mini_table(self):
-        cost = estimate_cost_usd("gpt-4.1-mini", 1_000_000, 0)
-        self.assertAlmostEqual(cost, 0.40, places=5)
-        cost_out = estimate_cost_usd("gpt-4o-mini", 0, 1_000_000)
-        self.assertAlmostEqual(cost_out, 0.60, places=5)
+        with patch.dict(
+            os.environ,
+            {"OPENAI_PRICE_INPUT_PER_1M": "", "OPENAI_PRICE_OUTPUT_PER_1M": ""},
+            clear=False,
+        ):
+            # Ensure empty env does not override table prices for known mini models.
+            os.environ.pop("OPENAI_PRICE_INPUT_PER_1M", None)
+            os.environ.pop("OPENAI_PRICE_OUTPUT_PER_1M", None)
+            cost = estimate_cost_usd("gpt-4.1-mini", 1_000_000, 0)
+            self.assertAlmostEqual(cost, 0.40, places=5)
+            cost_out = estimate_cost_usd("gpt-4o-mini", 0, 1_000_000)
+            self.assertAlmostEqual(cost_out, 0.60, places=5)
+
+    def test_local_cost_defaults_to_zero(self):
+        cost = estimate_cost_usd("qwen2.5:14b", 100_000, 50_000, provider="local")
+        self.assertEqual(cost, 0.0)
+
+    def test_summarize_filters_by_provider(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "usage.jsonl"
+            record_usage_event(
+                provider="openai",
+                model="gpt-4.1",
+                operation="score_skills",
+                prompt_tokens=100,
+                completion_tokens=20,
+                path=path,
+            )
+            record_usage_event(
+                provider="local",
+                model="qwen2.5:14b",
+                operation="score_skills",
+                prompt_tokens=200,
+                completion_tokens=40,
+                estimated_cost_usd=0.0,
+                path=path,
+            )
+            local = summarize_usage_for_provider("local", path=path)
+            openai = summarize_usage_for_provider("openai", path=path)
+            self.assertEqual(local["event_count"], 1)
+            self.assertEqual(local["totals"]["prompt_tokens"], 200)
+            self.assertEqual(openai["event_count"], 1)
+            self.assertEqual(openai["totals"]["prompt_tokens"], 100)
+            all_summary = summarize_usage(path=path)
+            self.assertIn("local", all_summary["by_provider"])
+            self.assertIn("openai", all_summary["by_provider"])
 
     def test_aggregate_and_summarize(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -180,6 +223,58 @@ class GptEvaluateProviderTests(unittest.TestCase):
         body = response.json()
         self.assertIn("totals", body)
         self.assertIn("by_operation", body)
+
+
+class LocalLlmClientTests(unittest.IsolatedAsyncioTestCase):
+    async def test_json_completion_meters_ollama_tokens(self):
+        payload = {
+            "response": json.dumps({"ok": True}),
+            "prompt_eval_count": 111,
+            "eval_count": 22,
+        }
+        mock_response = MagicMock()
+        mock_response.raise_for_status = MagicMock()
+        mock_response.json.return_value = payload
+
+        mock_client = AsyncMock()
+        mock_client.post.return_value = mock_response
+        mock_client.__aenter__.return_value = mock_client
+        mock_client.__aexit__.return_value = None
+
+        with tempfile.TemporaryDirectory() as tmp:
+            usage_path = Path(tmp) / "usage.jsonl"
+            with patch.dict(
+                os.environ,
+                {"LOCAL_LLM_URL": "http://gpu-server-01:11434", "LOCAL_LLM_MODEL": "qwen2.5:14b"},
+                clear=False,
+            ), patch("httpx.AsyncClient", return_value=mock_client), patch(
+                "app.llm_usage.USAGE_LOG_PATH", usage_path
+            ):
+                client = LocalLLM()
+                result = await client.json_completion_with_audit(
+                    "sys",
+                    "user",
+                    operation="score_skills",
+                    job_id="job-1",
+                    candidate_id="cand-1",
+                )
+
+            self.assertIsNotNone(result)
+            assert result is not None
+            self.assertEqual(result["parsed"], {"ok": True})
+            self.assertEqual(result["prompt_tokens"], 111)
+            self.assertEqual(result["completion_tokens"], 22)
+            self.assertEqual(result["provider"], "local")
+            self.assertEqual(result["estimated_cost_usd"], 0.0)
+            events = [
+                json.loads(line)
+                for line in usage_path.read_text(encoding="utf-8").splitlines()
+                if line.strip()
+            ]
+            self.assertEqual(len(events), 1)
+            self.assertEqual(events[0]["provider"], "local")
+            self.assertEqual(events[0]["operation"], "score_skills")
+            self.assertEqual(events[0]["total_tokens"], 133)
 
 
 if __name__ == "__main__":

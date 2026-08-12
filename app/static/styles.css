@@ -83,6 +83,22 @@ button { cursor: pointer; border: 0; }
 .panel { padding: 22px; margin-bottom: 18px; }
 .list { display: grid; gap: 12px; }
 .list-item { padding: 18px; display: grid; gap: 6px; }
+.list-item.job-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.list-item.job-list-item > a {
+  display: grid;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+.inline-form { display: inline; margin: 0; }
+.inline-form button { white-space: nowrap; }
 
 .form { display: grid; gap: 18px; }
 label { display: grid; gap: 8px; color: var(--muted); font-weight: 700; }

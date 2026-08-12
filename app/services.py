@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 import unicodedata
 from datetime import datetime, timezone
@@ -12,11 +13,14 @@ from app.evidence import (
     normalize_evidence_status,
 )
 from app.job_understanding import (
+    flatten_skill_snapshot,
     flatten_skills_v2,
     normalize_job_analysis,
+    normalize_stored_job_analysis,
+    normalize_weight_policy,
     skill_group_index,
 )
-from app.llm import LLMClient
+from app.llm import LLMClient, get_llm
 from app.llm_usage import aggregate_usage, aggregate_usage_from_audits, usage_from_audit_payload
 from app.prompts import load_prompt
 from app.scoring_config import (
@@ -247,9 +251,14 @@ def _skill_is_desired(text: str, spans: list[tuple[int, int]], desired_ranges: l
 
 
 async def analyse_job(job: dict[str, Any], llm: LLMClient) -> dict[str, Any]:
-    system = load_prompt("analyse_job.system.txt")
+    provider = getattr(llm, "provider_name", "local")
+    use_openai_prompts = provider == "openai"
+    weight_policy = "v3" if use_openai_prompts else "v2"
+    system_name = "openai/analyse_job.system.txt" if use_openai_prompts else "analyse_job.system.txt"
+    user_name = "openai/analyse_job.user.txt" if use_openai_prompts else "analyse_job.user.txt"
+    system = load_prompt(system_name)
     prompt = load_prompt(
-        "analyse_job.user.txt",
+        user_name,
         title=str(job.get("title", "")),
         profile=str(job.get("profile", "")),
         seniority=str(job.get("seniority", "")),
@@ -257,14 +266,15 @@ async def analyse_job(job: dict[str, Any], llm: LLMClient) -> dict[str, Any]:
         job_description=str(job.get("job_description", "")),
         ideal_candidate_context=str(job.get("ideal_candidate_context") or ""),
     )
-    result = await llm.json_completion(
+    audit_raw = await llm.json_completion_with_audit(
         system,
         prompt,
         operation="analyse_job",
         job_id=str(job.get("id") or "") or None,
     )
+    result = (audit_raw or {}).get("parsed") if audit_raw else None
     if result:
-        cleaned = normalize_job_analysis(result)
+        cleaned = normalize_job_analysis(result, policy=weight_policy)
         if (
             cleaned["must_have"]
             or cleaned["core_skills"]
@@ -273,10 +283,32 @@ async def analyse_job(job: dict[str, Any], llm: LLMClient) -> dict[str, Any]:
             or cleaned["desired_skills"]
         ):
             cleaned["analysis_version"] = JOB_ANALYSIS_VERSION
+            cleaned["weight_policy"] = weight_policy
+            cleaned["prompt_set"] = "openai" if use_openai_prompts else "local"
+            cleaned["llm_provider"] = provider
+            cleaned["llm_model"] = getattr(llm, "model", None)
+            cleaned["analyzed_at"] = datetime.now(timezone.utc).isoformat()
+            audit: dict[str, Any] = {
+                "prompt_files": [system_name, user_name],
+                "prompt_version": PROMPT_VERSIONS.get("analyse_job"),
+                "llm_provider": provider,
+                "llm_model": getattr(llm, "model", None),
+                "attempts": (audit_raw or {}).get("attempts"),
+                "error": (audit_raw or {}).get("error"),
+            }
+            usage = usage_from_audit_payload(audit_raw)
+            if usage.get("calls"):
+                audit["usage"] = usage
+            cleaned["audit"] = audit
             return cleaned
 
     heuristic = heuristic_job_analysis(job)
     heuristic["analysis_version"] = JOB_ANALYSIS_VERSION
+    heuristic["weight_policy"] = "v2"
+    heuristic["prompt_set"] = "heuristic"
+    heuristic["llm_provider"] = provider
+    heuristic["llm_model"] = getattr(llm, "model", None)
+    heuristic["analyzed_at"] = datetime.now(timezone.utc).isoformat()
     return heuristic
 
 
@@ -318,22 +350,36 @@ async def score_candidate(
     scoring_model: str | None = None,
 ) -> dict[str, Any]:
     model = active_scoring_model(scoring_model)
-    analysis = normalize_job_analysis(job.get("analysis") or heuristic_job_analysis(job))
+    raw_analysis = job.get("analysis") or heuristic_job_analysis(job)
+    analysis = normalize_stored_job_analysis(raw_analysis)
     resume_text = str(candidate.get("resume_text", ""))
     resume_excerpt = resume_text[:10000]
     job_id = str(job.get("id") or "") or None
     candidate_id = str(candidate.get("id") or "") or None
     provider_name = getattr(llm, "provider_name", "local")
 
-    if model == "v2":
+    if model in {"v2", "v3"}:
+        weight_policy_audit: dict[str, Any] | None = None
+        scoring_analysis = analysis
+        if model == "v3":
+            scoring_analysis, weight_policy_audit = await recalibrate_skill_weights(
+                job,
+                analysis,
+                job_id=job_id,
+                candidate_id=candidate_id,
+                llm=llm,
+            )
         return await _score_candidate_v2(
             job,
             candidate,
-            analysis,
+            scoring_analysis,
             resume_excerpt,
             llm,
             job_id=job_id,
             candidate_id=candidate_id,
+            scoring_model_version=model,
+            weight_policy_audit=weight_policy_audit,
+            baseline_analysis=analysis if model == "v3" else None,
         )
 
     skills = flatten_skills(analysis)
@@ -397,9 +443,102 @@ async def score_candidate(
         "skills_llm": skills_audit,
         "narrative_llm": narrative_audit,
     }
-    if provider_name == "openai" and usage.get("calls"):
+    if usage.get("calls"):
         built["audit"]["usage"] = usage
     return built
+
+
+async def recalibrate_skill_weights(
+    job: dict[str, Any],
+    baseline_analysis: dict[str, Any],
+    *,
+    job_id: str | None = None,
+    candidate_id: str | None = None,
+    llm: LLMClient | None = None,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Recalibrate skill tiers/weights for scoring model v3.
+
+    Uses the LLM selected by the user (local or OpenAI). Does not mutate
+    ``job["analysis"]``. Raises if the provider is unavailable or returns an
+    unusable payload.
+    """
+    weight_llm = llm or get_llm()
+    provider = str(getattr(weight_llm, "provider_name", "local") or "local").strip().lower()
+    if not getattr(weight_llm, "configured", False):
+        if provider == "openai":
+            raise ValueError(
+                "Scoring model v3 com OpenAI requer OPENAI_API_KEY. "
+                "Defina a chave, escolha Local, ou use o modelo v2."
+            )
+        raise ValueError(
+            "Scoring model v3 requer um LLM configurado (Local/Ollama ou OpenAI). "
+            "Verifique LOCAL_LLM_URL / OPENAI_API_KEY ou escolha o modelo v2."
+        )
+
+    baseline = normalize_stored_job_analysis(baseline_analysis)
+    items_before = flatten_skill_snapshot(baseline)
+    if not items_before:
+        raise ValueError(
+            "Scoring model v3 exige skills na análise da vaga. "
+            "Reanalise a vaga antes de gerar o score."
+        )
+
+    # Weight-policy prompts live under prompts/openai/ (v3 discriminative policy).
+    system_prompt = "openai/score_weights.system.txt"
+    user_prompt = "openai/score_weights.user.txt"
+    system = load_prompt(system_prompt)
+    prompt = load_prompt(
+        user_prompt,
+        title=str(job.get("title", "")),
+        profile=str(job.get("profile", "")),
+        seniority=str(job.get("seniority", "")),
+        description=str(job.get("description", "")),
+        job_description=str(job.get("job_description", "")),
+        ideal_candidate_context=str(job.get("ideal_candidate_context") or ""),
+        current_skills_json=json.dumps(items_before, ensure_ascii=False),
+    )
+    audit_raw = await weight_llm.json_completion_with_audit(
+        system,
+        prompt,
+        operation="score_weights",
+        job_id=job_id,
+        candidate_id=candidate_id,
+    )
+    parsed = (audit_raw or {}).get("parsed") if audit_raw else None
+    if not isinstance(parsed, dict):
+        error = (audit_raw or {}).get("error") if audit_raw else "llm_not_configured"
+        raise ValueError(
+            f"Falha ao recalibrar pesos via {provider} (score_weights): {error or 'empty_response'}"
+        )
+
+    recalibrated = normalize_weight_policy(parsed, baseline=baseline, policy="v3")
+    items_after = flatten_skill_snapshot(recalibrated)
+    if not items_after:
+        raise ValueError(f"Recalibração de pesos ({provider}) retornou conjunto de skills vazio.")
+
+    weight_policy: dict[str, Any] = {
+        "source": provider,
+        "prompt_version": PROMPT_VERSIONS.get("score_weights", "v1"),
+        "prompt_files": [system_prompt, user_prompt],
+        "items_before": items_before,
+        "items_after": items_after,
+        "llm_provider": provider,
+        "llm_model": getattr(weight_llm, "model", None),
+        "llm_temperature": getattr(weight_llm, "temperature", None),
+    }
+    if audit_raw:
+        weight_policy["llm"] = {
+            "error": audit_raw.get("error"),
+            "attempts": audit_raw.get("attempts"),
+            "prompt_tokens": audit_raw.get("prompt_tokens"),
+            "completion_tokens": audit_raw.get("completion_tokens"),
+            "total_tokens": audit_raw.get("total_tokens"),
+            "estimated_cost_usd": audit_raw.get("estimated_cost_usd"),
+        }
+        usage = usage_from_audit_payload(audit_raw)
+        if usage.get("calls"):
+            weight_policy["usage"] = usage
+    return recalibrated, weight_policy
 
 
 async def _score_candidate_v2(
@@ -411,6 +550,9 @@ async def _score_candidate_v2(
     *,
     job_id: str | None = None,
     candidate_id: str | None = None,
+    scoring_model_version: str = "v2",
+    weight_policy_audit: dict[str, Any] | None = None,
+    baseline_analysis: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     skills = flatten_skills_v2(analysis)
     if not skills:
@@ -455,6 +597,26 @@ async def _score_candidate_v2(
     role_fit = fit.get("role_fit")
     context_fit = fit.get("context_fit")
     provider_name = getattr(llm, "provider_name", "local")
+    model_version = scoring_model_version if scoring_model_version in {"v2", "v3"} else "v2"
+    job_analysis_source = baseline_analysis or analysis
+
+    audit: dict[str, Any] = {
+        "scoring_model_version": model_version,
+        "job_analysis_version": job_analysis_source.get("analysis_version")
+        or job_analysis_source.get("version")
+        or JOB_ANALYSIS_VERSION,
+        "job_updated_at": job.get("updated_at"),
+        "candidate_updated_at": candidate.get("updated_at"),
+        "scored_at": datetime.now(timezone.utc).isoformat(),
+        "prompt_versions": PROMPT_VERSIONS,
+        "llm_provider": provider_name,
+        "llm_model": getattr(llm, "model", None),
+        "llm_temperature": getattr(llm, "temperature", None),
+        "skills_llm": skills_audit,
+        "fit_llm": fit.get("audit"),
+    }
+    if weight_policy_audit:
+        audit["weight_policy"] = weight_policy_audit
 
     result = build_v2_score_result(
         job=job,
@@ -467,19 +629,8 @@ async def _score_candidate_v2(
         strengths=fit.get("strengths"),
         interview_validation=fit.get("interview_validation"),
         narrative={},
-        audit={
-            "scoring_model_version": "v2",
-            "job_analysis_version": analysis.get("analysis_version") or analysis.get("version") or JOB_ANALYSIS_VERSION,
-            "job_updated_at": job.get("updated_at"),
-            "candidate_updated_at": candidate.get("updated_at"),
-            "scored_at": datetime.now(timezone.utc).isoformat(),
-            "prompt_versions": PROMPT_VERSIONS,
-            "llm_provider": provider_name,
-            "llm_model": getattr(llm, "model", None),
-            "llm_temperature": getattr(llm, "temperature", None),
-            "skills_llm": skills_audit,
-            "fit_llm": fit.get("audit"),
-        },
+        audit=audit,
+        scoring_model_version=model_version,
     )
 
     narrative, narrative_audit = await _score_narrative_with_llm(
@@ -511,12 +662,18 @@ async def _score_candidate_v2(
     result["llm_provider"] = provider_name
     result.setdefault("audit", {})
     result["audit"]["narrative_llm"] = narrative_audit
-    usage = aggregate_usage(
+    usage_parts = [
         aggregate_usage_from_audits(skills_audit),
         usage_from_audit_payload(fit.get("audit")),
         usage_from_audit_payload(narrative_audit),
-    )
-    if provider_name == "openai" and usage.get("calls"):
+    ]
+    if weight_policy_audit and weight_policy_audit.get("usage"):
+        usage_parts.append(weight_policy_audit["usage"])
+    elif weight_policy_audit and weight_policy_audit.get("llm"):
+        usage_parts.append(usage_from_audit_payload(weight_policy_audit.get("llm")))
+    usage = aggregate_usage(*usage_parts)
+    # Persist OpenAI usage whenever present (weights step may be OpenAI while skills are local).
+    if usage.get("calls"):
         result["audit"]["usage"] = usage
     # Backend decides verdict_label (LLM interprets narrative only).
     if not result.get("interview_validation") and fit.get("interview_validation"):

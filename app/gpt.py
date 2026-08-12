@@ -21,7 +21,7 @@ from app.compensation.services.job_prefill import map_job_to_compensation_prefil
 from app.compensation.services.orchestrator import CompensationResearchOrchestrator
 from app.scoring_config import SCORING_MODEL, active_scoring_model
 from app.llm import active_llm_provider
-from app.services import normalize_job_analysis
+from app.job_understanding import normalize_stored_job_analysis
 from app.storage import candidates_store, find_by_id, jobs_store, scores_store
 from app.tasks import task_store
 
@@ -38,11 +38,11 @@ class EvaluateRequest(BaseModel):
     candidate_id: str = Field(..., description="Candidate identifier to evaluate.")
     scoring_model: str | None = Field(
         default=None,
-        description="Optional scoring model override: v1 or v2. Defaults to server SCORING_MODEL.",
+        description="Optional scoring model override: v1, v2, or v3 (recalibrate weights with selected LLM). Defaults to server SCORING_MODEL.",
     )
     llm_provider: str | None = Field(
         default=None,
-        description="Optional LLM provider override: local or openai. Defaults to server LLM_PROVIDER.",
+        description="Optional LLM provider override: local or openai. Used for score steps and v3 weight recalibration. Defaults to server LLM_PROVIDER.",
     )
 
 
@@ -74,7 +74,7 @@ def _job_summary(job: dict[str, Any]) -> dict[str, Any]:
 
 
 def _job_detail(job: dict[str, Any]) -> dict[str, Any]:
-    analysis = normalize_job_analysis(job.get("analysis"))
+    analysis = normalize_stored_job_analysis(job.get("analysis"))
     return {
         **_job_summary(job),
         "job_description": job.get("job_description"),

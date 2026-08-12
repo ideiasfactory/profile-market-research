@@ -6,6 +6,10 @@
   <input type="hidden" name="save_mode" id="save_mode" value="{{ 'save' if is_edit else 'reanalyse' }}">
   <input type="hidden" name="analysis_json" id="analysis_json" value="">
 
+  {% if job.cloned_from %}
+  <p class="hint">Esta vaga foi clonada de <a href="/jobs/{{ job.cloned_from }}">{{ job.cloned_from }}</a>. Selecione o provedor LLM e use “Salvar e reanalisar” para comparar a avaliação (ex.: OpenAI).</p>
+  {% endif %}
+
   <section class="panel form-section">
     <h2>Dados da vaga</h2>
     <label>Título<input name="title" value="{{ job.title or '' }}" required></label>
@@ -57,7 +61,7 @@
         <option value="local" {{ "selected" if llm_provider_default == "local" else "" }}>Local (Ollama)</option>
         <option value="openai" {{ "selected" if llm_provider_default == "openai" else "" }}>OpenAI</option>
       </select>
-      <span class="field-help">Usado ao salvar e reanalisar. Compensation Intelligence permanece no LLM local.</span>
+      <span class="field-help">Usado ao salvar e reanalisar a JD (tiers/pesos). OpenAI usa prompts discriminativos em <code>prompts/openai/</code> e registra custo estimado em usage. Compensation Intelligence permanece no LLM local.</span>
     </label>
   </section>
 

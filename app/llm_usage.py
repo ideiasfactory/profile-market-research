@@ -50,8 +50,24 @@ def price_for_model(model: str) -> tuple[float, float]:
     return env_in, env_out
 
 
-def estimate_cost_usd(model: str, prompt_tokens: int, completion_tokens: int) -> float:
-    input_per_1m, output_per_1m = price_for_model(model)
+def estimate_cost_usd(
+    model: str,
+    prompt_tokens: int,
+    completion_tokens: int,
+    *,
+    provider: str | None = None,
+) -> float:
+    """Estimate USD API cost. Local/on-prem defaults to 0 unless LOCAL_LLM_PRICE_* is set."""
+    provider_key = (provider or "").strip().lower()
+    if provider_key == "local":
+        local_in = os.getenv("LOCAL_LLM_PRICE_INPUT_PER_1M")
+        local_out = os.getenv("LOCAL_LLM_PRICE_OUTPUT_PER_1M")
+        if not local_in and not local_out:
+            return 0.0
+        input_per_1m = _env_float("LOCAL_LLM_PRICE_INPUT_PER_1M", 0.0)
+        output_per_1m = _env_float("LOCAL_LLM_PRICE_OUTPUT_PER_1M", 0.0)
+    else:
+        input_per_1m, output_per_1m = price_for_model(model)
     cost = (max(0, prompt_tokens) / 1_000_000.0) * input_per_1m + (
         max(0, completion_tokens) / 1_000_000.0
     ) * output_per_1m
@@ -74,7 +90,12 @@ def record_usage_event(
     path: Path | None = None,
 ) -> dict[str, Any]:
     if estimated_cost_usd is None:
-        estimated_cost_usd = estimate_cost_usd(model, prompt_tokens, completion_tokens)
+        estimated_cost_usd = estimate_cost_usd(
+            model,
+            prompt_tokens,
+            completion_tokens,
+            provider=provider,
+        )
     if total_tokens <= 0:
         total_tokens = max(0, prompt_tokens) + max(0, completion_tokens)
     event = {
@@ -177,10 +198,84 @@ def summarize_usage(since: str | None = None, *, path: Path | None = None) -> di
     by_day: dict[str, dict[str, Any]] = {}
     by_operation: dict[str, dict[str, Any]] = {}
     by_model: dict[str, dict[str, Any]] = {}
+    by_provider: dict[str, dict[str, Any]] = {}
 
     def _bump(bucket: dict[str, dict[str, Any]], key: str, event: dict[str, Any]) -> None:
         row = bucket.setdefault(
             key,
+            {
+                "prompt_tokens": 0,
+                "completion_tokens": 0,
+                "total_tokens": 0,
+                "estimated_cost_usd": 0.0,
+                "calls": 0,
+                "ok_calls": 0,
+            },
+        )
+        row["prompt_tokens"] += int(event.get("prompt_tokens") or 0)
+        row["completion_tokens"] += int(event.get("completion_tokens") or 0)
+        row["total_tokens"] += int(event.get("total_tokens") or 0)
+        row["estimated_cost_usd"] = round(
+            float(row["estimated_cost_usd"]) + float(event.get("estimated_cost_usd") or 0.0),
+            8,
+        )
+        row["calls"] += 1
+        if event.get("ok"):
+            row["ok_calls"] += 1
+
+    totals = empty_usage()
+    totals["ok_calls"] = 0
+    for event in events:
+        ts = str(event.get("ts") or "")
+        day = ts[:10] if len(ts) >= 10 else "unknown"
+        _bump(by_day, day, event)
+        _bump(by_operation, str(event.get("operation") or "unknown"), event)
+        _bump(by_model, str(event.get("model") or "unknown"), event)
+        _bump(by_provider, str(event.get("provider") or "unknown"), event)
+        totals["prompt_tokens"] += int(event.get("prompt_tokens") or 0)
+        totals["completion_tokens"] += int(event.get("completion_tokens") or 0)
+        totals["total_tokens"] += int(event.get("total_tokens") or 0)
+        totals["estimated_cost_usd"] = round(
+            float(totals["estimated_cost_usd"]) + float(event.get("estimated_cost_usd") or 0.0),
+            8,
+        )
+        totals["calls"] += 1
+        if event.get("ok"):
+            totals["ok_calls"] += 1
+
+    return {
+        "since": since,
+        "event_count": len(events),
+        "totals": totals,
+        "by_day": by_day,
+        "by_operation": by_operation,
+        "by_model": by_model,
+        "by_provider": by_provider,
+        "recent": events[-20:],
+    }
+
+
+def summarize_usage_for_provider(
+    provider: str,
+    *,
+    since: str | None = None,
+    path: Path | None = None,
+) -> dict[str, Any]:
+    """Like summarize_usage but filtered to a single provider (openai|local)."""
+    key = (provider or "").strip().lower()
+    events = [
+        event
+        for event in read_usage_events(path, since=since)
+        if str(event.get("provider") or "").strip().lower() == key
+    ]
+    # Reuse summarize by writing a temp view via in-memory filter path: summarize from filtered list.
+    by_day: dict[str, dict[str, Any]] = {}
+    by_operation: dict[str, dict[str, Any]] = {}
+    by_model: dict[str, dict[str, Any]] = {}
+
+    def _bump(bucket: dict[str, dict[str, Any]], name: str, event: dict[str, Any]) -> None:
+        row = bucket.setdefault(
+            name,
             {
                 "prompt_tokens": 0,
                 "completion_tokens": 0,
@@ -222,6 +317,7 @@ def summarize_usage(since: str | None = None, *, path: Path | None = None) -> di
 
     return {
         "since": since,
+        "provider": key,
         "event_count": len(events),
         "totals": totals,
         "by_day": by_day,
