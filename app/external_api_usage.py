@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import os
 from datetime import date, datetime, timezone
 from typing import Any
 
 import httpx
 
+from app.llm_usage import summarize_usage
 from app.system_settings import get_system_value
 
 
@@ -202,10 +204,74 @@ async def fetch_firecrawl_usage() -> dict[str, Any]:
     }
 
 
+def _sorted_usage_rows(bucket: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+    """Flatten summarize_usage buckets into rows sorted by total tokens desc."""
+    rows: list[dict[str, Any]] = []
+    for name, stats in (bucket or {}).items():
+        if not isinstance(stats, dict):
+            continue
+        row = {"name": name, **stats}
+        rows.append(row)
+    rows.sort(key=lambda r: (-int(r.get("total_tokens") or 0), str(r.get("name") or "")))
+    return rows
+
+
+def fetch_openai_usage() -> dict[str, Any]:
+    """Local metering from Chat Completions usage (not OpenAI Billing Admin API)."""
+    api_key = (os.getenv("OPENAI_API_KEY") or "").strip()
+    model = (os.getenv("OPENAI_MODEL") or "gpt-4.1").strip() or "gpt-4.1"
+    default_provider = (os.getenv("LLM_PROVIDER") or "local").strip().lower()
+    summary = summarize_usage()
+    totals = summary.get("totals") or {}
+    configured = bool(api_key)
+
+    return {
+        "provider": "openai",
+        "kind": "llm_tokens",
+        "configured": configured,
+        "ok": True,
+        "error": None if configured else "API key não configurada",
+        "plan_name": f"Chat Completions · modelo default {model}",
+        "includes": (
+            "Tokens e custo estimado a partir das respostas `usage` "
+            "(append-only em data/llm_usage.jsonl) — não é a Billing Admin API."
+        ),
+        "reset_note": (
+            f"LLM_PROVIDER default: {default_provider}. "
+            "Custo estimado via OPENAI_PRICE_*_PER_1M / tabela por modelo."
+        ),
+        "docs_url": "/api/llm/usage",
+        "used": totals.get("total_tokens"),
+        "limit": None,
+        "remaining": None,
+        "usage_pct": None,
+        "period_start": None,
+        "period_end": None,
+        "totals": totals,
+        "by_operation": _sorted_usage_rows(summary.get("by_operation") or {}),
+        "by_model": _sorted_usage_rows(summary.get("by_model") or {}),
+        "by_day": sorted(
+            _sorted_usage_rows(summary.get("by_day") or {}),
+            key=lambda r: str(r.get("name") or ""),
+            reverse=True,
+        ),
+        "event_count": summary.get("event_count") or 0,
+        "breakdown": {
+            "prompt_tokens": totals.get("prompt_tokens"),
+            "completion_tokens": totals.get("completion_tokens"),
+            "total_tokens": totals.get("total_tokens"),
+            "estimated_cost_usd": totals.get("estimated_cost_usd"),
+            "calls": totals.get("calls"),
+            "ok_calls": totals.get("ok_calls"),
+        },
+    }
+
+
 async def fetch_all_external_api_usage() -> dict[str, Any]:
     tavily = await fetch_tavily_usage()
     firecrawl = await fetch_firecrawl_usage()
+    openai = fetch_openai_usage()
     return {
         "fetched_at": _utc_now().isoformat(),
-        "providers": [tavily, firecrawl],
+        "providers": [tavily, firecrawl, openai],
     }

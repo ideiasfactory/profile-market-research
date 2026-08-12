@@ -98,9 +98,10 @@ Nos prompts (`prompts/`), use `{business_context}` ou `{<chave>}` — injetados 
 
 - Aba **Parâmetros de Sistema** (`/settings?tab=sistema`): API keys e URLs (Tavily, Firecrawl, Ollama, API key do PPA). Persistência local em `data/system_settings.json` (gitignored); `.env` continua como fallback.
 - Aba **Prompts IA** (`/settings?tab=prompts`): edita prompts LLM com título, descrição, conteúdo e histórico versionado (salvar cria versão; dropdown + reverter). Store em `data/prompt_store.json`.
-- Tela **APIs Externas** (`/external-apis`): plano, créditos usados/restantes e reset do ciclo via APIs oficiais:
+- Tela **APIs Externas** (`/external-apis`): plano, créditos usados/restantes e reset do ciclo via APIs oficiais, mais metering OpenAI:
   - Tavily `GET /usage` (reset documentado no 1º dia do mês)
   - Firecrawl `GET /v1/team/credit-usage` (período de billing na resposta)
+  - OpenAI: tokens (prompt/completion/total), custo estimado USD e breakdown por operação/modelo/dia a partir de `data/llm_usage.jsonl` (`GET /api/llm/usage`) — não usa Billing Admin API
 
 ## Prompts
 

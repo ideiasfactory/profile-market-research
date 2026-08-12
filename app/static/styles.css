@@ -482,6 +482,7 @@ button.danger {
   font-size: 0.9rem;
 }
 .api-usage-card h3 { margin-top: 18px; }
+.api-usage-card-wide { grid-column: 1 / -1; }
 
 .prompts-layout {
   align-items: start;

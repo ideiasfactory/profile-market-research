@@ -107,6 +107,7 @@ ADRs: ADR-017 (catálogo), ADR-018 (prompts).
   - `GET /health/llm` — reachability do Ollama + modelo.
   - `GET /health/providers` — health dos search engines, crawlers habilitados e status `set`/`missing` das API keys.
   - `GET /api/llm/usage` — resumo de tokens/custo OpenAI (`data/llm_usage.jsonl`).
+  - UI **APIs Externas** (`/external-apis`) inclui o mesmo resumo OpenAI junto com Tavily/Firecrawl (`GET /api/v1/external-apis/usage`).
 
 ## Scoring LLM providers
 
