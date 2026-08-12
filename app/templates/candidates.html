@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="title-row">
+  <h1>Currículos</h1>
+  <a class="button" href="/candidates/new">Novo currículo</a>
+</div>
+<div class="list">
+  {% for candidate in candidates %}
+  <a class="list-item" href="/candidates/{{ candidate.id }}">
+    <strong>{{ candidate.name or "Sem nome extraído" }}</strong>
+    <span>{{ candidate.reported_role or "Cargo não identificado" }} · {{ candidate.city or "Cidade não identificada" }}</span>
+  </a>
+  {% else %}
+  <p>Nenhum currículo cadastrado.</p>
+  {% endfor %}
+</div>
+{% endblock %}

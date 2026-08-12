@@ -1,0 +1,6 @@
+Extraia os campos abaixo do currículo. Retorne JSON estrito:
+{{"name": "...", "city": "...", "reported_role": "..."}}
+Use string vazia quando não houver evidência.
+
+Currículo:
+{resume_text}

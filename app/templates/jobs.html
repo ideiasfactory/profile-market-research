@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="title-row">
+  <h1>Vagas</h1>
+  <a class="button" href="/jobs/new">Nova vaga</a>
+</div>
+<div class="list">
+  {% for job in jobs %}
+  <a class="list-item" href="/jobs/{{ job.id }}">
+    <strong>{{ job.title }}</strong>
+    <span>{{ job.profile }} · {{ job.seniority }} · {{ job.work_location }}</span>
+  </a>
+  {% else %}
+  <p>Nenhuma vaga cadastrada.</p>
+  {% endfor %}
+</div>
+{% endblock %}

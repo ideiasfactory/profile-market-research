@@ -1,0 +1,405 @@
+{
+  "job_id": "671bb12e8d6c",
+  "candidate_id": "e475d1052f49",
+  "job_title": "Arquiteto OIC - CPFL",
+  "candidate_name": "Bruno Libanio",
+  "final_score": 54.9,
+  "method": "hybrid",
+  "scoring_model_version": "v2",
+  "items": [
+    {
+      "category": "Must-have",
+      "name": "Oracle Integration Cloud",
+      "weight": 10,
+      "tier": "MUST_HAVE",
+      "group": "OIC Platform",
+      "score": 4,
+      "confidence": 0.75,
+      "evidence_status": "explicit",
+      "evidence": [
+        {
+          "text": "Menções encontradas no currículo.",
+          "source": "resume"
+        }
+      ],
+      "weighted_score": 40.0,
+      "evidence_text": "Menções encontradas no currículo."
+    },
+    {
+      "category": "Must-have",
+      "name": "Arquitetura de Integração",
+      "weight": 7,
+      "tier": "CORE",
+      "group": "Architecture",
+      "score": 3,
+      "confidence": 0.75,
+      "evidence_status": "explicit",
+      "evidence": [
+        {
+          "text": "Menções encontradas no currículo.",
+          "source": "resume"
+        }
+      ],
+      "weighted_score": 21.0,
+      "evidence_text": "Menções encontradas no currículo."
+    },
+    {
+      "category": "Core skill",
+      "name": "API Management",
+      "weight": 6,
+      "tier": "CORE",
+      "group": "Architecture",
+      "score": 4,
+      "confidence": 0.75,
+      "evidence_status": "explicit",
+      "evidence": [
+        {
+          "text": "Menções encontradas no currículo.",
+          "source": "resume"
+        }
+      ],
+      "weighted_score": 24.0,
+      "evidence_text": "Menções encontradas no currículo."
+    },
+    {
+      "category": "Core skill",
+      "name": "Enterprise Integration Patterns",
+      "weight": 6,
+      "tier": "CORE",
+      "group": "Architecture",
+      "score": 0,
+      "confidence": 0.15,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Core skill",
+      "name": "SAP Process Orchestration",
+      "weight": 7,
+      "tier": "CORE",
+      "group": "SAP Ecosystem",
+      "score": 3,
+      "confidence": 0.75,
+      "evidence_status": "explicit",
+      "evidence": [
+        {
+          "text": "Menções encontradas no currículo.",
+          "source": "resume"
+        }
+      ],
+      "weighted_score": 21.0,
+      "evidence_text": "Menções encontradas no currículo."
+    },
+    {
+      "category": "Core skill",
+      "name": "SAP Business Technology Platform",
+      "weight": 7,
+      "tier": "CORE",
+      "group": "SAP Ecosystem",
+      "score": 0,
+      "confidence": 0.15,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Supporting skill",
+      "name": "Observabilidade",
+      "weight": 3,
+      "tier": "SUPPORTING",
+      "group": "Ops",
+      "score": 0,
+      "confidence": 0.15,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Supporting skill",
+      "name": "OAuth 2.0",
+      "weight": 3,
+      "tier": "SUPPORTING",
+      "group": "Security",
+      "score": 3,
+      "confidence": 0.75,
+      "evidence_status": "explicit",
+      "evidence": [
+        {
+          "text": "Menções encontradas no currículo.",
+          "source": "resume"
+        }
+      ],
+      "weighted_score": 9.0,
+      "evidence_text": "Menções encontradas no currículo."
+    },
+    {
+      "category": "Supporting skill",
+      "name": "OpenAPI",
+      "weight": 3,
+      "tier": "SUPPORTING",
+      "group": "API Security",
+      "score": 0,
+      "confidence": 0.15,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Differential",
+      "name": "Kafka",
+      "weight": 2,
+      "tier": "DIFFERENTIAL",
+      "group": "Messaging",
+      "score": 0,
+      "confidence": 0.15,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Differential",
+      "name": "TOGAF",
+      "weight": 1,
+      "tier": "DIFFERENTIAL",
+      "group": "Architecture Frameworks",
+      "score": 0,
+      "confidence": 0.15,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Differential",
+      "name": "ArchiMate",
+      "weight": 1,
+      "tier": "DIFFERENTIAL",
+      "group": "Architecture Frameworks",
+      "score": 0,
+      "confidence": 0.15,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Soft skill",
+      "name": "Comunicação",
+      "weight": 3,
+      "tier": "SOFT",
+      "group": "Behavioral",
+      "score": null,
+      "confidence": 0.95,
+      "evidence_status": "needs_validation",
+      "evidence": [],
+      "weighted_score": null,
+      "evidence_text": "Sem evidência textual; validar em entrevista."
+    },
+    {
+      "category": "Soft skill",
+      "name": "Liderança Técnica",
+      "weight": 2,
+      "tier": "SOFT",
+      "group": "Leadership",
+      "score": 4,
+      "confidence": 0.85,
+      "evidence_status": "explicit",
+      "evidence": [
+        {
+          "text": "Sou profissional com mais de cinco anos de experiência em liderança técnica, atuando na otimização de processos e arquiteturas para garantir soluções eficientes em sistemas distribuídos.",
+          "source": "resume"
+        },
+        {
+          "text": "Liderei equipes de desenvolvimento alinhando estratégias de implementação à visão da empresa, sempre com foco na entrega contínua de valor aos clientes.",
+          "source": "resume"
+        }
+      ],
+      "weighted_score": 8.0,
+      "evidence_text": "Sou profissional com mais de cinco anos de experiência em liderança técnica, atuando na otimização de processos e arquiteturas para garantir soluções eficientes em sistemas distribuídos."
+    }
+  ],
+  "score_breakdown": {
+    "dimensions": {
+      "core_technical_fit": 44.23,
+      "role_fit": 75.0,
+      "context_fit": 80.0,
+      "behavioral_fit": 80.0,
+      "differentials": 0.0
+    },
+    "weights": {
+      "core_technical_fit": 0.45,
+      "role_fit": 0.2,
+      "context_fit": 0.15,
+      "behavioral_fit": 0.1,
+      "differentials": 0.1
+    },
+    "final_score": 54.9,
+    "core_technical_fit": 44.23,
+    "role_fit": 75.0,
+    "context_fit": 80.0,
+    "behavioral_fit": 80.0,
+    "differentials": 0.0
+  },
+  "must_have_coverage": {
+    "covered": 1,
+    "total": 1,
+    "ratio": 1.0,
+    "covered_skills": [
+      "Oracle Integration Cloud"
+    ],
+    "missing_skills": [],
+    "min_score": 3
+  },
+  "critical_gaps": [
+    {
+      "name": "Enterprise Integration Patterns",
+      "severity": "important",
+      "tier": "CORE",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito CORE."
+    },
+    {
+      "name": "SAP Business Technology Platform",
+      "severity": "important",
+      "tier": "CORE",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito CORE."
+    },
+    {
+      "name": "Observabilidade",
+      "severity": "minor",
+      "tier": "SUPPORTING",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito SUPPORTING."
+    },
+    {
+      "name": "OpenAPI",
+      "severity": "minor",
+      "tier": "SUPPORTING",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito SUPPORTING."
+    },
+    {
+      "name": "Kafka",
+      "severity": "minor",
+      "tier": "DIFFERENTIAL",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito DIFFERENTIAL."
+    },
+    {
+      "name": "TOGAF",
+      "severity": "minor",
+      "tier": "DIFFERENTIAL",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito DIFFERENTIAL."
+    },
+    {
+      "name": "ArchiMate",
+      "severity": "minor",
+      "tier": "DIFFERENTIAL",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito DIFFERENTIAL."
+    },
+    {
+      "name": "Comunicação",
+      "severity": "documentation_gap",
+      "tier": "SOFT",
+      "score": null,
+      "evidence_status": "needs_validation",
+      "reason": "Sem evidência textual suficiente; validar em entrevista."
+    }
+  ],
+  "group_scores": [
+    {
+      "name": "OIC Platform",
+      "score": 80.0,
+      "skills_total": 1,
+      "skills_covered": 1,
+      "coverage_ratio": 1.0
+    },
+    {
+      "name": "SAP Ecosystem",
+      "score": 30.0,
+      "skills_total": 2,
+      "skills_covered": 1,
+      "coverage_ratio": 0.5
+    },
+    {
+      "name": "API Security",
+      "score": 30.0,
+      "skills_total": 2,
+      "skills_covered": 1,
+      "coverage_ratio": 0.5
+    }
+  ],
+  "role_fit": 75.0,
+  "context_fit": 80.0,
+  "strengths": [
+    "Oracle Integration Cloud",
+    "API Management"
+  ],
+  "gaps": [
+    "SAP BTP"
+  ],
+  "interview_validation": [
+    "Validar profundidade prática em OIC em projetos de migração SAP PO → OIC"
+  ],
+  "profile_summary": "Bruno Libanio é um profissional com mais de cinco anos de experiência em liderança técnica, focado na otimização de processos e arquiteturas para garantir soluções eficientes em sistemas distribuídos. Ele possui sólido conhecimento em API Management e Oracle Integration Cloud (OIC), além de experiência em SAP Process Orchestration. Bruno atuou como Arquiteto de Soluções na CPFL, onde foi responsável pela definição arquitetural de projetos estratégicos.",
+  "verdict": "Bruno Libanio é um candidato recomendado para a posição de Arquiteto OIC - CPFL. Ele possui experiência sólida em Oracle Integration Cloud e SAP Process Orchestration, além de habilidades fortes em API Management e liderança técnica. No entanto, ele apresenta lacunas significativas em Enterprise Integration Patterns, SAP Business Technology Platform e outros aspectos técnicos que são importantes para a posição.",
+  "verdict_label": "evaluate",
+  "audit": {
+    "scoring_model_version": "v2",
+    "job_analysis_version": 2,
+    "job_updated_at": "2026-08-08T02:38:31.904297+00:00",
+    "candidate_updated_at": "2026-08-07T20:15:51.383975+00:00",
+    "scored_at": "2026-08-08T02:46:35.185967+00:00",
+    "prompt_versions": {
+      "analyse_job": "v2",
+      "score_skills": "v2",
+      "score_fit": "v1",
+      "score_narrative": "v2"
+    },
+    "llm_model": "qwen2.5:14b",
+    "llm_temperature": 0.1,
+    "skills_llm": [
+      {
+        "raw": "",
+        "model": "qwen2.5:14b",
+        "temperature": 0.1,
+        "error": "",
+        "attempts": 1,
+        "usable": false
+      },
+      {
+        "raw": "{\n  \"skills\": [\n    {\n      \"name\": \"Comunicação\",\n      \"score\": null,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"needs_validation\",\n      \"evidence\": []\n    },\n    {\n      \"name\": \"Liderança Técnica\",\n      \"score\": 4,\n      \"confidence\": 0.85,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [\n        {\"text\": \"Sou profissional com mais de cinco anos de experiência em liderança técnica, atuando na otimização de processos e arquiteturas para garantir soluções eficientes em sistemas distribuídos.\", \"source\": \"resume\"},\n        {\"text\": \"Liderei equipes de desenvolvimento alinhando estratégias de implementação à visão da empresa, sempre com foco na entrega contínua de valor aos clientes.\", \"source\": \"resume\"}\n      ]\n    }\n  ]\n}",
+        "model": "qwen2.5:14b",
+        "temperature": 0.1,
+        "error": null,
+        "attempts": 1,
+        "usable": true
+      }
+    ],
+    "fit_llm": {
+      "raw": "{\n  \"role_fit\": 75,\n  \"context_fit\": 80,\n  \"strengths\": [\"Oracle Integration Cloud\", \"API Management\"],\n  \"gaps\": [\"SAP BTP\"],\n  \"interview_validation\": [\"Validar profundidade prática em OIC em projetos de migração SAP PO → OIC\"]\n}",
+      "model": "qwen2.5:14b",
+      "temperature": 0.1,
+      "error": null,
+      "attempts": 1
+    }
+  },
+  "id": "671bb12e8d6c_e475d1052f49",
+  "created_at": "2026-08-08T02:46:49.049724+00:00"
+}

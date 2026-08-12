@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div>
+    <p class="eyebrow">MVP local em JSON</p>
+    <h1>Avaliação de candidatos para vagas de tecnologia</h1>
+    <p>Cadastre a vaga, envie o currículo e gere um score ponderado por habilidades.</p>
+  </div>
+  <div class="status {{ 'ok' if llm_configured else 'warn' }}">
+    LLM local: {{ "configurada" if llm_configured else "não configurada, usando heurística" }}
+  </div>
+</section>
+<section class="grid">
+  <a class="card" href="/jobs/new"><strong>Nova vaga</strong><span>{{ jobs|length }} cadastradas</span></a>
+  <a class="card" href="/candidates/new"><strong>Novo currículo</strong><span>{{ candidates|length }} cadastrados</span></a>
+  <a class="card" href="/scores"><strong>Gerar score</strong><span>{{ scores|length }} avaliações</span></a>
+  <a class="card" href="/domains"><strong>Domínios</strong><span>Perfis e senioridades</span></a>
+</section>
+{% endblock %}

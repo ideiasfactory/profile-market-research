@@ -1,0 +1,34 @@
+Com base na vaga, no currículo e nas notas por critério, produza um resumo de perfil e um veredito.
+
+Retorne JSON estrito no formato:
+{{
+  "profile_summary": "Resumo objetivo do perfil profissional do candidato em 3 a 6 frases.",
+  "verdict_label": "recommended",
+  "verdict": "Veredito final com recomendação clara e justificativa em 2 a 4 frases."
+}}
+
+Regras:
+1. "verdict_label" deve ser exatamente um de: {verdict_labels}
+2. Conecte pontos fortes, lacunas e o score final {final_score}%.
+3. scoring_model={scoring_model}; must_have_coverage={must_have_coverage}
+4. "profile_summary" descreve o candidato com fatos do currículo e das notas; não invente skills.
+5. "verdict" pode mencionar lacunas explicitamente, mas nunca atribua experiência forte a itens de Lacunas.
+6. Só elogie tecnologias que aparecem em Pontos fortes.
+
+Vaga:
+Título: {job_title}
+Perfil: {job_profile}
+Senioridade: {job_seniority}
+Descrição: {job_description}
+
+Pontos fortes (score >= 3) — únicas skills que podem ser citadas como experiência sólida:
+{strengths_list}
+
+Lacunas (score <= 1) — NÃO diga que o candidato tem experiência nestas:
+{gaps_list}
+
+Notas por critério (com evidência):
+{scored_skills}
+
+Currículo:
+{resume_text}

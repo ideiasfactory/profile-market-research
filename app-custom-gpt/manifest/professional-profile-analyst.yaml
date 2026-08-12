@@ -1,0 +1,90 @@
+# Professional Profile Analyst — Custom GPT Manifest
+
+# Versioned configuration for GPT Builder (not auto-imported by ChatGPT).
+# Git is the source of truth for these artifacts.
+
+name: Professional Profile Analyst
+
+description: >
+  AI-assisted candidate-to-role evaluator focused on evidence-based
+  technical fit, role seniority, professional context, explainable scoring,
+  and Compensation Intelligence market-pay research.
+
+version: 0.2.0
+custom_gpt_version: 0.2.0
+instructions_version: "1.1"
+knowledge_version: "1.1"
+actions_version: "1.1"
+methodology_version: scoring-v2
+last_updated: "2026-08-12"
+
+owner: Professional Profile Analyser team
+project: professional_profile_analyser
+
+compatibility:
+  application_min_version: "0.2.0"
+  scoring_models: ["v1", "v2"]
+  preferred_scoring_model: v2
+  api:
+    json_prefix: /api/gpt
+    tasks: /api/gpt/tasks/{task_id}
+    compensation_prefix: /api/gpt/compensation
+
+api:
+  # Replace in GPT Builder Actions server URL — do not commit secrets.
+  base_url: https://YOUR_PPA_HOST
+  authentication:
+    type: api_key_or_bearer
+    header_api_key: X-API-Key
+    header_bearer: Authorization
+    secret_placeholder: "${PROFESSIONAL_PROFILE_API_KEY}"
+    env: PROFESSIONAL_PROFILE_API_KEY
+    notes: >
+      When PROFESSIONAL_PROFILE_API_KEY is set on the server, /api/gpt requires
+      the key (including compensation). Leave unset only for trusted local
+      development. HTML UI and /api/v1/compensation remain unauthenticated.
+
+instructions:
+  file: ../instructions/instructions.md
+  action_policy: ../instructions/action-policy.md
+
+knowledge:
+  - ../knowledge/01-product-context.md
+  - ../knowledge/02-scoring-methodology.md
+  - ../knowledge/03-evidence-policy.md
+  - ../knowledge/04-role-fit-methodology.md
+  - ../knowledge/05-context-fit-methodology.md
+  - ../knowledge/06-skill-taxonomy.md
+  - ../knowledge/07-interview-validation.md
+  - ../knowledge/08-reference-cases.md
+
+actions:
+  schema: ../actions/openapi.yaml
+  catalog: ../actions/action-catalog.md
+  authentication: ../actions/authentication.md
+  examples:
+    requests: ../actions/examples/requests.md
+    responses: ../actions/examples/responses.md
+
+capabilities:
+  web_search: false
+  image_generation: false
+  code_interpreter: true
+
+conversation_starters:
+  file: ../conversations/starters.md
+  builder_pick_count: 4
+
+scoring_model:
+  preferred: v2
+
+privacy:
+  data_handling: ../privacy/data-handling.md
+  policy_template: ../privacy/privacy-policy-template.md
+  intended_visibility: private_internal
+
+sources_of_truth:
+  custom_gpt_config: git
+  runtime_deployment: gpt_builder
+  jobs_candidates_evaluations: professional_profile_analyser_api
+  compensation_research: professional_profile_analyser_api

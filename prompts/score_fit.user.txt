@@ -1,0 +1,31 @@
+Avalie role fit e context fit do candidato para a vaga.
+
+Retorne JSON estrito:
+{{
+  "role_fit": 75,
+  "context_fit": 80,
+  "strengths": ["Oracle Integration Cloud", "API Management"],
+  "gaps": ["SAP BTP"],
+  "interview_validation": ["Validar profundidade prática em OIC em projetos de migração SAP PO → OIC"]
+}}
+
+Regras:
+1. role_fit: alinhamento de senioridade, escopo de arquitetura vs desenvolvimento, liderança técnica.
+2. context_fit: aderência a cliente/setor/ambiente profissional citado (ex.: CPFL, utilities, presencial Campinas). Só contexto profissional.
+3. strengths: somente skills com boa evidência nas notas.
+4. gaps: lacunas reais (especialmente must-haves ausentes).
+5. interview_validation: perguntas objetivas para validar gaps/documentação.
+
+Vaga: {job_title} | Perfil: {job_profile} | Senioridade: {job_seniority}
+Role intent: {role_intent}
+Role expectations: {role_expectations}
+Context signals: {context_signals}
+Ideal candidate context: {ideal_candidate_context}
+Must-have: {must_have}
+Candidato: {candidate_role} · {candidate_city}
+
+Notas por critério:
+{scored_skills}
+
+Currículo:
+{resume_text}

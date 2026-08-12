@@ -1,0 +1,50 @@
+search_engines:
+  tavily:
+    enabled: true
+    priority: 10
+    timeout_seconds: 15
+    max_results: 8
+    retry_count: 2
+
+  firecrawl:
+    enabled: false
+    priority: 20
+    timeout_seconds: 20
+    max_results: 8
+    retry_count: 2
+
+crawlers:
+  glassdoor:
+    enabled: true
+    priority: 10
+    timeout_seconds: 15
+    max_results: 6
+    retry_count: 2
+
+  indeed:
+    enabled: true
+    priority: 20
+    timeout_seconds: 15
+    max_results: 6
+    retry_count: 2
+
+  vagas:
+    enabled: true
+    priority: 30
+    timeout_seconds: 15
+    max_results: 6
+    retry_count: 2
+
+  catho:
+    enabled: false
+    priority: 40
+    timeout_seconds: 15
+    max_results: 4
+    retry_count: 2
+
+  generic:
+    enabled: true
+    priority: 100
+    timeout_seconds: 12
+    max_results: 10
+    retry_count: 1

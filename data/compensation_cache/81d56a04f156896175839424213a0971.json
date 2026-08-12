@@ -1,0 +1,682 @@
+{
+  "research_id": "381b7a0c2a26751b",
+  "profile": {
+    "role_family": "Arquitetura de Soluções",
+    "normalized_role": "Arquiteto de Soluções em Nuvem",
+    "seniority": "senior",
+    "specialization": "Cloud e Microserviços",
+    "skills": [
+      "Azure",
+      "AKS",
+      "Kubernetes"
+    ]
+  },
+  "market": {
+    "currency": "BRL",
+    "unit": "hour",
+    "contract_type": "PJ",
+    "minimum": 3.07,
+    "p25": 177.4,
+    "median": 214.29,
+    "mean": 842.15,
+    "p75": 401.83,
+    "maximum": 4300.0,
+    "monthly_equivalent": 141480.32,
+    "recommended_range": {
+      "min": 177.4,
+      "max": 401.83
+    }
+  },
+  "sample": {
+    "observations": 10,
+    "sources": 9
+  },
+  "providers": {
+    "search_engines_used": [
+      "tavily"
+    ],
+    "crawlers_used": [
+      "generic"
+    ]
+  },
+  "confidence": {
+    "score": 0.91,
+    "level": "HIGH"
+  },
+  "sources": [
+    {
+      "name": "indeed",
+      "url": "https://br.indeed.com/career/senior-cloud-architect/salaries/Campinas--SP",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T04:03:57.317856+00:00"
+    },
+    {
+      "name": "generic",
+      "url": "https://www.salario.com.br/assine-o-portal-salario/?from=%2Fprofissao%2Farquiteto-de-solucoes-de-tecnologia-da-informacao-cbo-212425%2Fcampinas-sp",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T04:03:59.632694+00:00"
+    },
+    {
+      "name": "glassdoor",
+      "url": "https://www.glassdoor.com.br/Sal%C3%A1rio/Kyndryl-Infrastructure-Cloud-Solution-Architect-Campinas-Sp-Sal%C3%A1rios-E5905801_DAO.htm?filter.jobTitleExact=Infrastructure%2FCloud+Solution+Architect&selectedLocationString=C%2C2490130",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T04:03:57.486147+00:00"
+    },
+    {
+      "name": "generic",
+      "url": "https://www.empregos.com.br/vagas/arquiteto-de-sistemas-em-em-campinas-sp",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T04:03:57.593178+00:00"
+    },
+    {
+      "name": "glassdoor",
+      "url": "https://www.glassdoor.com.br/Sal%C3%A1rios/s%C3%A3o-paulo-arquiteto-cloud-junior-sal%C3%A1rio-SRCH_IL.0,9_IS3937_KO10,32.htm",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T04:03:59.729493+00:00"
+    },
+    {
+      "name": "generic",
+      "url": "https://www.levels.fyi/pt-br/t/solution-architect/levels/senior/locations/greater-sao-paulo",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T04:04:01.187409+00:00"
+    },
+    {
+      "name": "generic",
+      "url": "https://br.linkedin.com/jobs/view/arquiteto-de-solu%C3%A7%C3%B5es-s%C3%AAnior-cloud-microservi%C3%A7os-h%C3%ADbrido-at-aggrandize-4451492359",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T04:04:01.568641+00:00"
+    },
+    {
+      "name": "generic",
+      "url": "https://convergenciadigital.com.br/mercado/especialistas-de-dados-arquiteto-de-cloud-sap-profissoes-seguem-em-alta-em-ti/",
+      "observations": 2,
+      "retrieved_at": "2026-08-12T04:04:01.117851+00:00"
+    },
+    {
+      "name": "generic",
+      "url": "https://www.levels.fyi/pt-br/t/solution-architect/title/cloud-architect",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T04:04:01.967434+00:00"
+    }
+  ],
+  "warnings": [],
+  "observations": [
+    {
+      "id": "12f56776851a8009",
+      "role": "Arquiteto de Soluções Senior Cloud",
+      "normalized_role": "Arquiteto de Soluções em Nuvem",
+      "seniority": "senior",
+      "skills": [
+        "Azure",
+        "AKS",
+        "Kubernetes"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 195528.0,
+        "max": 195528.0,
+        "average": 195528.0,
+        "currency": "BRL",
+        "period": "year"
+      },
+      "source": "indeed",
+      "source_url": "https://br.indeed.com/career/senior-cloud-architect/salaries/Campinas--SP",
+      "evidence": "A faixa salarial média para o cargo de Senior Cloud Architect é de R$ 195.528 por ano para Campinas, SP.",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T04:03:57.317856+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.7,
+      "observed_salary": {
+        "min": 195528.0,
+        "max": 195528.0,
+        "average": 195528.0,
+        "currency": "BRL",
+        "period": "year"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 145.48,
+        "monthly_equivalent": 24441.0
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "524f400b18eabe40",
+      "role": "Arquiteto de Soluções Senior Cloud e Microserviços",
+      "normalized_role": "Arquiteto de Soluções em Nuvem",
+      "seniority": "senior",
+      "skills": [
+        "Azure",
+        "AKS",
+        "Kubernetes"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "PJ",
+      "salary": {
+        "min": 59.9,
+        "max": 5420.0,
+        "average": 2482.169090909091,
+        "currency": "BRL",
+        "period": "hour"
+      },
+      "source": "generic",
+      "source_url": "https://www.salario.com.br/assine-o-portal-salario/?from=%2Fprofissao%2Farquiteto-de-solucoes-de-tecnologia-da-informacao-cbo-212425%2Fcampinas-sp",
+      "evidence": "ização : subdivisão do cargo por foco de atuação Filtros por estado e cidade · seletor de período (trimestre, semestre, ano) Salário mediano · histórico mensal R$ 4.820,00",
+      "evidence_type": "page_content",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T04:03:59.632694+00:00",
+      "crawl_method": "http",
+      "confidence": 0.75,
+      "observed_salary": {
+        "min": 59.9,
+        "max": 5420.0,
+        "average": 2482.169090909091,
+        "currency": "BRL",
+        "period": "hour"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 2482.17,
+        "monthly_equivalent": 417004.41
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "18ad45cce90a8bce",
+      "role": "Infrastructure/Cloud Solution Architect",
+      "normalized_role": "Arquiteto de Soluções em Nuvem",
+      "seniority": "senior",
+      "skills": [
+        "Azure",
+        "AKS",
+        "Kubernetes"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 18000.0,
+        "max": 21000.0,
+        "average": null,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "glassdoor",
+      "source_url": "https://www.glassdoor.com.br/Sal%C3%A1rio/Kyndryl-Infrastructure-Cloud-Solution-Architect-Campinas-Sp-Sal%C3%A1rios-E5905801_DAO.htm?filter.jobTitleExact=Infrastructure%2FCloud+Solution+Architect&selectedLocationString=C%2C2490130",
+      "evidence": "R$ 18 mil - R$ 21 mil/mês",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T04:03:57.486147+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.7,
+      "observed_salary": {
+        "min": 18000.0,
+        "max": 21000.0,
+        "average": null,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 174.11,
+        "monthly_equivalent": 29250.0
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "7bcb5be703e6c035",
+      "role": "Arquiteto de Soluções Senior Cloud e Microserviços",
+      "normalized_role": "Arquiteto de Soluções em Nuvem",
+      "seniority": "senior",
+      "skills": [
+        "Azure",
+        "AKS",
+        "Kubernetes"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 2800.0,
+        "max": 3000.0,
+        "average": 2866.6666666666665,
+        "currency": "BRL",
+        "period": "hour"
+      },
+      "source": "generic",
+      "source_url": "https://www.empregos.com.br/vagas/arquiteto-de-sistemas-em-em-campinas-sp",
+      "evidence": "ok X (Twitter) Copiar link Que tal compartilhar esta vaga? Email WhatsApp LinkedIn Facebook X (Twitter) Copiar link Campinas, SP Campinas, SP Presencial 1 vaga R$ 2.800,00",
+      "evidence_type": "page_content",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T04:03:57.593178+00:00",
+      "crawl_method": "http",
+      "confidence": 0.75,
+      "observed_salary": {
+        "min": 2800.0,
+        "max": 3000.0,
+        "average": 2866.6666666666665,
+        "currency": "BRL",
+        "period": "hour"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 4300.0,
+        "monthly_equivalent": 722400.0
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "0503db1cef04694b",
+      "role": "Arquiteto de Soluções Senior Cloud e Microserviços",
+      "normalized_role": "Arquiteto de Soluções em Nuvem",
+      "seniority": "senior",
+      "skills": [
+        "Azure",
+        "AKS",
+        "Kubernetes"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 4120.0,
+        "max": null,
+        "average": 4120.0,
+        "currency": "BRL",
+        "period": "year"
+      },
+      "source": "glassdoor",
+      "source_url": "https://www.glassdoor.com.br/Sal%C3%A1rios/s%C3%A3o-paulo-arquiteto-cloud-junior-sal%C3%A1rio-SRCH_IL.0,9_IS3937_KO10,32.htm",
+      "evidence": "A média salarial anual de Arquiteto Cloud Junior é de R$ 4.120 (São Paulo). Clique aqui para conferir a remuneração total, os salários compartilhados",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T04:03:59.729493+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 4120.0,
+        "max": null,
+        "average": 4120.0,
+        "currency": "BRL",
+        "period": "year"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 3.07,
+        "monthly_equivalent": 515.0
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "b30c34a86310a493",
+      "role": "Arquiteto de Soluções Senior Cloud e Microserviços",
+      "normalized_role": "Arquiteto de Soluções em Nuvem",
+      "seniority": "senior",
+      "skills": [
+        "Azure",
+        "AKS",
+        "Kubernetes"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 211.0,
+        "max": 235653.0,
+        "average": 39467.0,
+        "currency": "BRL",
+        "period": "hour"
+      },
+      "source": "glassdoor",
+      "source_url": "https://www.glassdoor.com.br/Sal%C3%A1rios/infrastructure-cloud-solution-architect-sal%C3%A1rio-SRCH_KO0,39.htm",
+      "evidence": "Cloud Solution Architect é de R$ 235.653 … base R$ 211 mil - R$. R$ 217 mil - R$ 252 mil/ano Campinas, SP Data de envio: 22 de abr. de 2024 R$ 217 mil - R$ 252",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T04:03:59.857641+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 211.0,
+        "max": 235653.0,
+        "average": 39467.0,
+        "currency": "BRL",
+        "period": "hour"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 59200.5,
+        "monthly_equivalent": 9945684.0
+      },
+      "excluded_from_statistics": true
+    },
+    {
+      "id": "ba81da110d0c1a5c",
+      "role": "Arquiteto de Soluções Senior Cloud e Microserviços",
+      "normalized_role": "Arquiteto de Soluções em Nuvem",
+      "seniority": "senior",
+      "skills": [
+        "Azure",
+        "AKS",
+        "Kubernetes"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 30.0,
+        "max": 445.73,
+        "average": 302.18,
+        "currency": "BRL",
+        "period": "hour"
+      },
+      "source": "generic",
+      "source_url": "https://www.levels.fyi/pt-br/t/solution-architect/levels/senior/locations/greater-sao-paulo",
+      "evidence": "Ver Vagas Abertas RH / Recrutamento? Crie uma proposta interativa Que Mais Pagam Empresas BR Localidades Empresas que Mais Pagam 🏆 Ver nosso Ranking Salesforce R$445,737",
+      "evidence_type": "page_content",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T04:04:01.187409+00:00",
+      "crawl_method": "playwright",
+      "confidence": 0.75,
+      "observed_salary": {
+        "min": 30.0,
+        "max": 445.73,
+        "average": 302.18,
+        "currency": "BRL",
+        "period": "hour"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 453.27,
+        "monthly_equivalent": 76149.36
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "242dfc38cef97bd6",
+      "role": "Arquiteto de Soluções Senior Cloud e Microserviços",
+      "normalized_role": "Arquiteto de Soluções em Nuvem",
+      "seniority": "senior",
+      "skills": [
+        "Azure",
+        "AKS",
+        "Kubernetes"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 62.0,
+        "max": 41350.0,
+        "average": 13828.0,
+        "currency": "BRL",
+        "period": "hour"
+      },
+      "source": "glassdoor",
+      "source_url": "https://www.glassdoor.com.br/Sal%C3%A1rios/principal-cloud-architect-sal%C3%A1rio-SRCH_KO0,25.htm",
+      "evidence": "A média salarial anual de Principal Cloud Architect é de R$ 41.350 (Brasil). - R$ 17 mil/mês Campinas, SP. R$ 62 mil - R$ 72 mil/mês",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T04:04:00.643606+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 62.0,
+        "max": 41350.0,
+        "average": 13828.0,
+        "currency": "BRL",
+        "period": "hour"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 20742.0,
+        "monthly_equivalent": 3484656.0
+      },
+      "excluded_from_statistics": true
+    },
+    {
+      "id": "0e5af151020203bd",
+      "role": "Arquiteto de Soluções Senior Cloud e Microserviços",
+      "normalized_role": "Arquiteto de Soluções em Nuvem",
+      "seniority": "senior",
+      "skills": [
+        "Azure",
+        "AKS",
+        "Kubernetes"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 39.71,
+        "max": 210.0,
+        "average": 124.855,
+        "currency": "BRL",
+        "period": "hour"
+      },
+      "source": "generic",
+      "source_url": "https://br.linkedin.com/jobs/view/arquiteto-de-solu%C3%A7%C3%B5es-s%C3%AAnior-cloud-microservi%C3%A7os-h%C3%ADbrido-at-aggrandize-4451492359",
+      "evidence": "ade; Colaboração; Visão de Dono; Foco no Cliente; Perfil consultivo; Pensamento sistêmico; Autonomia; Organização. ✨O que oferecemos (modalidade CLT): VR/VA de R$39,71/dia (cartão flexível);",
+      "evidence_type": "page_content",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T04:04:01.568641+00:00",
+      "crawl_method": "http",
+      "confidence": 0.75,
+      "observed_salary": {
+        "min": 39.71,
+        "max": 210.0,
+        "average": 124.855,
+        "currency": "BRL",
+        "period": "hour"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 187.28,
+        "monthly_equivalent": 31463.46
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "fa7685bd72c93ff3",
+      "role": "Arquiteto de Solução",
+      "normalized_role": "Arquiteto de Soluções em Nuvem",
+      "seniority": "senior",
+      "skills": [
+        "Azure",
+        "AKS",
+        "Kubernetes"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 20000.0,
+        "max": 30000.0,
+        "average": 25000.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "generic",
+      "source_url": "https://convergenciadigital.com.br/mercado/especialistas-de-dados-arquiteto-de-cloud-sap-profissoes-seguem-em-alta-em-ti/",
+      "evidence": "Salário: R$ 20 mil a R$ 30 mil",
+      "evidence_type": "page_content",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T04:04:01.117851+00:00",
+      "crawl_method": "http",
+      "confidence": 0.85,
+      "observed_salary": {
+        "min": 20000.0,
+        "max": 30000.0,
+        "average": 25000.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 223.21,
+        "monthly_equivalent": 37500.0
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "5acd5531364a967f",
+      "role": "Especialista/Arquiteto de Cloud",
+      "normalized_role": "Arquiteto de Soluções em Nuvem",
+      "seniority": "senior",
+      "skills": [
+        "Azure",
+        "AKS",
+        "Kubernetes"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 18000.0,
+        "max": 28000.0,
+        "average": 23000.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "generic",
+      "source_url": "https://convergenciadigital.com.br/mercado/especialistas-de-dados-arquiteto-de-cloud-sap-profissoes-seguem-em-alta-em-ti/",
+      "evidence": "Salário: R$ 18 mil a R$ 28 mil",
+      "evidence_type": "page_content",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T04:04:01.117851+00:00",
+      "crawl_method": "http",
+      "confidence": 0.85,
+      "observed_salary": {
+        "min": 18000.0,
+        "max": 28000.0,
+        "average": 23000.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 205.36,
+        "monthly_equivalent": 34500.0
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "6af8501d21ff4ff9",
+      "role": "Arquiteto de Soluções Senior Cloud e Microserviços",
+      "normalized_role": "Arquiteto de Soluções em Nuvem",
+      "seniority": "senior",
+      "skills": [
+        "Azure",
+        "AKS",
+        "Kubernetes"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 30.0,
+        "max": 300.0,
+        "average": 165.0,
+        "currency": "BRL",
+        "period": "hour"
+      },
+      "source": "generic",
+      "source_url": "https://www.levels.fyi/pt-br/t/solution-architect/title/cloud-architect",
+      "evidence": "va Obter Ajuda Especializada Negociação Salarial 1:1 Negociação Salarial 1:1 Seja bem pago, não enganado. Já ajudamos pessoas como você a conseguir aumentos de R$30k+ (às vezes R$300k+).",
+      "evidence_type": "page_content",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T04:04:01.967434+00:00",
+      "crawl_method": "playwright",
+      "confidence": 0.75,
+      "observed_salary": {
+        "min": 30.0,
+        "max": 300.0,
+        "average": 165.0,
+        "currency": "BRL",
+        "period": "hour"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 247.5,
+        "monthly_equivalent": 41580.0
+      },
+      "excluded_from_statistics": false
+    }
+  ],
+  "created_at": "2026-08-12T04:04:59.995044Z"
+}

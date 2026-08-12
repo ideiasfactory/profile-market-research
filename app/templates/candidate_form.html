@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ "Editar currículo" if candidate.id else "Novo currículo" }}</h1>
+<p class="hint">Envie um PDF, informe o link do perfil no LinkedIn ou cole o texto. Prioridade: arquivo → texto → LinkedIn. Para buscar de novo no LinkedIn, limpe o campo de texto e deixe só o link.</p>
+<form method="post" action="/candidates" class="form js-long-task" enctype="multipart/form-data">
+  <input type="hidden" name="item_id" value="{{ candidate.id or '' }}">
+  <label>PDF do currículo
+    <input name="resume_file" type="file" accept=".pdf,.txt,.md,application/pdf,text/plain,text/markdown">
+  </label>
+  <label>Link do perfil no LinkedIn
+    <input name="linkedin_url" type="url" placeholder="https://www.linkedin.com/in/seu-perfil" value="{{ candidate.source_url if candidate.source_type == 'linkedin' else '' }}">
+  </label>
+  <label>Ou cole o texto do currículo
+    <textarea name="resume_text" rows="12" placeholder="Cole aqui o conteúdo do currículo em texto livre">{{ candidate.resume_text or '' }}</textarea>
+  </label>
+  <label>Gerar score contra uma vaga agora
+    <select name="target_job_id">
+      <option value="">Não gerar agora</option>
+      {% for job in jobs %}
+      <option value="{{ job.id }}">{{ job.title }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <button>Salvar currículo</button>
+</form>
+{% endblock %}

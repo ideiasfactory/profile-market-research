@@ -1,0 +1,587 @@
+{
+  "research_id": "936a155b23ed2acc",
+  "profile": {
+    "role_family": "Cloud Architecture",
+    "normalized_role": "Solution Architect",
+    "seniority": "Senior",
+    "specialization": "Cloud and Microservices",
+    "skills": [
+      "Azure",
+      "AKS",
+      "Kubernetes",
+      "Microservices"
+    ]
+  },
+  "market": {
+    "currency": "BRL",
+    "unit": "hour",
+    "contract_type": "PJ",
+    "minimum": 53.57,
+    "p25": 101.34,
+    "median": 159.19,
+    "mean": 133.89,
+    "p75": 173.66,
+    "maximum": 174.48,
+    "monthly_equivalent": 22493.85,
+    "recommended_range": {
+      "min": 101.34,
+      "max": 173.66
+    }
+  },
+  "sample": {
+    "observations": 7,
+    "sources": 7
+  },
+  "providers": {
+    "search_engines_used": [
+      "tavily"
+    ],
+    "crawlers_used": [
+      "generic"
+    ]
+  },
+  "confidence": {
+    "score": 0.85,
+    "level": "HIGH"
+  },
+  "sources": [
+    {
+      "name": "glassdoor",
+      "url": "https://www.glassdoor.com.br/Sal%C3%A1rios/campinas-solution-architect-sal%C3%A1rio-SRCH_IL.0,8_IC2490130_KO9,27.htm",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T04:26:53.965129+00:00"
+    },
+    {
+      "name": "glassdoor",
+      "url": "https://www.glassdoor.com.br/Sal%C3%A1rio/Kyndryl-Infrastructure-Cloud-Solution-Architect-Campinas-Sp-Sal%C3%A1rios-E5905801_DAO.htm?filter.jobTitleExact=Infrastructure%2FCloud+Solution+Architect&selectedLocationString=C%2C2490130",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T04:26:54.132076+00:00"
+    },
+    {
+      "name": "glassdoor",
+      "url": "https://www.glassdoor.com.br/Sal%C3%A1rios/campinas-sp-analista-de-customer-success-sal%C3%A1rio-SRCH_IL.0,11_IC2490130_KO12,40.htm",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T04:26:54.305387+00:00"
+    },
+    {
+      "name": "glassdoor",
+      "url": "https://www.glassdoor.com.br/Sal%C3%A1rio/Thomson-Reuters-Senior-Solutions-Architect-Campinas-Sp-Sal%C3%A1rios-EJI_IE100303.0,15_KO16,42_IL.43,54_IC2490130.htm",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T04:26:54.323064+00:00"
+    },
+    {
+      "name": "glassdoor",
+      "url": "https://www.glassdoor.com.br/Sal%C3%A1rios/infrastructure-cloud-solution-architect-sal%C3%A1rio-SRCH_KO0,39.htm",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T04:26:54.408301+00:00"
+    },
+    {
+      "name": "glassdoor",
+      "url": "https://www.glassdoor.com.br/Sal%C3%A1rios/campinas-s%C3%A3o-paulo-representante-de-vendas-sal%C3%A1rio-SRCH_IL.0,18_IC2490130_KO19,42.htm",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T04:26:55.289282+00:00"
+    },
+    {
+      "name": "indeed",
+      "url": "https://br.indeed.com/career/arquiteto-de-solu%C3%A7%C3%B5es/salaries/Campinas--SP",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T04:26:55.535173+00:00"
+    }
+  ],
+  "warnings": [
+    "2 observação(ões) excluída(s) das estatísticas por faixa salarial irreal após normalização."
+  ],
+  "observations": [
+    {
+      "id": "cf893fa9b63cb4da",
+      "role": "Arquiteto de Soluções Senior Cloud e Microserviços",
+      "normalized_role": "Solution Architect",
+      "seniority": "senior",
+      "skills": [
+        "Azure",
+        "AKS",
+        "Kubernetes",
+        "Microservices"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 17000.0,
+        "max": 19000.0,
+        "average": 17829.2,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "glassdoor",
+      "source_url": "https://www.glassdoor.com.br/Sal%C3%A1rios/campinas-solution-architect-sal%C3%A1rio-SRCH_IL.0,8_IC2490130_KO9,27.htm",
+      "evidence": "A média salarial de Solution Architect é de R$ 18.146 na cidade: Campinas, SP. Salário base R$ 17 mil - R$ 19 mil/mês R$ 18 mil/mêsSalário base. R$ 17 mil - at",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T04:26:53.965129+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 17000.0,
+        "max": 19000.0,
+        "average": 17829.2,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 159.19,
+        "monthly_equivalent": 26743.8
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "81830dccdbca5dba",
+      "role": "Arquiteto de Soluções Senior Cloud e Microserviços",
+      "normalized_role": "Solution Architect",
+      "seniority": "senior",
+      "skills": [
+        "Azure",
+        "AKS",
+        "Kubernetes",
+        "Microservices"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 960.0,
+        "max": 6000.0,
+        "average": 3192.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "glassdoor",
+      "source_url": "https://www.glassdoor.com.br/Sal%C3%A1rios/campinas-sp-customer-success-sal%C3%A1rio-SRCH_IL.0,11_IC2490130_KO12,28.htm",
+      "evidence": "Title: Salário: Customer Success em Campinas, SP 2026 | Glassdoor Ir para o conteúdoIr para a pasta. ## Salários de Customer Success. # Salários de Customer Success (Campinas, SP). R$ 2 mil - R$ 4 mil/mês. R$ 3 mil/mêsSalário base médio. R$ 960 - R$ 6 mil/mêsFaixa. Última atualização: 2 de out. A “Faixa mais provável” representa valores entre o 25º e o 75º percen",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T04:26:53.965624+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 960.0,
+        "max": 6000.0,
+        "average": 3192.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 28.5,
+        "monthly_equivalent": 4788.0
+      },
+      "excluded_from_statistics": true
+    },
+    {
+      "id": "788931e5d434617b",
+      "role": "Infrastructure/Cloud Solution Architect",
+      "normalized_role": "Solution Architect",
+      "seniority": "senior",
+      "skills": [
+        "Azure",
+        "AKS",
+        "Kubernetes",
+        "Microservices"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 18000.0,
+        "max": 21000.0,
+        "average": null,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "glassdoor",
+      "source_url": "https://www.glassdoor.com.br/Sal%C3%A1rio/Kyndryl-Infrastructure-Cloud-Solution-Architect-Campinas-Sp-Sal%C3%A1rios-E5905801_DAO.htm?filter.jobTitleExact=Infrastructure%2FCloud+Solution+Architect&selectedLocationString=C%2C2490130",
+      "evidence": "R$ 18 mil - R$ 21 mil/mês. Campinas, SP",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T04:26:54.132076+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.7,
+      "observed_salary": {
+        "min": 18000.0,
+        "max": 21000.0,
+        "average": null,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 174.11,
+        "monthly_equivalent": 29250.0
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "1f3943fe2cbd0d91",
+      "role": "Arquiteto de Soluções Senior Cloud e Microserviços",
+      "normalized_role": "Solution Architect",
+      "seniority": "senior",
+      "skills": [
+        "Azure",
+        "AKS",
+        "Kubernetes",
+        "Microservices"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 3000.0,
+        "max": null,
+        "average": 3000.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "generic",
+      "source_url": "https://www.empregos.com.br/vagas/arquiteto-de-sistemas-em-em-campinas-sp",
+      "evidence": "itter) Copiar link Jundiaí, SP Jundiaí, SP Presencial 1 vaga À combinar Publicada há 7 dias ...m atuação em Jundiaí/SP. Salário: R$ 3.000,00 Benefícios: Vale-Refeição + Vale-Transporte Horário: Segunda a sexta-feira, das 8h às 17h30 Atividades: Realizar instalação e manutenção de",
+      "evidence_type": "page_content",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T04:26:54.943494+00:00",
+      "crawl_method": "http",
+      "confidence": 0.75,
+      "observed_salary": {
+        "min": 3000.0,
+        "max": null,
+        "average": 3000.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 26.79,
+        "monthly_equivalent": 4500.0
+      },
+      "excluded_from_statistics": true
+    },
+    {
+      "id": "af59624b51f0f528",
+      "role": "Arquiteto de Soluções Senior Cloud e Microserviços",
+      "normalized_role": "Solution Architect",
+      "seniority": "senior",
+      "skills": [
+        "Azure",
+        "AKS",
+        "Kubernetes",
+        "Microservices"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 271.0,
+        "max": 29000.0,
+        "average": 6363.444444444444,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "glassdoor",
+      "source_url": "https://www.glassdoor.com.br/Sal%C3%A1rios/campinas-sp-analista-de-customer-success-sal%C3%A1rio-SRCH_IL.0,11_IC2490130_KO12,40.htm",
+      "evidence": ": Salário: Analista De Customer Success em Campinas, SP 2026 | Glassdoor ## Salários de Analista De Customer Success. # Salários de Analista De Customer Success (Campinas, SP). R$ 2 mil - R$ 4 mil/mês. R$ 3 mil/mêsSalário base médio. R$ 271 - R$ 29 mil/mêsFaixa. Como lhe parece a **faixa de salário base médio** de **R$ 2 mil-R$ 4 mil/mês?**. R$ 2 mil–R$ 11 mil/mês. gerente de sucesso",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T04:26:54.305387+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 271.0,
+        "max": 29000.0,
+        "average": 6363.444444444444,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 56.82,
+        "monthly_equivalent": 9545.17
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "1d298647babbf02b",
+      "role": "Senior Solutions Architect",
+      "normalized_role": "Solution Architect",
+      "seniority": "senior",
+      "skills": [
+        "Azure",
+        "AKS",
+        "Kubernetes",
+        "Microservices"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 19400.0,
+        "max": 19400.0,
+        "average": 19400.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "glassdoor",
+      "source_url": "https://www.glassdoor.com.br/Sal%C3%A1rio/Thomson-Reuters-Senior-Solutions-Architect-Campinas-Sp-Sal%C3%A1rios-EJI_IE100303.0,15_KO16,42_IL.43,54_IC2490130.htm",
+      "evidence": "A estimativa da média salarial mensal do cargo de Senior Solutions Architect é de R$ 19.400 na localização Campinas Sp",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T04:26:54.323064+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.7,
+      "observed_salary": {
+        "min": 19400.0,
+        "max": 19400.0,
+        "average": 19400.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 173.21,
+        "monthly_equivalent": 29100.0
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "5c51106d84171a08",
+      "role": "Cloud Solution Architect",
+      "normalized_role": "Solution Architect",
+      "seniority": "senior",
+      "skills": [
+        "Azure",
+        "AKS",
+        "Kubernetes",
+        "Microservices"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 217000.0,
+        "max": 252000.0,
+        "average": null,
+        "currency": "BRL",
+        "period": "year"
+      },
+      "source": "glassdoor",
+      "source_url": "https://www.glassdoor.com.br/Sal%C3%A1rios/infrastructure-cloud-solution-architect-sal%C3%A1rio-SRCH_KO0,39.htm",
+      "evidence": "R$ 217 mil - R$ 252 mil/ano Campinas, SP Data de envio: 22 de abr. de 2024",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T04:26:54.408301+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.7,
+      "observed_salary": {
+        "min": 217000.0,
+        "max": 252000.0,
+        "average": null,
+        "currency": "BRL",
+        "period": "year"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 174.48,
+        "monthly_equivalent": 29312.5
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "ce995a7eed901bcf",
+      "role": "Arquiteto de Soluções Senior Cloud e Microserviços",
+      "normalized_role": "Solution Architect",
+      "seniority": "senior",
+      "skills": [
+        "Azure",
+        "AKS",
+        "Kubernetes",
+        "Microservices"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 6000.0,
+        "max": null,
+        "average": 6000.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "glassdoor",
+      "source_url": "https://www.glassdoor.com.br/Sal%C3%A1rios/campinas-s%C3%A3o-paulo-representante-de-vendas-sal%C3%A1rio-SRCH_IL.0,18_IC2490130_KO19,42.htm",
+      "evidence": "## Salários de Representante De Vendas # Salários de Representante De Vendas (Campinas, SP) R$ 6 mil/mêsSalário base médio Os salários do Glassdoor são gerados por nosso modelo exclusivo de aprendizado de máquina, que usa salários coletados de nossos usuários e dos dados gove",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T04:26:55.289282+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 6000.0,
+        "max": null,
+        "average": 6000.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 53.57,
+        "monthly_equivalent": 9000.0
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "28b7c8fbc962e707",
+      "role": "Arquiteto de Soluções Senior Cloud e Microserviços",
+      "normalized_role": "Solution Architect",
+      "seniority": "principal",
+      "skills": [
+        "Azure",
+        "AKS",
+        "Kubernetes",
+        "Microservices"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 17000.0,
+        "max": 72000.0,
+        "average": 48087.5,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "glassdoor",
+      "source_url": "https://www.glassdoor.com.br/Sal%C3%A1rios/principal-cloud-architect-sal%C3%A1rio-SRCH_KO0,25.htm",
+      "evidence": "A média salarial anual de Principal Cloud Architect é de R$ 41.350 (Brasil). - R$ 17 mil/mês Campinas, SP. R$ 62 mil - R$ 72 mil/mês",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T04:26:55.517086+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 17000.0,
+        "max": 72000.0,
+        "average": 48087.5,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 429.35,
+        "monthly_equivalent": 72131.25
+      },
+      "excluded_from_statistics": true
+    },
+    {
+      "id": "9c519d1087d3a769",
+      "role": "Arquiteto de Soluções Senior Cloud e Microserviços",
+      "normalized_role": "Solution Architect",
+      "seniority": "senior",
+      "skills": [
+        "Azure",
+        "AKS",
+        "Kubernetes",
+        "Microservices"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 16337.0,
+        "max": null,
+        "average": 16337.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "indeed",
+      "source_url": "https://br.indeed.com/career/arquiteto-de-solu%C3%A7%C3%B5es/salaries/Campinas--SP",
+      "evidence": "A faixa salarial média para o cargo de Arquiteto de Soluções é de R$ 16.337 por mês para Campinas, SP. Saiba mais sobre salários, benefícios,",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T04:26:55.535173+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 16337.0,
+        "max": null,
+        "average": 16337.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 145.87,
+        "monthly_equivalent": 24505.5
+      },
+      "excluded_from_statistics": false
+    }
+  ],
+  "created_at": "2026-08-12T04:27:53.257761Z"
+}

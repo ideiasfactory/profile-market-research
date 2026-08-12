@@ -1,0 +1,40 @@
+glassdoor:
+  domains:
+    - glassdoor.com.br
+  quality_score: 0.90
+
+indeed:
+  domains:
+    - br.indeed.com
+  quality_score: 0.90
+
+vagas:
+  domains:
+    - vagas.com.br
+  quality_score: 0.80
+
+catho:
+  domains:
+    - catho.com.br
+  quality_score: 0.75
+
+robert_half:
+  domains:
+    - roberthalf.com
+    - roberthalf.com.br
+  quality_score: 0.95
+
+michael_page:
+  domains:
+    - michaelpage.com.br
+    - pagepersonnel.com.br
+  quality_score: 0.90
+
+hays:
+  domains:
+    - hays.com.br
+  quality_score: 0.90
+
+unknown:
+  domains: []
+  quality_score: 0.50

@@ -1,0 +1,50 @@
+{
+  "profiles": [
+    {
+      "id": "backend",
+      "name": "Backend"
+    },
+    {
+      "id": "frontend",
+      "name": "Frontend"
+    },
+    {
+      "id": "fullstack",
+      "name": "Full Stack"
+    },
+    {
+      "id": "data",
+      "name": "Dados"
+    },
+    {
+      "id": "devops",
+      "name": "DevOps"
+    },
+    {
+      "id": "e5639bf6b06a",
+      "name": "Arquiteto"
+    }
+  ],
+  "seniorities": [
+    {
+      "id": "junior",
+      "name": "Júnior"
+    },
+    {
+      "id": "pleno",
+      "name": "Pleno"
+    },
+    {
+      "id": "senior",
+      "name": "Sênior"
+    },
+    {
+      "id": "lead",
+      "name": "Lead"
+    },
+    {
+      "id": "30a22072a914",
+      "name": "Especialista"
+    }
+  ]
+}

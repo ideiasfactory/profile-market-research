@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title or "Profile Analyser" }}</title>
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="/">Profile Analyser</a>
+      <nav>
+        <a href="/domains">Domínios</a>
+        <a href="/jobs">Vagas</a>
+        <a href="/candidates">Currículos</a>
+        <a href="/scores">Scores</a>
+        <a href="/compensation">Compensation v1</a>
+      </nav>
+    </header>
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+
+    <div id="progress-overlay" class="progress-overlay" hidden aria-hidden="true">
+      <section id="status-panel" class="panel status-card" aria-live="polite">
+        <div class="status-heading">
+          <div>
+            <p class="eyebrow">Status</p>
+            <h2 id="status-label">Aguardando</h2>
+          </div>
+          <span id="progress-label">0%</span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div id="progress-bar"></div>
+        </div>
+        <p id="status-message">Iniciando…</p>
+      </section>
+    </div>
+
+    <script src="/static/app.js" defer></script>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

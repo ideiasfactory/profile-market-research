@@ -1,0 +1,38 @@
+[
+  {
+    "id": "472f6a237bd8",
+    "name": "Maria Silva",
+    "city": "Campinas/SP",
+    "reported_role": "Arquiteto de IntegraÃ§Ã£o",
+    "source_type": "",
+    "source_label": "",
+    "source_url": "",
+    "path": "candidates/472f6a237bd8_maria_silva_profile.json",
+    "created_at": "2026-08-07T19:56:21.798149+00:00",
+    "updated_at": "2026-08-07T19:56:21.798171+00:00"
+  },
+  {
+    "id": "d28fa65b2923",
+    "name": "Gabriela Rocha de Paula",
+    "city": "",
+    "reported_role": "SAP Developer",
+    "source_type": "pdf",
+    "source_label": "CurriculoSAP-Gabriela Rocha.pdf",
+    "source_url": "",
+    "path": "candidates/d28fa65b2923_gabriela_rocha_de_paula_profile.json",
+    "created_at": "2026-08-07T20:11:18.127824+00:00",
+    "updated_at": "2026-08-07T20:11:18.127862+00:00"
+  },
+  {
+    "id": "e475d1052f49",
+    "name": "Bruno Libanio",
+    "city": "Campinas, São Paulo, Brasil",
+    "reported_role": "Tech Lead | Team Lead | Arquiteto de Soluções",
+    "source_type": "pdf",
+    "source_label": "Bruno Libanio.pdf",
+    "source_url": "",
+    "path": "candidates/e475d1052f49_bruno_libanio_profile.json",
+    "created_at": "2026-08-07T20:15:51.383945+00:00",
+    "updated_at": "2026-08-07T20:15:51.383975+00:00"
+  }
+]

@@ -1,0 +1,84 @@
+{
+  "job_id": "671bb12e8d6c",
+  "candidate_id": "472f6a237bd8",
+  "job_title": "Arquiteto OIC - CPFL",
+  "candidate_name": "Maria Silva",
+  "final_score": 46.67,
+  "method": "llm",
+  "items": [
+    {
+      "category": "Hard skill",
+      "name": "Azure",
+      "weight": 4,
+      "score": 1,
+      "weighted_score": 4.0,
+      "evidence": "Não há menção a experiência com Azure no currículo."
+    },
+    {
+      "category": "Hard skill",
+      "name": "Ci/Cd",
+      "weight": 4,
+      "score": 3,
+      "weighted_score": 12.0,
+      "evidence": "Experiência com Docker e Kubernetes sugere alguma familiaridade com CI/CD, mas não é explicitamente mencionado."
+    },
+    {
+      "category": "Hard skill",
+      "name": "GIT",
+      "weight": 4,
+      "score": 1,
+      "weighted_score": 4.0,
+      "evidence": "Não há menção de experiência ou uso do GIT no currículo."
+    },
+    {
+      "category": "Hard skill",
+      "name": "API",
+      "weight": 4,
+      "score": 4,
+      "weighted_score": 16.0,
+      "evidence": "Menciona experiência com APIs REST e OAuth, indicando um entendimento prático na criação e utilização de APIs."
+    },
+    {
+      "category": "Hard skill",
+      "name": "Rest",
+      "weight": 4,
+      "score": 4,
+      "weighted_score": 16.0,
+      "evidence": "Experiência em APIs REST é mencionada, sugerindo conhecimento sólido sobre o padrão REST."
+    },
+    {
+      "category": "Soft skill",
+      "name": "Comunicação",
+      "weight": 4,
+      "score": 1,
+      "weighted_score": 4.0,
+      "evidence": "Não há informações específicas sobre habilidades de comunicação no currículo."
+    },
+    {
+      "category": "Soft skill",
+      "name": "Liderança",
+      "weight": 4,
+      "score": 1,
+      "weighted_score": 4.0,
+      "evidence": "Não há menção a experiências de liderança ou gestão de equipes no currículo."
+    },
+    {
+      "category": "Soft skill",
+      "name": "Autonomia",
+      "weight": 4,
+      "score": 3,
+      "weighted_score": 12.0,
+      "evidence": "Como Arquiteto de Integração é possível inferir algum nível de trabalho independente e tomada de decisões autônoma."
+    },
+    {
+      "category": "Soft skill",
+      "name": "Organização",
+      "weight": 4,
+      "score": 3,
+      "weighted_score": 12.0,
+      "evidence": "Cargo de Arquiteto de Integração sugere que há organização na estruturação e manutenção de integrações complexas."
+    }
+  ],
+  "id": "671bb12e8d6c_472f6a237bd8",
+  "created_at": "2026-08-07T19:57:05.951160+00:00"
+}

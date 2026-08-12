@@ -1,0 +1,31 @@
+Pontue o candidato contra cada habilidade de 0 a 5 e produza também um resumo de perfil e um veredito de aderência à vaga.
+0 = sem evidência, 1 = contato básico, 3 = experiência prática, 5 = especialista.
+
+Retorne JSON estrito no formato:
+{{
+  "skills": [{{"name": "Python", "score": 4, "evidence": "..."}}],
+  "profile_summary": "Resumo objetivo do perfil profissional do candidato em 3 a 6 frases.",
+  "verdict_label": "recomendado",
+  "verdict": "Veredito final com recomendação clara e justificativa em 2 a 4 frases."
+}}
+
+Regras:
+1. Inclua uma entrada em "skills" para cada habilidade listada, usando exatamente o mesmo nome.
+2. "profile_summary" descreve o candidato (experiência, foco técnico, senioridade aparente), sem inventar fatos.
+3. "verdict_label" deve ser exatamente um de: "recomendado", "considerar", "nao_recomendado".
+4. "verdict" deve conectar pontos fortes, lacunas e a recomendação em relação a esta vaga.
+5. Use "recomendado" para forte aderência, "considerar" para aderência parcial com ressalvas, "nao_recomendado" quando houver desalinhamento relevante.
+6. Só cite como ponto forte habilidades com score >= 3; trate score <= 1 como lacuna.
+7. Requisitos da vaga não são evidência do candidato.
+
+Vaga:
+Título: {job_title}
+Perfil: {job_profile}
+Senioridade: {job_seniority}
+Descrição: {job_description}
+
+Habilidades esperadas:
+{skills}
+
+Currículo:
+{resume_text}

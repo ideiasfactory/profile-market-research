@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="title-row">
+  <h1>{{ job.title }}</h1>
+  <div class="form-actions">
+    <a class="button" href="/compensation?job_id={{ job.id }}">Pesquisar remuneração</a>
+    <a class="button secondary" href="/jobs/{{ job.id }}/edit">Editar</a>
+  </div>
+</div>
+<section class="panel">
+  <p><strong>Perfil:</strong> {{ job.profile }} · <strong>Senioridade:</strong> {{ job.seniority }} · <strong>Local:</strong> {{ job.work_location }}</p>
+  <p><strong>Remuneração:</strong> {{ job.compensation_type }} de {{ job.compensation_min }} até {{ job.compensation_max }}</p>
+  <p>{{ job.description }}</p>
+  {% if job.ideal_candidate_context %}
+  <p><strong>Contexto do candidato ideal:</strong> {{ job.ideal_candidate_context }}</p>
+  {% endif %}
+</section>
+<section class="panel">
+  <h2>Job description</h2>
+  <div class="markdown-body">{{ job.job_description | markdown | safe }}</div>
+</section>
+{% if job.analysis.role_intent or job.analysis.role_expectations or job.analysis.context_signals %}
+<section class="panel">
+  <h2>Job understanding</h2>
+  {% if job.analysis.role_intent %}<p><strong>Role intent:</strong> {{ job.analysis.role_intent }}</p>{% endif %}
+  {% if job.analysis.role_expectations %}<p><strong>Expectations:</strong> {{ job.analysis.role_expectations }}</p>{% endif %}
+  {% if job.analysis.context_signals %}
+  <p><strong>Context signals:</strong> {{ job.analysis.context_signals | join(', ') }}</p>
+  {% endif %}
+  {% if job.analysis.skill_groups %}
+  <h3>Skill groups</h3>
+  <ul>
+    {% for group in job.analysis.skill_groups %}
+    <li><strong>{{ group.name }}:</strong> {{ group.skills | join(', ') }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</section>
+{% endif %}
+<section class="panel" id="criteria-viewer">
+  <h2>Requisitos e critérios</h2>
+  <div class="tabs" role="tablist" aria-label="Categorias de critérios">
+    <button type="button" class="tab-btn is-active" role="tab" aria-selected="true" data-tab="must_have">Must-have</button>
+    <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="core_skills">Core</button>
+    <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="supporting_skills">Supporting</button>
+    <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="differentials">Differentials</button>
+    <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="soft_skills">Soft</button>
+  </div>
+  {% for key, label in [
+    ("must_have", "Must-have"),
+    ("core_skills", "Core"),
+    ("supporting_skills", "Supporting"),
+    ("differentials", "Differentials"),
+    ("soft_skills", "Soft")
+  ] %}
+  <div class="tab-panel {{ 'is-active' if key == 'must_have' else '' }}" data-panel="{{ key }}" role="tabpanel"{% if key != 'must_have' %} hidden{% endif %}>
+    <table>
+      <thead><tr><th>Item</th><th>Peso</th><th>Grupo</th></tr></thead>
+      <tbody>
+        {% for item in job.analysis[key] %}
+        <tr><td>{{ item.name }}</td><td>{{ item.weight }}</td><td>{{ item.group or '—' }}</td></tr>
+        {% else %}
+        <tr><td colspan="3">Nenhum item identificado.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endfor %}
+</section>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const root = document.querySelector("#criteria-viewer");
+    if (!root) return;
+    root.querySelectorAll(".tab-btn").forEach((button) => {
+      button.addEventListener("click", () => {
+        const tab = button.dataset.tab;
+        root.querySelectorAll(".tab-btn").forEach((btn) => {
+          const active = btn === button;
+          btn.classList.toggle("is-active", active);
+          btn.setAttribute("aria-selected", active ? "true" : "false");
+        });
+        root.querySelectorAll(".tab-panel").forEach((panel) => {
+          const active = panel.dataset.panel === tab;
+          panel.classList.toggle("is-active", active);
+          panel.hidden = !active;
+        });
+      });
+    });
+  });
+</script>
+{% endblock %}

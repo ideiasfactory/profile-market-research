@@ -1,0 +1,21 @@
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.env
+.env.local
+*.pem
+*.key
+.DS_Store
+
+# Secrets and local credentials
+secrets/
+*.secret
+credentials.json
+
+# Real candidate PII dumps outside fixtures
+data/private/
+**/resume_raw/

@@ -1,0 +1,29 @@
+Pontue o candidato contra cada habilidade abaixo.
+
+Skills marcadas [soft] são comportamentais: se não houver evidência, use score null e evidence_status needs_validation.
+Skills marcadas [tech] são técnicas: sem evidência → score 0 e not_found.
+
+Escala de score (quando aplicável):
+0 = sem evidência, 1 = contato básico, 3 = experiência prática, 5 = especialista.
+
+Retorne JSON estrito:
+{{
+  "skills": [
+    {{
+      "name": "Python",
+      "score": 4,
+      "confidence": 0.85,
+      "evidence_status": "explicit",
+      "evidence": [{{"text": "trecho do currículo", "source": "resume"}}]
+    }}
+  ]
+}}
+
+Inclua exatamente uma entrada para cada habilidade listada, com o mesmo nome.
+Não equivaque CPI/Integration Suite a OIC, nem BTP a OCI.
+
+Habilidades:
+{skills}
+
+Currículo:
+{resume_text}

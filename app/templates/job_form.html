@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ "Editar vaga" if is_edit else "Nova vaga" }}</h1>
+<form method="post" action="/jobs" class="form js-long-task js-job-form" data-edit="{{ 'true' if is_edit else 'false' }}">
+  <input type="hidden" name="item_id" value="{{ job.id or '' }}">
+  <input type="hidden" name="save_mode" id="save_mode" value="{{ 'save' if is_edit else 'reanalyse' }}">
+  <input type="hidden" name="analysis_json" id="analysis_json" value="">
+
+  <section class="panel form-section">
+    <h2>Dados da vaga</h2>
+    <label>Título<input name="title" value="{{ job.title or '' }}" required></label>
+    <label>Descrição<textarea name="description" required>{{ job.description or '' }}</textarea></label>
+    <div class="grid two">
+      <label>Perfil
+        <select name="profile" required>
+          {% for item in domains.profiles %}
+          <option value="{{ item.name }}" {{ "selected" if job.profile == item.name else "" }}>{{ item.name }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>Senioridade
+        <select name="seniority" required>
+          {% for item in domains.seniorities %}
+          <option value="{{ item.name }}" {{ "selected" if job.seniority == item.name else "" }}>{{ item.name }}</option>
+          {% endfor %}
+        </select>
+      </label>
+    </div>
+    <label>Job description
+      <span class="field-help">Texto livre ou Markdown. Cole a descrição completa da vaga como estiver no anúncio.</span>
+      <textarea name="job_description" rows="12" required placeholder="# Título da vaga&#10;&#10;## Responsabilidades&#10;- ...">{{ job.job_description or '' }}</textarea>
+    </label>
+    <label>Contexto do candidato ideal
+      <span class="field-help">Opcional. Complementa a análise (cliente, setor, perfil desejado). Não substitui a job description.</span>
+      <textarea name="ideal_candidate_context" rows="4" placeholder="Ex.: Experiência prévia no cliente CPFL / setor de utilities; perfil consultivo de arquitetura…">{{ job.ideal_candidate_context or '' }}</textarea>
+    </label>
+    <div class="grid three">
+      <label>Remuneração
+        <select name="compensation_type">
+          {% for value, label in [("pj_hour", "PJ valor/hora"), ("pj_month", "PJ valor/mês"), ("clt_month", "CLT salário mensal")] %}
+          <option value="{{ value }}" {{ "selected" if job.compensation_type == value else "" }}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>Mínimo<input name="compensation_min" type="number" step="0.01" value="{{ job.compensation_min or 0 }}" required></label>
+      <label>Máximo<input name="compensation_max" type="number" step="0.01" value="{{ job.compensation_max or 0 }}" required></label>
+    </div>
+    <label>Local de trabalho
+      <select name="work_location">
+        {% for value in ["Remoto", "Híbrido", "Presencial"] %}
+        <option value="{{ value }}" {{ "selected" if job.work_location == value else "" }}>{{ value }}</option>
+        {% endfor %}
+      </select>
+    </label>
+  </section>
+
+  {% if is_edit %}
+  <section class="panel form-section" id="criteria-editor">
+    <div class="title-row compact">
+      <div>
+        <h2>Requisitos e critérios</h2>
+        <p class="hint">Edite tiers (Must-have / Core / Supporting / Differentials / Soft), pesos e grupos. A LLM recomenda; você decide o final.</p>
+      </div>
+    </div>
+
+    {% if analysis.role_intent or analysis.role_expectations %}
+    <div class="narrative-block">
+      {% if analysis.role_intent %}<p><strong>Role intent:</strong> {{ analysis.role_intent }}</p>{% endif %}
+      {% if analysis.role_expectations %}<p><strong>Expectations:</strong> {{ analysis.role_expectations }}</p>{% endif %}
+      {% if analysis.context_signals %}
+      <p><strong>Context signals:</strong> {{ analysis.context_signals | join(', ') }}</p>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="tabs" role="tablist" aria-label="Categorias de critérios">
+      <button type="button" class="tab-btn is-active" role="tab" aria-selected="true" data-tab="must_have">Must-have</button>
+      <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="core_skills">Core</button>
+      <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="supporting_skills">Supporting</button>
+      <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="differentials">Differentials</button>
+      <button type="button" class="tab-btn" role="tab" aria-selected="false" data-tab="soft_skills">Soft skills</button>
+    </div>
+
+    {% for key, label, default_weight in [
+      ("must_have", "Must-have", 10),
+      ("core_skills", "Core skills", 7),
+      ("supporting_skills", "Supporting", 3),
+      ("differentials", "Differentials", 2),
+      ("soft_skills", "Soft skills", 3)
+    ] %}
+    <div class="tab-panel {{ 'is-active' if key == 'must_have' else '' }}" data-panel="{{ key }}" role="tabpanel"{% if key != 'must_have' %} hidden{% endif %}>
+      <div class="criteria-toolbar">
+        <strong>{{ label }}</strong>
+        <button type="button" class="button secondary js-add-criterion" data-category="{{ key }}" data-default-weight="{{ default_weight }}">Adicionar</button>
+      </div>
+      <div class="criteria-list" data-category="{{ key }}">
+        {% for item in analysis[key] %}
+        <div class="criteria-row">
+          <input type="text" class="criterion-name" value="{{ item.name }}" placeholder="Nome do critério" maxlength="80">
+          <label class="weight-field">Peso
+            <input type="number" class="criterion-weight" min="1" max="10" step="1" value="{{ item.weight }}">
+          </label>
+          <label class="group-field">Grupo
+            <input type="text" class="criterion-group" value="{{ item.group or '' }}" placeholder="Skill group" maxlength="80">
+          </label>
+          <button type="button" class="button secondary danger js-remove-criterion" aria-label="Remover critério">Remover</button>
+        </div>
+        {% else %}
+        <div class="criteria-row">
+          <input type="text" class="criterion-name" value="" placeholder="Nome do critério" maxlength="80">
+          <label class="weight-field">Peso
+            <input type="number" class="criterion-weight" min="1" max="10" step="1" value="{{ default_weight }}">
+          </label>
+          <label class="group-field">Grupo
+            <input type="text" class="criterion-group" value="" placeholder="Skill group" maxlength="80">
+          </label>
+          <button type="button" class="button secondary danger js-remove-criterion" aria-label="Remover critério">Remover</button>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  <div class="form-actions">
+    {% if is_edit %}
+    <button type="submit" class="js-save-mode" data-mode="save">Salvar critérios</button>
+    <button type="submit" class="button secondary js-save-mode" data-mode="reanalyse">Salvar e reanalisar com LLM</button>
+    {% else %}
+    <button type="submit" class="js-save-mode" data-mode="reanalyse">Salvar e analisar vaga</button>
+    {% endif %}
+  </div>
+</form>
+{% endblock %}

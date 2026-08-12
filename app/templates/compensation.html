@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div>
+    <p class="eyebrow">v1 · Compensation Intelligence</p>
+    <h1>Pesquisa de remuneração</h1>
+    <p>Pesquise de forma livre ou a partir de uma vaga aberta. A LLM só extrai evidências; o cálculo fica no engine Python.</p>
+  </div>
+  <div class="status {{ 'ok' if api_keys.tavily == 'set' else 'warn' }}">
+    Tavily {{ api_keys.tavily }}
+  </div>
+</section>
+
+{% if selected_job %}
+<section class="panel job-prefill-banner">
+  <div class="title-row compact">
+    <div>
+      <p class="eyebrow">A partir da vaga</p>
+      <h2>{{ selected_job.title }}</h2>
+      <p class="hint">
+        {{ selected_job.profile }} · {{ selected_job.seniority }} · {{ selected_job.work_location }}
+        · faixa da vaga {{ selected_job.compensation_type }}
+        {{ selected_job.compensation_min }}–{{ selected_job.compensation_max }}
+      </p>
+    </div>
+    <div class="form-actions">
+      <a class="button secondary" href="/jobs/{{ selected_job.id }}">Abrir vaga</a>
+      <a class="button secondary" href="/compensation">Modo livre</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="panel">
+  <div class="title-row compact">
+    <div>
+      <h2>Pesquisas históricas</h2>
+      <p class="hint">Resultados armazenados em <code>data/compensation_cache</code>. Clique para abrir.</p>
+    </div>
+    <span class="hint" id="history-count">{{ history|length }} registro(s)</span>
+  </div>
+  <div id="history-list" class="list history-list">
+    {% if history %}
+      {% for item in history %}
+      <button type="button"
+        class="list-item history-item {{ 'is-active' if item.cache_key == selected_cache_key else '' }}"
+        data-cache-key="{{ item.cache_key }}">
+        <div class="history-item-top">
+          <strong>{{ item.normalized_role or "Sem cargo normalizado" }}</strong>
+          <span class="verdict-badge {{ 'verdict-recomendado' if item.confidence_level == 'HIGH' else ('verdict-considerar' if item.confidence_level == 'MEDIUM' else 'verdict-nao_recomendado') }}">
+            {{ item.confidence_level }}
+          </span>
+        </div>
+        <span>
+          {{ item.contract_type or "—" }}
+          · {{ item.observations }} obs
+          · {{ item.sources }} fontes
+          {% if item.median is not none %}
+          · mediana
+          {% if item.unit == 'hour' %}R$ {{ '%.2f'|format(item.median) }}/h
+          {% else %}R$ {{ '%.2f'|format(item.median) }}/mês
+          {% endif %}
+          {% endif %}
+        </span>
+        <span class="cell-meta">
+          {{ item.created_at }}
+          · cache {{ item.cache_key[:12] }}…
+          · search {{ item.search_engines_used|join(', ') or 'nenhum' }}
+        </span>
+      </button>
+      {% endfor %}
+    {% else %}
+      <p class="hint" id="history-empty">Nenhuma pesquisa em cache ainda.</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="panel">
+  <form id="compensation-form" class="form form-section">
+    <div class="title-row compact">
+      <div>
+        <h2>Nova pesquisa</h2>
+        <p class="hint">Escolha uma vaga para pré-preencher, ou preencha livremente. A consulta roda em background com progresso por etapa.</p>
+      </div>
+    </div>
+
+    <input type="hidden" name="source_job_id" id="source_job_id" value="{{ prefill.source_job_id or '' }}">
+
+    <label>Vaga de origem (opcional)
+      <select id="job-source-select">
+        <option value="">Pesquisa livre</option>
+        {% for job in jobs %}
+        <option value="{{ job.id }}" {{ "selected" if selected_job and selected_job.id == job.id else "" }}>
+          {{ job.title }} · {{ job.seniority }} · {{ job.work_location }}
+        </option>
+        {% endfor %}
+      </select>
+      <span class="field-help">Ao selecionar, o formulário é preenchido com título, skills, senioridade, contrato e localidade da vaga.</span>
+    </label>
+
+    <label>Perfil / cargo
+      <input name="profile" required minlength="3"
+        value="{{ prefill.profile }}"
+        placeholder="Ex.: Arquiteto de Soluções Senior Cloud">
+    </label>
+
+    <label>Skills (separadas por vírgula)
+      <input name="skills" value="{{ prefill.skills | join(', ') }}"
+        placeholder="Azure, Kubernetes, ...">
+    </label>
+
+    <div class="grid three">
+      <label>Senioridade
+        <select name="seniority">
+          {% for value in ["junior", "pleno", "senior", "principal", "lead"] %}
+          <option value="{{ value }}" {{ "selected" if prefill.seniority == value else "" }}>{{ value }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>Modelo de alocação
+        <select name="allocation_model">
+          <option value="remote" {{ "selected" if prefill.allocation_model == "remote" else "" }}>Remoto</option>
+          <option value="hybrid" {{ "selected" if prefill.allocation_model == "hybrid" else "" }}>Híbrido</option>
+          <option value="onsite" {{ "selected" if prefill.allocation_model == "onsite" else "" }}>Presencial</option>
+        </select>
+      </label>
+      <label>Contrato alvo
+        <select name="target_contract">
+          <option value="PJ" {{ "selected" if prefill.target_contract == "PJ" else "" }}>PJ (R$/h)</option>
+          <option value="CLT" {{ "selected" if prefill.target_contract == "CLT" else "" }}>CLT (R$/mês)</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="grid three">
+      <label>Cidade<input name="city" value="{{ prefill.location.city }}"></label>
+      <label>Estado<input name="state" value="{{ prefill.location.state }}" maxlength="2"></label>
+      <label>País<input name="country" value="{{ prefill.location.country or 'BR' }}" maxlength="2"></label>
+    </div>
+
+    <div class="grid two">
+      <fieldset class="provider-fieldset">
+        <legend>Search engines</legend>
+        {% for name in all_search_engines %}
+        <label class="checkbox-row">
+          <input type="checkbox" name="search_engines" value="{{ name }}"
+            {{ "checked" if name in search_engines else "" }}>
+          <span>{{ name }}{% if name not in search_engines %} <em>(off no registry)</em>{% endif %}</span>
+        </label>
+        {% else %}
+        <p class="hint">Nenhum search engine habilitado no registry.</p>
+        {% endfor %}
+      </fieldset>
+      <fieldset class="provider-fieldset">
+        <legend>Crawlers</legend>
+        {% for name in all_crawlers %}
+        <label class="checkbox-row">
+          <input type="checkbox" name="crawlers" value="{{ name }}"
+            {{ "checked" if name in crawlers else "" }}>
+          <span>{{ name }}</span>
+        </label>
+        {% endfor %}
+      </fieldset>
+    </div>
+
+    <label class="checkbox-row">
+      <input type="checkbox" name="force_refresh" value="1" checked>
+      <span>Forçar refresh (ignorar cache)</span>
+    </label>
+
+    <div class="form-actions">
+      <button type="submit" id="compensation-submit">Pesquisar mercado</button>
+      <button type="button" class="button secondary" id="compensation-clear" hidden>Limpar resultado</button>
+    </div>
+    <p id="compensation-error" class="form-error" hidden></p>
+  </form>
+</section>
+
+<section id="compensation-results" class="compensation-results" hidden>
+  <section class="panel">
+    <div class="title-row compact">
+      <div>
+        <p class="eyebrow">Resultado</p>
+        <h2 id="result-role">—</h2>
+        <p id="result-meta" class="hint"></p>
+      </div>
+      <span id="result-confidence" class="verdict-badge">—</span>
+    </div>
+
+    <div class="grid" id="market-stats">
+      <article class="card metric-card"><span>Faixa recomendada</span><strong id="stat-range">—</strong></article>
+      <article class="card metric-card"><span>Mediana</span><strong id="stat-median">—</strong></article>
+      <article class="card metric-card"><span>P25 / P75</span><strong id="stat-percentiles">—</strong></article>
+      <article class="card metric-card"><span>Amostra</span><strong id="stat-sample">—</strong></article>
+    </div>
+
+    <div class="grid two" style="margin-top: 16px;">
+      <article class="card metric-card"><span>Mín / Máx</span><strong id="stat-minmax">—</strong></article>
+      <article class="card metric-card"><span>Equiv. mensal médio</span><strong id="stat-monthly">—</strong></article>
+    </div>
+  </section>
+
+  <section class="panel" id="warnings-panel" hidden>
+    <h2>Avisos</h2>
+    <ul id="warnings-list" class="warning-list"></ul>
+  </section>
+
+  <section class="panel">
+    <h2>Fontes</h2>
+    <div id="sources-list" class="list"></div>
+  </section>
+
+  <section class="panel">
+    <div class="title-row compact">
+      <h2>Observações com evidência</h2>
+      <p class="hint" id="observations-count"></p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Cargo</th>
+            <th>Contrato</th>
+            <th>Observado</th>
+            <th>Normalizado</th>
+            <th>Fonte</th>
+            <th>Evidência</th>
+          </tr>
+        </thead>
+        <tbody id="observations-body"></tbody>
+      </table>
+    </div>
+  </section>
+</section>
+
+{% if last_result %}
+<script type="application/json" id="last-research-data">{{ last_result | tojson | safe }}</script>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/compensation.js" defer></script>
+{% endblock %}

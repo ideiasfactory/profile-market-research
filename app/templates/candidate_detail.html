@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="title-row">
+  <h1>{{ candidate.name or "Currículo" }}</h1>
+  <a class="button secondary" href="/candidates/{{ candidate.id }}/edit">Editar</a>
+</div>
+<section class="panel">
+  <p><strong>Cidade:</strong> {{ candidate.city or "Não identificada" }}</p>
+  <p><strong>Cargo reportado:</strong> {{ candidate.reported_role or "Não identificado" }}</p>
+  <p><strong>Origem:</strong>
+    {% if candidate.source_type == "linkedin" and candidate.source_url %}
+      <a href="{{ candidate.source_url }}" target="_blank" rel="noopener noreferrer">{{ candidate.source_label or "LinkedIn" }}</a>
+    {% else %}
+      {{ candidate.source_label or candidate.source_type or "Texto" }}
+    {% endif %}
+  </p>
+</section>
+<section class="panel">
+  <h2>Texto armazenado</h2>
+  <pre>{{ candidate.resume_text }}</pre>
+</section>
+{% endblock %}

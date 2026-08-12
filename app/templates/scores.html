@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Scores</h1>
+<section class="panel">
+  <form method="post" action="/scores" class="grid three js-long-task">
+    <label>Vaga
+      <select name="job_id" required>
+        {% for job in jobs %}
+        <option value="{{ job.id }}" {{ "selected" if job.id == job_id else "" }}>{{ job.title }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Candidato
+      <select name="candidate_id" required>
+        {% for candidate in candidates %}
+        <option value="{{ candidate.id }}" {{ "selected" if candidate.id == candidate_id else "" }}>{{ candidate.name or candidate.id }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Modelo de score
+      <select name="scoring_model">
+        <option value="v2" {{ "selected" if scoring_model_default == "v2" else "" }}>v2 — hierárquico</option>
+        <option value="v1" {{ "selected" if scoring_model_default == "v1" else "" }}>v1 — média ponderada flat</option>
+      </select>
+    </label>
+    <button>Gerar / reprocessar score</button>
+  </form>
+  <p class="hint">Scores existentes não são recalculados automaticamente. Use o botão acima para reprocessar com o modelo escolhido.</p>
+</section>
+{% if selected %}
+<section class="panel">
+  <h2>{{ selected.candidate_name }} → {{ selected.job_title }}</h2>
+  <p class="big-score">{{ selected.final_score }}%</p>
+  <p>
+    Overall Fit · Método: {{ selected.method }}
+    {% if selected.scoring_model_version %}
+    · Modelo: {{ selected.scoring_model_version }}
+    {% endif %}
+    {% if selected.verdict_label %}
+    · <span class="verdict-badge verdict-{{ selected.verdict_label }}">{{ selected.verdict_label.replace('_', ' ') }}</span>
+    {% endif %}
+  </p>
+
+  {% if selected.score_breakdown %}
+  <div class="exec-grid">
+    <div>
+      <h3>Score breakdown</h3>
+      <ul class="breakdown-list">
+        {% for key, value in selected.score_breakdown.dimensions.items() %}
+        <li>
+          <span>{{ key.replace('_', ' ') }}</span>
+          <strong>{{ value }}%</strong>
+          {% if selected.score_breakdown.weights and selected.score_breakdown.weights[key] is defined %}
+          <em>{{ (selected.score_breakdown.weights[key] * 100) | round(0) }}% peso</em>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div>
+      <h3>Must-haves</h3>
+      {% if selected.must_have_coverage %}
+      <p class="big-metric">{{ selected.must_have_coverage.covered }}/{{ selected.must_have_coverage.total }}</p>
+      {% if selected.must_have_coverage.missing_skills %}
+      <p class="hint">Ausentes: {{ selected.must_have_coverage.missing_skills | join(', ') }}</p>
+      {% endif %}
+      {% else %}
+      <p class="hint">Não disponível neste score.</p>
+      {% endif %}
+      {% if selected.role_fit is defined %}
+      <p>Role fit: <strong>{{ selected.role_fit }}%</strong> · Context fit: <strong>{{ selected.context_fit }}%</strong></p>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if selected.strengths %}
+  <div class="narrative-block">
+    <h3>Strengths</h3>
+    <ul>{% for item in selected.strengths %}<li>{{ item }}</li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+
+  {% if selected.gaps or selected.critical_gaps %}
+  <div class="narrative-block">
+    <h3>Gaps</h3>
+    {% if selected.critical_gaps %}
+    <ul>
+      {% for gap in selected.critical_gaps %}
+      <li><span class="gap-{{ gap.severity }}">{{ gap.severity }}</span> — {{ gap.name }}{% if gap.reason %}: {{ gap.reason }}{% endif %}</li>
+      {% endfor %}
+    </ul>
+    {% elif selected.gaps %}
+    <ul>{% for item in selected.gaps %}<li>{{ item }}</li>{% endfor %}</ul>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if selected.interview_validation %}
+  <div class="narrative-block">
+    <h3>Interview validation</h3>
+    <ul>{% for item in selected.interview_validation %}<li>{{ item }}</li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+
+  {% if selected.profile_summary %}
+  <div class="narrative-block">
+    <h3>Resumo do perfil</h3>
+    <p>{{ selected.profile_summary }}</p>
+  </div>
+  {% endif %}
+
+  {% if selected.verdict %}
+  <div class="narrative-block verdict-block verdict-{{ selected.verdict_label or 'evaluate' }}">
+    <h3>Veredito</h3>
+    <p>{{ selected.verdict }}</p>
+  </div>
+  {% endif %}
+
+  {% if chart_data %}
+  <div class="chart-section">
+    <div class="title-row compact">
+      <div>
+        <h3>Comparativo por eixo</h3>
+        <p class="hint">Esperado (requisito da vaga) versus desempenho do candidato.</p>
+      </div>
+      <div class="chart-tabs" role="tablist" aria-label="Tipo de gráfico">
+        <button type="button" class="tab-btn is-active" data-chart-view="radar-category">Radar categorias</button>
+        <button type="button" class="tab-btn" data-chart-view="radar-skills">Radar critérios</button>
+        <button type="button" class="tab-btn" data-chart-view="bars">Barras</button>
+      </div>
+    </div>
+    <div class="chart-frame">
+      <canvas id="score-chart" aria-label="Gráfico esperado versus candidato"></canvas>
+    </div>
+  </div>
+  <script id="score-chart-data" type="application/json">{{ chart_data | tojson | safe }}</script>
+  {% endif %}
+
+  <h3>Detalhamento por critério</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Categoria</th>
+        <th>Habilidade</th>
+        <th>Tier</th>
+        <th>Peso</th>
+        <th>Nota</th>
+        <th>Conf.</th>
+        <th>Status</th>
+        <th>Ponderado</th>
+        <th>Evidência</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in selected["items"] %}
+      <tr>
+        <td>{{ item.category }}</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.tier or '—' }}</td>
+        <td>{{ item.weight }}</td>
+        <td>{{ "n/a" if item.score is none else item.score }}</td>
+        <td>{{ item.confidence if item.confidence is defined else '—' }}</td>
+        <td>{{ item.evidence_status or '—' }}</td>
+        <td>{{ item.weighted_score if item.weighted_score is not none else '—' }}</td>
+        <td>
+          {% if item.evidence is iterable and item.evidence is not string %}
+            {% for ev in item.evidence %}{{ ev.text }}{% if not loop.last %}; {% endif %}{% endfor %}
+          {% else %}
+            {{ item.evidence_text or item.evidence }}
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endif %}
+<section class="panel">
+  <h2>Avaliações salvas</h2>
+  <div class="list">
+    {% for score in scores %}
+    <a class="list-item" href="/scores?job_id={{ score.job_id }}&candidate_id={{ score.candidate_id }}">
+      <strong>{{ score.final_score }}% · {{ score.candidate_name }}</strong>
+      <span>{{ score.job_title }}{% if score.scoring_model_version %} · {{ score.scoring_model_version }}{% endif %}{% if score.verdict_label %} · {{ score.verdict_label.replace('_', ' ') }}{% endif %}</span>
+    </a>
+    {% else %}
+    <p>Nenhum score gerado.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+{% if selected and chart_data %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+<script src="/static/score-charts.js"></script>
+{% endif %}
+{% endblock %}

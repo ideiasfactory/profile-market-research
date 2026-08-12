@@ -1,0 +1,51 @@
+{
+  "research_id": "1ccd8b87c466d57c",
+  "profile": {
+    "role_family": "Arquitetura de Soluções",
+    "normalized_role": "Arquiteto de Soluções em Nuvem",
+    "seniority": "senior",
+    "specialization": "Cloud e Microserviços",
+    "skills": [
+      "Azure",
+      "AKS",
+      "Kubernetes"
+    ]
+  },
+  "market": {
+    "currency": "BRL",
+    "unit": "hour",
+    "contract_type": "PJ",
+    "minimum": null,
+    "p25": null,
+    "median": null,
+    "mean": null,
+    "p75": null,
+    "maximum": null,
+    "monthly_equivalent": null,
+    "recommended_range": {
+      "min": null,
+      "max": null
+    }
+  },
+  "sample": {
+    "observations": 0,
+    "sources": 0
+  },
+  "providers": {
+    "search_engines_used": [],
+    "crawlers_used": []
+  },
+  "confidence": {
+    "score": 0.0,
+    "level": "LOW"
+  },
+  "sources": [],
+  "warnings": [
+    "Nenhum search engine habilitado (search_engines vazio ou sem API key). Sem URLs descobertas, os crawlers não são executados e a amostra fica zerada.",
+    "Crawlers configurados (glassdoor, indeed, vagas, generic) não foram usados porque não há URLs de entrada.",
+    "Nenhuma observação com evidência salarial válida foi encontrada.",
+    "Confidence LOW; aumente fontes, localidade ou amostra antes de decisão comercial."
+  ],
+  "observations": [],
+  "created_at": "2026-08-12T03:58:35.292276Z"
+}

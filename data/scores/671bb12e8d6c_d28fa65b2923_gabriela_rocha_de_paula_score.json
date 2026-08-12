@@ -1,0 +1,403 @@
+{
+  "job_id": "671bb12e8d6c",
+  "candidate_id": "d28fa65b2923",
+  "job_title": "Arquiteto OIC - CPFL",
+  "candidate_name": "Gabriela Rocha de Paula",
+  "final_score": 51.7,
+  "method": "llm",
+  "scoring_model_version": "v2",
+  "items": [
+    {
+      "category": "Must-have",
+      "name": "Oracle Integration Cloud",
+      "weight": 10,
+      "tier": "MUST_HAVE",
+      "group": "OIC Platform",
+      "score": 0,
+      "confidence": 1.0,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Must-have",
+      "name": "Arquitetura de Integração",
+      "weight": 7,
+      "tier": "CORE",
+      "group": "Architecture",
+      "score": 3,
+      "confidence": 0.95,
+      "evidence_status": "explicit",
+      "evidence": [
+        {
+          "text": "Defini arquitetura de integração entre sistemas legados globais e SAP S/4HANA, estabelecendo padrões para uso de CPI, APIs REST e IDoc",
+          "source": "resume"
+        }
+      ],
+      "weighted_score": 21.0,
+      "evidence_text": "Defini arquitetura de integração entre sistemas legados globais e SAP S/4HANA, estabelecendo padrões para uso de CPI, APIs REST e IDoc"
+    },
+    {
+      "category": "Core skill",
+      "name": "API Management",
+      "weight": 6,
+      "tier": "CORE",
+      "group": "Architecture",
+      "score": 3,
+      "confidence": 0.95,
+      "evidence_status": "explicit",
+      "evidence": [
+        {
+          "text": "Implementei integrações SAP para sistemas externos via BTP e APIs modernas",
+          "source": "resume"
+        }
+      ],
+      "weighted_score": 18.0,
+      "evidence_text": "Implementei integrações SAP para sistemas externos via BTP e APIs modernas"
+    },
+    {
+      "category": "Core skill",
+      "name": "Enterprise Integration Patterns",
+      "weight": 6,
+      "tier": "CORE",
+      "group": "Architecture",
+      "score": 0,
+      "confidence": 1.0,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Core skill",
+      "name": "SAP Process Orchestration",
+      "weight": 7,
+      "tier": "CORE",
+      "group": "SAP Ecosystem",
+      "score": 4,
+      "confidence": 0.95,
+      "evidence_status": "explicit",
+      "evidence": [
+        {
+          "text": "Desenvolvi e mantive iFlows complexos no SAP CPI com Content Modifier, Router, Exception Subprocess e Message Mapping",
+          "source": "resume"
+        }
+      ],
+      "weighted_score": 28.0,
+      "evidence_text": "Desenvolvi e mantive iFlows complexos no SAP CPI com Content Modifier, Router, Exception Subprocess e Message Mapping"
+    },
+    {
+      "category": "Core skill",
+      "name": "SAP Business Technology Platform",
+      "weight": 7,
+      "tier": "CORE",
+      "group": "SAP Ecosystem",
+      "score": 5,
+      "confidence": 0.98,
+      "evidence_status": "explicit",
+      "evidence": [
+        {
+          "text": "Desenvolvimento de integrações e extensões cloud-native no setor de energia/distribuição com SAP BTP e Integration Suite",
+          "source": "resume"
+        }
+      ],
+      "weighted_score": 35.0,
+      "evidence_text": "Desenvolvimento de integrações e extensões cloud-native no setor de energia/distribuição com SAP BTP e Integration Suite"
+    },
+    {
+      "category": "Supporting skill",
+      "name": "Observabilidade",
+      "weight": 3,
+      "tier": "SUPPORTING",
+      "group": "Ops",
+      "score": 0,
+      "confidence": 1.0,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Supporting skill",
+      "name": "OAuth 2.0",
+      "weight": 3,
+      "tier": "SUPPORTING",
+      "group": "Security",
+      "score": 4,
+      "confidence": 0.95,
+      "evidence_status": "explicit",
+      "evidence": [
+        {
+          "text": "Implementei autenticação e segurança em todos os fluxos: OAuth2",
+          "source": "resume"
+        }
+      ],
+      "weighted_score": 12.0,
+      "evidence_text": "Implementei autenticação e segurança em todos os fluxos: OAuth2"
+    },
+    {
+      "category": "Supporting skill",
+      "name": "OpenAPI",
+      "weight": 3,
+      "tier": "SUPPORTING",
+      "group": "API Security",
+      "score": 0,
+      "confidence": 0.1,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Differential",
+      "name": "Kafka",
+      "weight": 2,
+      "tier": "DIFFERENTIAL",
+      "group": "Messaging",
+      "score": 0,
+      "confidence": 0.1,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Differential",
+      "name": "TOGAF",
+      "weight": 1,
+      "tier": "DIFFERENTIAL",
+      "group": "Architecture Frameworks",
+      "score": 0,
+      "confidence": 0.1,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Differential",
+      "name": "ArchiMate",
+      "weight": 1,
+      "tier": "DIFFERENTIAL",
+      "group": "Architecture Frameworks",
+      "score": 0,
+      "confidence": 0.1,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Soft skill",
+      "name": "Comunicação",
+      "weight": 3,
+      "tier": "SOFT",
+      "group": "Behavioral",
+      "score": null,
+      "confidence": 0.95,
+      "evidence_status": "needs_validation",
+      "evidence": [],
+      "weighted_score": null,
+      "evidence_text": "Sem evidência textual; validar em entrevista."
+    },
+    {
+      "category": "Soft skill",
+      "name": "Liderança Técnica",
+      "weight": 2,
+      "tier": "SOFT",
+      "group": "Leadership",
+      "score": null,
+      "confidence": 0.95,
+      "evidence_status": "needs_validation",
+      "evidence": [],
+      "weighted_score": null,
+      "evidence_text": "Sem evidência textual; validar em entrevista."
+    }
+  ],
+  "score_breakdown": {
+    "dimensions": {
+      "core_technical_fit": 43.85,
+      "role_fit": 75.0,
+      "context_fit": 80.0,
+      "behavioral_fit": 50.0,
+      "differentials": 0.0
+    },
+    "weights": {
+      "core_technical_fit": 0.47500000000000003,
+      "role_fit": 0.225,
+      "context_fit": 0.175,
+      "differentials": 0.125
+    },
+    "final_score": 51.7,
+    "core_technical_fit": 43.85,
+    "role_fit": 75.0,
+    "context_fit": 80.0,
+    "behavioral_fit": 50.0,
+    "differentials": 0.0
+  },
+  "must_have_coverage": {
+    "covered": 0,
+    "total": 1,
+    "ratio": 0.0,
+    "covered_skills": [],
+    "missing_skills": [
+      "Oracle Integration Cloud"
+    ],
+    "min_score": 3
+  },
+  "critical_gaps": [
+    {
+      "name": "Oracle Integration Cloud",
+      "severity": "critical",
+      "tier": "MUST_HAVE",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito MUST_HAVE."
+    },
+    {
+      "name": "Enterprise Integration Patterns",
+      "severity": "important",
+      "tier": "CORE",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito CORE."
+    },
+    {
+      "name": "Observabilidade",
+      "severity": "minor",
+      "tier": "SUPPORTING",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito SUPPORTING."
+    },
+    {
+      "name": "OpenAPI",
+      "severity": "minor",
+      "tier": "SUPPORTING",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito SUPPORTING."
+    },
+    {
+      "name": "Kafka",
+      "severity": "minor",
+      "tier": "DIFFERENTIAL",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito DIFFERENTIAL."
+    },
+    {
+      "name": "TOGAF",
+      "severity": "minor",
+      "tier": "DIFFERENTIAL",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito DIFFERENTIAL."
+    },
+    {
+      "name": "ArchiMate",
+      "severity": "minor",
+      "tier": "DIFFERENTIAL",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito DIFFERENTIAL."
+    },
+    {
+      "name": "Comunicação",
+      "severity": "documentation_gap",
+      "tier": "SOFT",
+      "score": null,
+      "evidence_status": "needs_validation",
+      "reason": "Sem evidência textual suficiente; validar em entrevista."
+    },
+    {
+      "name": "Liderança Técnica",
+      "severity": "documentation_gap",
+      "tier": "SOFT",
+      "score": null,
+      "evidence_status": "needs_validation",
+      "reason": "Sem evidência textual suficiente; validar em entrevista."
+    }
+  ],
+  "group_scores": [
+    {
+      "name": "OIC Platform",
+      "score": 0.0,
+      "skills_total": 1,
+      "skills_covered": 0,
+      "coverage_ratio": 0.0
+    },
+    {
+      "name": "SAP Ecosystem",
+      "score": 90.0,
+      "skills_total": 2,
+      "skills_covered": 2,
+      "coverage_ratio": 1.0
+    },
+    {
+      "name": "API Security",
+      "score": 40.0,
+      "skills_total": 2,
+      "skills_covered": 1,
+      "coverage_ratio": 0.5
+    }
+  ],
+  "role_fit": 75.0,
+  "context_fit": 80.0,
+  "strengths": [
+    "Oracle Integration Cloud",
+    "API Management"
+  ],
+  "gaps": [
+    "SAP BTP"
+  ],
+  "interview_validation": [
+    "Validar profundidade prática em OIC em projetos de migração SAP PO → OIC"
+  ],
+  "profile_summary": "Gabriela Rocha de Paula é uma desenvolvedora e arquiteta SAP com mais de 12 anos de experiência. Ela possui forte expertise em SAP CPI, ABAP Cloud, CAP, RAP, Fiori UI5 e CDS Views. Gabriela tem habilidades sólidas na implementação de integrações complexas entre sistemas SAP e não-SAP via OData, IDoc, SOAP e REST, além de configuração segura do SAP Cloud Connector para comunicação entre ambientes on-premise e cloud.",
+  "verdict": "Gabriela possui sólida experiência em arquitetura de integração, API Management, SAP Process Orchestration e SAP Business Technology Platform. No entanto, ela não apresenta evidências claras de experiência com Oracle Integration Cloud, o que é um requisito essencial para a vaga. Recomenda-se uma avaliação mais detalhada em entrevista.",
+  "verdict_label": "evaluate",
+  "audit": {
+    "scoring_model_version": "v2",
+    "job_analysis_version": 2,
+    "job_updated_at": "2026-08-08T02:38:31.904297+00:00",
+    "candidate_updated_at": "2026-08-07T20:11:18.127862+00:00",
+    "scored_at": "2026-08-08T02:42:56.960239+00:00",
+    "prompt_versions": {
+      "analyse_job": "v2",
+      "score_skills": "v2",
+      "score_fit": "v1",
+      "score_narrative": "v2"
+    },
+    "llm_model": "qwen2.5:14b",
+    "llm_temperature": 0.1,
+    "skills_llm": [
+      {
+        "raw": "{\n  \"skills\": [\n    {\n      \"name\": \"Oracle Integration Cloud\",\n      \"score\": 0,\n      \"confidence\": 1,\n      \"evidence_status\": \"not_found\",\n      \"evidence\": []\n    },\n    {\n      \"name\": \"Arquitetura de Integração\",\n      \"score\": 3,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [{\"text\": \"Defini arquitetura de integração entre sistemas legados globais e SAP S/4HANA, estabelecendo padrões para uso de CPI, APIs REST e IDoc\", \"source\": \"resume\"}]\n    },\n    {\n      \"name\": \"API Management\",\n      \"score\": 3,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [{\"text\": \"Implementei integrações SAP para sistemas externos via BTP e APIs modernas\", \"source\": \"resume\"}]\n    },\n    {\n      \"name\": \"Enterprise Integration Patterns\",\n      \"score\": 0,\n      \"confidence\": 1,\n      \"evidence_status\": \"not_found\",\n      \"evidence\": []\n    },\n    {\n      \"name\": \"SAP Process Orchestration\",\n      \"score\": 4,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [{\"text\": \"Desenvolvi e mantive iFlows complexos no SAP CPI com Content Modifier, Router, Exception Subprocess e Message Mapping\", \"source\": \"resume\"}]\n    },\n    {\n      \"name\": \"SAP Business Technology Platform\",\n      \"score\": 5,\n      \"confidence\": 0.98,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [{\"text\": \"Desenvolvimento de integrações e extensões cloud-native no setor de energia/distribuição com SAP BTP e Integration Suite\", \"source\": \"resume\"}]\n    },\n    {\n      \"name\": \"Observabilidade\",\n      \"score\": 0,\n      \"confidence\": 1,\n      \"evidence_status\": \"not_found\",\n      \"evidence\": []\n    },\n    {\n      \"name\": \"OAuth 2.0\",\n      \"score\": 4,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [{\"text\": \"Implementei autenticação e segurança em todos os fluxos: OAuth2\", \"source\": \"resume\"}]\n    },\n    {\n      \"name\": \"REST\",\n      \"score\": 3,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [{\"text\": \"Implementei integrações SAP para sistemas externos via BTP e APIs modernas\", \"source\": \"resume\"}]\n    },\n    {\n      \"name\": \"SOAP\",\n      \"score\": 3,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [{\"text\": \"Consumi BAPIs do backend SAP para integração com regras de negócio de venda, devoluções e tributação fiscal\", \"source\": \"resume\"}]\n    },\n    {\n      \"name\": \"IDoc\",\n      \"score\": 3,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [{\"text\": \"Implementei integrações SAP para sistemas externos via BTP e APIs modernas\", \"source\": \"resume\"}]\n    },\n    {\n      \"name\": \"OData\",\n      \"score\": 4,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [{\"text\": \"Desenvolvi extensões ABAP Cloud com RAP: behavior definitions com validações, determinações e custom actions para processos de venda omnichannel\", \"source\": \"resume\"}]\n    },\n    {\n      \"name\": \"SAP Cloud Connector\",\n      \"score\": 4,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [{\"text\": \"Configurei SAP Cloud Connector para comunicação segura entre POS on-premise e SAP BTP cloud\", \"source\": \"resume\"}]\n    },\n    {\n      \"name\": \"PI/PO\",\n      \"score\": 0,\n      \"confidence\": 1,\n      \"evidence_status\": \"not_found\",\n      \"evidence\": []\n    },\n    {\n      \"name\": \"Event Mesh\",\n      \"score\": 3,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [{\"text\": \"Implementei integrações event-driven com SAP Event Mesh para cenários assíncronos de alta volumetria entre plantas globais\", \"source\": \"resume\"}]\n    },\n    {\n      \"name\": \"Clean Core\",\n      \"score\": 3,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [{\"text\": \"Estruturei estratégia de Clean Core, mapeando customizações Z e propondo substitutos via extensibilidade SAP BTP\", \"source\": \"resume\"}]\n    }\n  ]\n}",
+        "model": "qwen2.5:14b",
+        "temperature": 0.1,
+        "error": null,
+        "attempts": 1,
+        "usable": true
+      },
+      {
+        "raw": "{\n  \"skills\": [\n    {\n      \"name\": \"Comunicação\",\n      \"score\": null,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"needs_validation\",\n      \"evidence\": []\n    },\n    {\n      \"name\": \"Liderança Técnica\",\n      \"score\": null,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"needs_validation\",\n      \"evidence\": []\n    }\n  ]\n}",
+        "model": "qwen2.5:14b",
+        "temperature": 0.1,
+        "error": null,
+        "attempts": 1,
+        "usable": true
+      }
+    ],
+    "fit_llm": {
+      "raw": "{\n  \"role_fit\": 75,\n  \"context_fit\": 80,\n  \"strengths\": [\"Oracle Integration Cloud\", \"API Management\"],\n  \"gaps\": [\"SAP BTP\"],\n  \"interview_validation\": [\"Validar profundidade prática em OIC em projetos de migração SAP PO → OIC\"]\n}",
+      "model": "qwen2.5:14b",
+      "temperature": 0.1,
+      "error": null,
+      "attempts": 1
+    }
+  },
+  "id": "671bb12e8d6c_d28fa65b2923",
+  "created_at": "2026-08-08T02:43:15.833358+00:00"
+}
