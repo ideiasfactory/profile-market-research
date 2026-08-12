@@ -23,9 +23,15 @@
         <option value="v1" {{ "selected" if scoring_model_default == "v1" else "" }}>v1 — média ponderada flat</option>
       </select>
     </label>
+    <label>Provedor LLM
+      <select name="llm_provider">
+        <option value="local" {{ "selected" if llm_provider_default == "local" else "" }}>Local (Ollama)</option>
+        <option value="openai" {{ "selected" if llm_provider_default == "openai" else "" }}>OpenAI</option>
+      </select>
+    </label>
     <button>Gerar / reprocessar score</button>
   </form>
-  <p class="hint">Scores existentes não são recalculados automaticamente. Use o botão acima para reprocessar com o modelo escolhido.</p>
+  <p class="hint">Scores existentes não são recalculados automaticamente. Use o botão acima para reprocessar com o modelo e provedor escolhidos. Compensation continua no LLM local.</p>
 </section>
 {% if selected %}
 <section class="panel">
@@ -36,10 +42,23 @@
     {% if selected.scoring_model_version %}
     · Modelo: {{ selected.scoring_model_version }}
     {% endif %}
+    {% if selected.llm_provider or (selected.audit and selected.audit.llm_provider) %}
+    · LLM: {{ selected.llm_provider or selected.audit.llm_provider }}
+    {% endif %}
+    {% if selected.audit and selected.audit.llm_model %}
+    · {{ selected.audit.llm_model }}
+    {% endif %}
     {% if selected.verdict_label %}
     · <span class="verdict-badge verdict-{{ selected.verdict_label }}">{{ selected.verdict_label.replace('_', ' ') }}</span>
     {% endif %}
   </p>
+  {% if selected.audit and selected.audit.usage %}
+  <p class="hint">
+    Custo estimado OpenAI: ${{ (selected.audit.usage.estimated_cost_usd or 0) | round(4) }}
+    · {{ selected.audit.usage.total_tokens or 0 }} tokens
+    · {{ selected.audit.usage.calls or 0 }} calls
+  </p>
+  {% endif %}
 
   {% if selected.score_breakdown %}
   <div class="exec-grid">
@@ -182,7 +201,7 @@
     {% for score in scores %}
     <a class="list-item" href="/scores?job_id={{ score.job_id }}&candidate_id={{ score.candidate_id }}">
       <strong>{{ score.final_score }}% · {{ score.candidate_name }}</strong>
-      <span>{{ score.job_title }}{% if score.scoring_model_version %} · {{ score.scoring_model_version }}{% endif %}{% if score.verdict_label %} · {{ score.verdict_label.replace('_', ' ') }}{% endif %}</span>
+      <span>{{ score.job_title }}{% if score.scoring_model_version %} · {{ score.scoring_model_version }}{% endif %}{% if score.llm_provider %} · {{ score.llm_provider }}{% endif %}{% if score.verdict_label %} · {{ score.verdict_label.replace('_', ' ') }}{% endif %}</span>
     </a>
     {% else %}
     <p>Nenhum score gerado.</p>

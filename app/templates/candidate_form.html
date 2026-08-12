@@ -21,6 +21,13 @@
       {% endfor %}
     </select>
   </label>
+  <label>Provedor LLM
+    <select name="llm_provider">
+      <option value="local" {{ "selected" if llm_provider_default == "local" else "" }}>Local (Ollama)</option>
+      <option value="openai" {{ "selected" if llm_provider_default == "openai" else "" }}>OpenAI</option>
+    </select>
+    <span class="field-help">Usado na extração do currículo e no score imediato (se selecionar uma vaga).</span>
+  </label>
   <button>Salvar currículo</button>
 </form>
 {% endblock %}

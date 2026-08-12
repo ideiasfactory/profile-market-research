@@ -59,6 +59,14 @@ p { color: var(--muted); }
 .status { white-space: nowrap; }
 .status.ok { background: var(--ok); }
 .status.warn { background: var(--warn); }
+.status-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+.status-stack .status { white-space: normal; max-width: 320px; }
+.status-stack a { color: inherit; text-decoration: underline; }
 .button.secondary { background: transparent; color: var(--text); }
 button { cursor: pointer; border: 0; }
 

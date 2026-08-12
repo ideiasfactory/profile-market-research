@@ -35,12 +35,32 @@ export SCORING_MODEL=v2   # ou v1 para média ponderada flat
 uvicorn app.main:app --reload
 ```
 
+## Provider OpenAI (opcional)
+
+`analyse_job`, `extract_candidate` e `score_candidate` aceitam provedor **local** ou **openai** (select na UI + `LLM_PROVIDER` no `.env`). Compensation Intelligence permanece no Ollama local (ADR-001).
+
+```bash
+export LLM_PROVIDER=local          # default; ou openai
+export OPENAI_API_KEY=sk-...
+export OPENAI_BASE_URL=https://api.openai.com/v1
+export OPENAI_MODEL=gpt-4.1        # default recomendado
+export OPENAI_TIMEOUT=90
+export OPENAI_TEMPERATURE=0.1
+export OPENAI_PRICE_INPUT_PER_1M=2.00
+export OPENAI_PRICE_OUTPUT_PER_1M=8.00
+```
+
+- Sem `OPENAI_API_KEY`, o modo openai falha graceful → mesma heurística do local.
+- Alternativa mais barata após validar qualidade: `OPENAI_MODEL=gpt-4.1-mini`.
+- Uso/custo: append-only em `data/llm_usage.jsonl`; resumo em `GET /api/llm/usage`. Scores OpenAI incluem `audit.usage` (tokens + custo estimado).
+
 ## Scoring model
 
 - `SCORING_MODEL=v1` — média ponderada flat das skills (legado).
 - `SCORING_MODEL=v2` (padrão) — score hierárquico: Core Technical, Role Fit, Context Fit, Behavioral, Differentials.
 - Avaliações antigas **não** são recalculadas automaticamente; use “Gerar / reprocessar score” na UI.
 - Soft skills sem evidência usam `score: null` + `needs_validation` e saem do denominador (v2).
+- Provedor LLM por operação (Scores / Vaga / Candidato) não altera o contrato de score; só `audit` / `llm_provider` são aditivos.
 
 ## Testes
 
@@ -59,6 +79,7 @@ Os dados ficam em JSON dentro de `data/`:
 - `data/candidates/{id}_{slug}_profile.json` — currículo completo de cada candidato
 - `data/scores.json` — índice leve de scores
 - `data/scores/{job_id}_{candidate_id}_{slug}_score.json` — detalhe completo de cada score
+- `data/llm_usage.jsonl` — eventos de tokens/custo OpenAI (append-only)
 
 Na primeira carga, entradas monolíticas antigas em `candidates.json` / `scores.json` são migradas automaticamente para arquivos individuais (idempotente).
 

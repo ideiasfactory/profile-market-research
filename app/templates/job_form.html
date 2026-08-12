@@ -52,6 +52,13 @@
         {% endfor %}
       </select>
     </label>
+    <label>Provedor LLM (análise)
+      <select name="llm_provider">
+        <option value="local" {{ "selected" if llm_provider_default == "local" else "" }}>Local (Ollama)</option>
+        <option value="openai" {{ "selected" if llm_provider_default == "openai" else "" }}>OpenAI</option>
+      </select>
+      <span class="field-help">Usado ao salvar e reanalisar. Compensation Intelligence permanece no LLM local.</span>
+    </label>
   </section>
 
   {% if is_edit %}
