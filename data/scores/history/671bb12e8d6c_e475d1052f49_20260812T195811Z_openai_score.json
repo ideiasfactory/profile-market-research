@@ -1,0 +1,478 @@
+{
+  "id": "671bb12e8d6c_e475d1052f49_20260812T195811Z_openai",
+  "job_id": "671bb12e8d6c",
+  "candidate_id": "e475d1052f49",
+  "job_title": "Arquiteto OIC - CPFL",
+  "candidate_name": "Bruno Libanio",
+  "final_score": 59.47,
+  "verdict_label": "evaluate",
+  "method": "llm",
+  "scoring_model_version": "v2",
+  "llm_provider": "openai",
+  "llm_model": "gpt-4.1",
+  "created_at": "2026-08-12T19:58:11.884384+00:00",
+  "items": [
+    {
+      "category": "Must-have",
+      "name": "Oracle Integration Cloud",
+      "weight": 10,
+      "tier": "MUST_HAVE",
+      "group": "OIC Platform",
+      "score": 3,
+      "confidence": 0.8,
+      "evidence_status": "explicit",
+      "evidence": [
+        {
+          "text": "Tenho experiência em integração de sistemas (SAP PO, Oracle OIC e SOA Suite, API Manager, barramentos internos e externos).",
+          "source": "resume"
+        }
+      ],
+      "weighted_score": 30.0,
+      "evidence_text": "Tenho experiência em integração de sistemas (SAP PO, Oracle OIC e SOA Suite, API Manager, barramentos internos e externos)."
+    },
+    {
+      "category": "Must-have",
+      "name": "Arquitetura de Integração",
+      "weight": 7,
+      "tier": "CORE",
+      "group": "Architecture",
+      "score": 5,
+      "confidence": 0.95,
+      "evidence_status": "explicit",
+      "evidence": [
+        {
+          "text": "Sou responsável por definir, implementar, configurar, gerenciar e administrar a arquitetura de sistemas, aplicações e integrações do Grupo CPFL e os processos relativos.",
+          "source": "resume"
+        },
+        {
+          "text": "Atuação estratégica, técnica e executiva na modernização da arquitetura de integração do Grêmio FB Porto Alegrense",
+          "source": "resume"
+        }
+      ],
+      "weighted_score": 35.0,
+      "evidence_text": "Sou responsável por definir, implementar, configurar, gerenciar e administrar a arquitetura de sistemas, aplicações e integrações do Grupo CPFL e os processos relativos."
+    },
+    {
+      "category": "Core skill",
+      "name": "API Management",
+      "weight": 6,
+      "tier": "CORE",
+      "group": "Architecture",
+      "score": 5,
+      "confidence": 0.95,
+      "evidence_status": "explicit",
+      "evidence": [
+        {
+          "text": "Possuo sólido conhecimento em API Management, com experiência em plataformas como Sensedia e Oracle Integration Cloud (OIC), além de domínio em modelos de integração sistêmica",
+          "source": "resume"
+        },
+        {
+          "text": "Governança de APIs: Estabelecimento de padrões de design, definição de políticas de segurança avançadas (como OAuth), monitoramento de métricas e gestão do ciclo de vida completo (Full Lifecycle API Management) na plataforma Sensedia.",
+          "source": "resume"
+        }
+      ],
+      "weighted_score": 30.0,
+      "evidence_text": "Possuo sólido conhecimento em API Management, com experiência em plataformas como Sensedia e Oracle Integration Cloud (OIC), além de domínio em modelos de integração sistêmica"
+    },
+    {
+      "category": "Core skill",
+      "name": "Enterprise Integration Patterns",
+      "weight": 6,
+      "tier": "CORE",
+      "group": "Architecture",
+      "score": 0,
+      "confidence": 0.2,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Core skill",
+      "name": "SAP Process Orchestration",
+      "weight": 7,
+      "tier": "CORE",
+      "group": "SAP Ecosystem",
+      "score": 2,
+      "confidence": 0.6,
+      "evidence_status": "explicit",
+      "evidence": [
+        {
+          "text": "Tenho experiência em integração de sistemas (SAP PO, Oracle OIC e SOA Suite, API Manager, barramentos internos e externos).",
+          "source": "resume"
+        }
+      ],
+      "weighted_score": 14.0,
+      "evidence_text": "Tenho experiência em integração de sistemas (SAP PO, Oracle OIC e SOA Suite, API Manager, barramentos internos e externos)."
+    },
+    {
+      "category": "Core skill",
+      "name": "SAP Business Technology Platform",
+      "weight": 7,
+      "tier": "CORE",
+      "group": "SAP Ecosystem",
+      "score": 0,
+      "confidence": 1.0,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Supporting skill",
+      "name": "Observabilidade",
+      "weight": 3,
+      "tier": "SUPPORTING",
+      "group": "Ops",
+      "score": 0,
+      "confidence": 0.2,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Supporting skill",
+      "name": "OAuth 2.0",
+      "weight": 3,
+      "tier": "SUPPORTING",
+      "group": "Security",
+      "score": 3,
+      "confidence": 0.8,
+      "evidence_status": "explicit",
+      "evidence": [
+        {
+          "text": "definição de políticas de segurança avançadas (como OAuth)",
+          "source": "resume"
+        }
+      ],
+      "weighted_score": 9.0,
+      "evidence_text": "definição de políticas de segurança avançadas (como OAuth)"
+    },
+    {
+      "category": "Supporting skill",
+      "name": "OpenAPI",
+      "weight": 3,
+      "tier": "SUPPORTING",
+      "group": "API Security",
+      "score": 0,
+      "confidence": 0.2,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Differential",
+      "name": "Kafka",
+      "weight": 2,
+      "tier": "DIFFERENTIAL",
+      "group": "Messaging",
+      "score": 0,
+      "confidence": 1.0,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Differential",
+      "name": "TOGAF",
+      "weight": 1,
+      "tier": "DIFFERENTIAL",
+      "group": "Architecture Frameworks",
+      "score": 0,
+      "confidence": 1.0,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Differential",
+      "name": "ArchiMate",
+      "weight": 1,
+      "tier": "DIFFERENTIAL",
+      "group": "Architecture Frameworks",
+      "score": 0,
+      "confidence": 1.0,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Soft skill",
+      "name": "Comunicação",
+      "weight": 3,
+      "tier": "SOFT",
+      "group": "Behavioral",
+      "score": 4,
+      "confidence": 0.9,
+      "evidence_status": "explicit",
+      "evidence": [
+        {
+          "text": "Minha atuação envolve comunicação assíncrona, arquiteturas de microsserviços e uma gestão orientada a resultados.",
+          "source": "resume"
+        },
+        {
+          "text": "Atuei na comunicação e transmissão de dados e informações para equipes internas e clientes, garantindo a clareza e a precisão das informações.",
+          "source": "resume"
+        },
+        {
+          "text": "Busquei sempre otimizar o trabalho da equipe, esclarecendo dúvidas e mantendo uma comunicação aberta sobre as necessidades do projeto.",
+          "source": "resume"
+        }
+      ],
+      "weighted_score": 12.0,
+      "evidence_text": "Minha atuação envolve comunicação assíncrona, arquiteturas de microsserviços e uma gestão orientada a resultados."
+    },
+    {
+      "category": "Soft skill",
+      "name": "Liderança Técnica",
+      "weight": 2,
+      "tier": "SOFT",
+      "group": "Leadership",
+      "score": 5,
+      "confidence": 1.0,
+      "evidence_status": "explicit",
+      "evidence": [
+        {
+          "text": "Sou profissional com mais de cinco anos de experiência em liderança técnica, atuando na otimização de processos e arquiteturas para garantir soluções eficientes em sistemas distribuídos.",
+          "source": "resume"
+        },
+        {
+          "text": "Liderei equipes de desenvolvimento alinhando estratégias de implementação à visão da empresa, sempre com foco na entrega contínua de valor aos clientes.",
+          "source": "resume"
+        },
+        {
+          "text": "Atuei como líder técnico, sendo responsável pela análise de requisitos e pela elaboração de soluções e arquiteturas técnicas.",
+          "source": "resume"
+        },
+        {
+          "text": "Liderei a direção da arquitetura e soluções para o time, sugerindo novas abordagens tecnológicas relevantes, como frameworks, linguagens, plataformas e sistemas.",
+          "source": "resume"
+        }
+      ],
+      "weighted_score": 10.0,
+      "evidence_text": "Sou profissional com mais de cinco anos de experiência em liderança técnica, atuando na otimização de processos e arquiteturas para garantir soluções eficientes em sistemas distribuídos."
+    }
+  ],
+  "score_breakdown": {
+    "dimensions": {
+      "core_technical_fit": 45.38,
+      "role_fit": 80.0,
+      "context_fit": 95.0,
+      "behavioral_fit": 88.0,
+      "differentials": 0.0
+    },
+    "weights": {
+      "core_technical_fit": 0.45,
+      "role_fit": 0.2,
+      "context_fit": 0.15,
+      "behavioral_fit": 0.1,
+      "differentials": 0.1
+    },
+    "final_score": 59.47,
+    "core_technical_fit": 45.38,
+    "role_fit": 80.0,
+    "context_fit": 95.0,
+    "behavioral_fit": 88.0,
+    "differentials": 0.0
+  },
+  "must_have_coverage": {
+    "covered": 1,
+    "total": 1,
+    "ratio": 1.0,
+    "covered_skills": [
+      "Oracle Integration Cloud"
+    ],
+    "missing_skills": [],
+    "min_score": 3
+  },
+  "critical_gaps": [
+    {
+      "name": "Enterprise Integration Patterns",
+      "severity": "important",
+      "tier": "CORE",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito CORE."
+    },
+    {
+      "name": "SAP Business Technology Platform",
+      "severity": "important",
+      "tier": "CORE",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito CORE."
+    },
+    {
+      "name": "Observabilidade",
+      "severity": "minor",
+      "tier": "SUPPORTING",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito SUPPORTING."
+    },
+    {
+      "name": "OpenAPI",
+      "severity": "minor",
+      "tier": "SUPPORTING",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito SUPPORTING."
+    },
+    {
+      "name": "Kafka",
+      "severity": "minor",
+      "tier": "DIFFERENTIAL",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito DIFFERENTIAL."
+    },
+    {
+      "name": "TOGAF",
+      "severity": "minor",
+      "tier": "DIFFERENTIAL",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito DIFFERENTIAL."
+    },
+    {
+      "name": "ArchiMate",
+      "severity": "minor",
+      "tier": "DIFFERENTIAL",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito DIFFERENTIAL."
+    }
+  ],
+  "group_scores": [
+    {
+      "name": "OIC Platform",
+      "score": 60.0,
+      "skills_total": 1,
+      "skills_covered": 1,
+      "coverage_ratio": 1.0
+    },
+    {
+      "name": "SAP Ecosystem",
+      "score": 20.0,
+      "skills_total": 2,
+      "skills_covered": 0,
+      "coverage_ratio": 0.0
+    },
+    {
+      "name": "API Security",
+      "score": 30.0,
+      "skills_total": 2,
+      "skills_covered": 1,
+      "coverage_ratio": 0.5
+    }
+  ],
+  "role_fit": 80.0,
+  "context_fit": 95.0,
+  "strengths": [
+    "Oracle Integration Cloud",
+    "API Management",
+    "Arquitetura de Integração",
+    "Liderança Técnica",
+    "Experiência prévia na CPFL e setor utilities"
+  ],
+  "gaps": [
+    "SAP Business Technology Platform",
+    "Enterprise Integration Patterns"
+  ],
+  "interview_validation": [
+    "Validar profundidade prática em OIC em projetos de migração SAP PO → OIC",
+    "Explorar conhecimento e experiência prática com SAP BTP",
+    "Investigar domínio de Enterprise Integration Patterns aplicados em projetos reais"
+  ],
+  "profile_summary": "Bruno Libanio, atua ou reporta experiência como Tech Lead | Team Lead | Arquiteto de Soluções, com base em Campinas, São Paulo, Brasil. Avaliação automática de aderência à vaga Arquiteto OIC - CPFL resultou em score 59.47%. Pontos com boa evidência: Arquitetura de Integração, API Management, Comunicação, Liderança Técnica. Lacunas ou baixa evidência em: Enterprise Integration Patterns, SAP Business Technology Platform, Observabilidade, OpenAPI, Kafka.",
+  "verdict": "Veredito: considerar com ressalvas para Arquiteto OIC - CPFL. O score de 59.47% mostra aderência parcial; vale aprofundar entrevistas nos gaps identificados.",
+  "audit": {
+    "scoring_model_version": "v2",
+    "job_analysis_version": 2,
+    "job_updated_at": "2026-08-08T02:38:31.904297+00:00",
+    "candidate_updated_at": "2026-08-07T20:15:51.383975+00:00",
+    "scored_at": "2026-08-12T19:58:05.704896+00:00",
+    "prompt_versions": {
+      "analyse_job": "v2",
+      "score_skills": "v2",
+      "score_fit": "v1",
+      "score_narrative": "v2",
+      "score_weights": "v1"
+    },
+    "llm_provider": "openai",
+    "llm_model": "gpt-4.1",
+    "llm_temperature": 0.1,
+    "skills_llm": [
+      {
+        "raw": "{\n  \"skills\": [\n    {\n      \"name\": \"Oracle Integration Cloud\",\n      \"score\": 3,\n      \"confidence\": 0.8,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [\n        {\n          \"text\": \"Tenho experiência em integração de sistemas (SAP PO, Oracle OIC e SOA Suite, API Manager, barramentos internos e externos).\",\n          \"source\": \"resume\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Arquitetura de Integração\",\n      \"score\": 5,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [\n        {\n          \"text\": \"Sou responsável por definir, implementar, configurar, gerenciar e administrar a arquitetura de sistemas, aplicações e integrações do Grupo CPFL e os processos relativos.\",\n          \"source\": \"resume\"\n        },\n        {\n          \"text\": \"Atuação estratégica, técnica e executiva na modernização da arquitetura de integração do Grêmio FB Porto Alegrense\",\n          \"source\": \"resume\"\n        }\n      ]\n    },\n    {\n      \"name\": \"API Management\",\n      \"score\": 5,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [\n        {\n          \"text\": \"Possuo sólido conhecimento em API Management, com experiência em plataformas como Sensedia e Oracle Integration Cloud (OIC), além de domínio em modelos de integração sistêmica\",\n          \"source\": \"resume\"\n        },\n        {\n          \"text\": \"Governança de APIs: Estabelecimento de padrões de design, definição de políticas de segurança avançadas (como OAuth), monitoramento de métricas e gestão do ciclo de vida completo (Full Lifecycle API Management) na plataforma Sensedia.\",\n          \"source\": \"resume\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Enterprise Integration Patterns\",\n      \"score\": 3,\n      \"confidence\": 0.7,\n      \"evidence_status\": \"inferred\",\n      \"evidence\": [\n        {\n          \"text\": \"Direcionamento técnico para a concepção e desenho de fluxos de integração complexos, assegurando alta eficiência, escalabilidade e o baixo acoplamento entre os sistemas core.\",\n          \"source\": \"resume\"\n        },\n        {\n          \"text\": \"Domínio em modelos de integração sistêmica, incluindo arquiteturas orientadas a eventos e integrações síncronas e assíncronas.\",\n          \"source\": \"resume\"\n        }\n      ]\n    },\n    {\n      \"name\": \"SAP Process Orchestration\",\n      \"score\": 2,\n      \"confidence\": 0.6,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [\n        {\n          \"text\": \"Tenho experiência em integração de sistemas (SAP PO, Oracle OIC e SOA Suite, API Manager, barramentos internos e externos).\",\n          \"source\": \"resume\"\n        }\n      ]\n    },\n    {\n      \"name\": \"SAP Business Technology Platform\",\n      \"score\": 0,\n      \"confidence\": 1,\n      \"evidence_status\": \"not_found\",\n      \"evidence\": []\n    },\n    {\n      \"name\": \"Observabilidade\",\n      \"score\": 2,\n      \"confidence\": 0.6,\n      \"evidence_status\": \"inferred\",\n      \"evidence\": [\n        {\n          \"text\": \"ferramentas de monitoração e governança\",\n          \"source\": \"resume\"\n        },\n        {\n          \"text\": \"monitoramento de métricas e gestão do ciclo de vida completo (Full Lifecycle API Management) na plataforma Sensedia.\",\n          \"source\": \"resume\"\n        }\n      ]\n    },\n    {\n      \"name\": \"OAuth 2.0\",\n      \"score\": 3,\n      \"confidence\": 0.8,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [\n        {\n          \"text\": \"definição de políticas de segurança avançadas (como OAuth)\",\n          \"source\": \"resume\"\n        }\n      ]\n    },\n    {\n      \"name\": \"OpenAPI\",\n      \"score\": 2,\n      \"confidence\": 0.6,\n      \"evidence_status\": \"inferred\",\n      \"evidence\": [\n        {\n          \"text\": \"Estabelecimento de padrões de design, definição de políticas de segurança avançadas (como OAuth), monitoramento de métricas e gestão do ciclo de vida completo (Full Lifecycle API Management) na plataforma Sensedia.\",\n          \"source\": \"resume\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Kafka\",\n      \"",
+        "model": "gpt-4.1",
+        "provider": "openai",
+        "temperature": 0.1,
+        "error": null,
+        "attempts": 1,
+        "prompt_tokens": 2876,
+        "completion_tokens": 1093,
+        "total_tokens": 3969,
+        "estimated_cost_usd": 0.014496,
+        "usable": true
+      },
+      {
+        "raw": "{\n  \"skills\": [\n    {\n      \"name\": \"Comunicação\",\n      \"score\": 4,\n      \"confidence\": 0.9,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [\n        {\n          \"text\": \"Minha atuação envolve comunicação assíncrona, arquiteturas de microsserviços e uma gestão orientada a resultados.\",\n          \"source\": \"resume\"\n        },\n        {\n          \"text\": \"Atuei na comunicação e transmissão de dados e informações para equipes internas e clientes, garantindo a clareza e a precisão das informações.\",\n          \"source\": \"resume\"\n        },\n        {\n          \"text\": \"Busquei sempre otimizar o trabalho da equipe, esclarecendo dúvidas e mantendo uma comunicação aberta sobre as necessidades do projeto.\",\n          \"source\": \"resume\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Liderança Técnica\",\n      \"score\": 5,\n      \"confidence\": 1.0,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [\n        {\n          \"text\": \"Sou profissional com mais de cinco anos de experiência em liderança técnica, atuando na otimização de processos e arquiteturas para garantir soluções eficientes em sistemas distribuídos.\",\n          \"source\": \"resume\"\n        },\n        {\n          \"text\": \"Liderei equipes de desenvolvimento alinhando estratégias de implementação à visão da empresa, sempre com foco na entrega contínua de valor aos clientes.\",\n          \"source\": \"resume\"\n        },\n        {\n          \"text\": \"Atuei como líder técnico, sendo responsável pela análise de requisitos e pela elaboração de soluções e arquiteturas técnicas.\",\n          \"source\": \"resume\"\n        },\n        {\n          \"text\": \"Liderei a direção da arquitetura e soluções para o time, sugerindo novas abordagens tecnológicas relevantes, como frameworks, linguagens, plataformas e sistemas.\",\n          \"source\": \"resume\"\n        }\n      ]\n    }\n  ]\n}",
+        "model": "gpt-4.1",
+        "provider": "openai",
+        "temperature": 0.1,
+        "error": null,
+        "attempts": 1,
+        "prompt_tokens": 2800,
+        "completion_tokens": 401,
+        "total_tokens": 3201,
+        "estimated_cost_usd": 0.008808,
+        "usable": true
+      }
+    ],
+    "fit_llm": {
+      "raw": "{\n  \"role_fit\": 80,\n  \"context_fit\": 95,\n  \"strengths\": [\n    \"Oracle Integration Cloud\",\n    \"API Management\",\n    \"Arquitetura de Integração\",\n    \"Liderança Técnica\",\n    \"Experiência prévia na CPFL e setor utilities\"\n  ],\n  \"gaps\": [\n    \"SAP Business Technology Platform\",\n    \"Enterprise Integration Patterns\"\n  ],\n  \"interview_validation\": [\n    \"Validar profundidade prática em OIC em projetos de migração SAP PO → OIC\",\n    \"Explorar conhecimento e experiência prática com SAP BTP\",\n    \"Investigar domínio de Enterprise Integration Patterns aplicados em projetos reais\"\n  ]\n}",
+      "model": "gpt-4.1",
+      "provider": "openai",
+      "temperature": 0.1,
+      "error": null,
+      "attempts": 1,
+      "prompt_tokens": 2369,
+      "completion_tokens": 146,
+      "total_tokens": 2515,
+      "estimated_cost_usd": 0.005906
+    },
+    "narrative_llm": {
+      "parsed": {
+        "profile_summary": "O candidato possui sólida experiência em arquitetura de integração, com atuação relevante em projetos estratégicos no setor de utilities e integração de sistemas. Destaca-se pelo domínio em Oracle Integration Cloud, API Management e arquitetura de integração, além de forte liderança técnica e habilidades de comunicação. Demonstrou experiência prática em definição de arquiteturas, desenho de soluções e implementação de fluxos de integração, especialmente em ambientes corporativos de grande porte. Também possui conhecimento em políticas de segurança como OAuth 2.0. Entretanto, não apresenta evidências de experiência com Enterprise Integration Patterns, SAP Business Technology Platform, observabilidade, OpenAPI, Kafka, TOGAF ou ArchiMate.",
+        "verdict_label": "recommended",
+        "verdict": "O candidato apresenta perfil alinhado à vaga, com pontos fortes em Oracle Integration Cloud, arquitetura de integração, API Management, liderança técnica e comunicação. Apesar de lacunas importantes em padrões de integração, SAP BTP e outras tecnologias específicas, o score final de 59.47% e a cobertura dos requisitos essenciais justificam a recomendação para o processo. Recomenda-se atenção às lacunas técnicas durante as próximas etapas."
+      },
+      "raw": "{\n  \"profile_summary\": \"O candidato possui sólida experiência em arquitetura de integração, com atuação relevante em projetos estratégicos no setor de utilities e integração de sistemas. Destaca-se pelo domínio em Oracle Integration Cloud, API Management e arquitetura de integração, além de forte liderança técnica e habilidades de comunicação. Demonstrou experiência prática em definição de arquiteturas, desenho de soluções e implementação de fluxos de integração, especialmente em ambientes corporativos de grande porte. Também possui conhecimento em políticas de segurança como OAuth 2.0. Entretanto, não apresenta evidências de experiência com Enterprise Integration Patterns, SAP Business Technology Platform, observabilidade, OpenAPI, Kafka, TOGAF ou ArchiMate.\",\n  \"verdict_label\": \"recommended\",\n  \"verdict\": \"O candidato apresenta perfil alinhado à vaga, com pontos fortes em Oracle Integration Cloud, arquitetura de integração, API Management, liderança técnica e comunicação. Apesar de lacunas importantes em padrões de integração, SAP BTP e outras tecnologias específicas, o score final de 59.47% e a cobertura dos requisitos essenciais justificam a recomendação para o processo. Recomenda-se atenção às lacunas técnicas durante as próximas etapas.\"\n}",
+      "model": "gpt-4.1",
+      "provider": "openai",
+      "temperature": 0.1,
+      "error": null,
+      "attempts": 1,
+      "prompt_tokens": 2992,
+      "completion_tokens": 238,
+      "total_tokens": 3230,
+      "estimated_cost_usd": 0.007888
+    },
+    "usage": {
+      "prompt_tokens": 11037,
+      "completion_tokens": 1878,
+      "total_tokens": 12915,
+      "estimated_cost_usd": 0.037098,
+      "calls": 4
+    }
+  },
+  "score_id": "671bb12e8d6c_e475d1052f49",
+  "archived_at": "2026-08-12T20:01:19.957640+00:00",
+  "is_history": true
+}

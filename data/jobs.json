@@ -216,5 +216,852 @@
       ],
       "analysis_version": 2
     }
+  },
+  {
+    "id": "3c53e6963cc9",
+    "title": "Arquiteto OIC - CPFL (OpenAI)",
+    "description": "Vaga para Arquiteto OIC",
+    "profile": "Arquiteto",
+    "seniority": "Especialista",
+    "job_description": "# Job Description – Arquiteto(a) de Soluções Sênior – Integração Corporativa (Oracle Integration Cloud | SAP Integration)\r\n\r\n## Objetivo da posição\r\n\r\nEstamos em busca de um(a) **Arquiteto(a) de Soluções Sênior** com sólida experiência em arquitetura de integração e visão holística de arquitetura corporativa, para atuar em projetos estratégicos de transformação digital e modernização de plataformas de integração.\r\n\r\nO profissional será responsável pelo desenho de soluções, definição de arquiteturas de integração e apoio técnico em iniciativas envolvendo **Oracle Integration Cloud (OIC)**, arquiteturas modernas baseadas em APIs e ambientes corporativos SAP.\r\n\r\nO foco da posição é **arquitetura e integração**, não desenvolvimento.\r\n\r\n---\r\n\r\n## Local de atuação\r\n\r\n* **Modelo de trabalho:** Presencial;\r\n* **Local:** Campinas/SP;\r\n* É indispensável disponibilidade para atuação presencial nas instalações do cliente durante o período do projeto.\r\n\r\n---\r\n\r\n## Principais responsabilidades\r\n\r\n* Definir arquiteturas de integração para ambientes corporativos de grande porte;\r\n* Projetar soluções utilizando Oracle Integration Cloud (OIC);\r\n* Traduzir requisitos de negócio e requisitos técnicos em arquiteturas escaláveis, resilientes e seguras;\r\n* Definir estratégias de modernização de integrações legadas;\r\n* Avaliar integrações existentes e propor arquiteturas-alvo;\r\n* Apoiar estimativas técnicas e o desenho de soluções;\r\n* Atuar em conjunto com arquitetos corporativos, especialistas SAP, equipes de desenvolvimento, infraestrutura e segurança;\r\n* Definir padrões arquiteturais, boas práticas e mecanismos de governança de integração;\r\n* Participar de revisões arquiteturais e decisões técnicas estratégicas;\r\n* Apoiar programas de migração e modernização de plataformas de integração;\r\n* Atuar especialmente em iniciativas envolvendo SAP Process Orchestration (SAP PO), SAP Business Technology Platform (SAP BTP) e Oracle Integration Cloud (OIC);\r\n* Produzir e revisar documentação técnica e arquitetural;\r\n* Apoiar discussões técnicas com clientes, fornecedores e equipes multidisciplinares;\r\n* Apoiar estimativas e atividades de pré-vendas quando necessário.\r\n\r\n---\r\n\r\n## Requisitos obrigatórios\r\n\r\n### Oracle Integration Cloud\r\n\r\nExperiência sólida em:\r\n\r\n* Oracle Integration Cloud (OIC);\r\n* Arquitetura de integrações;\r\n* Desenho e implementação de fluxos de integração;\r\n* Orquestração de serviços;\r\n* Integrações síncronas e assíncronas;\r\n* Tratamento de erros e exceções;\r\n* Monitoramento e rastreabilidade;\r\n* Projetos de modernização e migração de integrações.\r\n\r\n---\r\n\r\n### Arquitetura de Integração\r\n\r\nConhecimento sólido em padrões e práticas de arquitetura moderna, incluindo:\r\n\r\n* APIs REST;\r\n* Web Services SOAP;\r\n* OpenAPI;\r\n* API Management;\r\n* Microsserviços;\r\n* Arquitetura Orientada a Eventos;\r\n* Enterprise Integration Patterns;\r\n* Mensageria;\r\n* Integrações síncronas e assíncronas;\r\n* OAuth 2.0;\r\n* OpenID Connect;\r\n* JWT;\r\n* CORS;\r\n* TLS e mTLS;\r\n* Versionamento de APIs;\r\n* Observabilidade;\r\n* Monitoramento e rastreabilidade de integrações;\r\n* Segurança aplicada a APIs e integrações;\r\n* Resiliência, disponibilidade e escalabilidade;\r\n* Arquiteturas distribuídas e ambientes híbridos.\r\n\r\n---\r\n\r\n### Ecossistema SAP\r\n\r\nConhecimento em arquitetura de integração com o ecossistema SAP, incluindo:\r\n\r\n* SAP S/4HANA;\r\n* SAP ECC, desejável;\r\n* SAP Process Orchestration;\r\n* SAP Business Technology Platform;\r\n* SAP Integration Suite, desejável.\r\n\r\nConhecimento dos principais mecanismos de integração utilizados pelo SAP, tais como:\r\n\r\n* RFC;\r\n* BAPI;\r\n* IDoc;\r\n* OData;\r\n* Web Services SOAP;\r\n* APIs REST;\r\n* Integração baseada em arquivos;\r\n* Mensageria e eventos.\r\n\r\nEsta posição **não exige experiência em desenvolvimento SAP ou ABAP**.\r\n\r\nEspera-se que o profissional seja capaz de:\r\n\r\n* Compreender a arquitetura de integração do ecossistema SAP;\r\n* Entender como aplicações externas se integram ao SAP;\r\n* Compreender cenários de integração com SAP S/4HANA;\r\n* Interpretar interfaces e fluxos implementados no SAP Process Orchestration;\r\n* Interpretar canais, adaptadores, mappings, transformações e orquestrações existentes no SAP PO;\r\n* Compreender cenários de integração utilizando SAP Business Technology Platform;\r\n* Avaliar dependências entre SAP, sistemas legados, plataformas de integração e aplicações externas;\r\n* Participar de discussões técnicas com especialistas SAP;\r\n* Apoiar a definição de estratégias arquiteturais para integração e modernização de ambientes SAP;\r\n* Apoiar iniciativas de migração de integrações do SAP PO para o Oracle Integration Cloud.\r\n\r\n---\r\n\r\n## Competências comportamentais\r\n\r\n* Visão holística de arquitetura corporativa;\r\n* Perfil consultivo;\r\n* Pensamento sistêmico;\r\n* Capacidade analítica;\r\n* Capacidade de compreender ambientes tecnológicos complexos;\r\n* Comunicação clara com áreas técnicas, executivas e de negócio;\r\n* Liderança técnica;\r\n* Autonomia;\r\n* Organização;\r\n* Capacidade de documentação;\r\n* Facilidade para atuar em equipes multidisciplinares;\r\n* Capacidade de conduzir discussões e decisões arquiteturais;\r\n* Facilidade para interação com clientes e fornecedores.\r\n\r\n---\r\n\r\n## Experiência profissional desejada\r\n\r\n* Experiência mínima de cinco anos atuando como Arquiteto de Soluções, Arquiteto de Integração, Líder Técnico de Integração ou função equivalente;\r\n* Experiência em projetos corporativos de integração de média e grande complexidade;\r\n* Experiência comprovada com Oracle Integration Cloud;\r\n* Vivência em projetos de transformação digital e modernização de plataformas de integração;\r\n* Experiência em ambientes SAP integrados a plataformas de integração de mercado;\r\n* Experiência na definição de arquiteturas corporativas e integração entre aplicações;\r\n* Experiência na produção de documentação técnica e arquitetural;\r\n* Vivência em projetos com múltiplas equipes, fornecedores e plataformas tecnológicas.\r\n\r\n---\r\n\r\n## Diferenciais\r\n\r\nSerão considerados diferenciais:\r\n\r\n* Experiência em projetos de migração do SAP Process Orchestration para o Oracle Integration Cloud;\r\n* Experiência com Oracle Cloud Infrastructure;\r\n* Conhecimento em SAP Integration Suite;\r\n* Conhecimento em MuleSoft;\r\n* Conhecimento em Kafka;\r\n* Conhecimento em RabbitMQ;\r\n* Conhecimento em Azure Integration Services;\r\n* Conhecimento em TOGAF;\r\n* Conhecimento em ArchiMate;\r\n* Conhecimento em BPMN;\r\n* Conhecimento em processos de CI/CD para plataformas de integração;\r\n* Conhecimento em DevSecOps;\r\n* Experiência em projetos de integração envolvendo ambientes híbridos e multicloud;\r\n* Experiência em atividades de pré-vendas, estimativas e definição de soluções.\r\n\r\n---\r\n\r\n## Perfil esperado\r\n\r\nBuscamos um profissional com perfil de arquiteto, capaz de atuar de forma estratégica na definição de soluções de integração para ambientes corporativos complexos.\r\n\r\nO candidato ideal deverá possuir visão ampla de arquitetura, facilidade para compreender diferentes plataformas e tecnologias de integração, capacidade para conduzir discussões técnicas de alto nível e habilidade para conectar requisitos de negócio às melhores práticas de arquitetura.\r\n\r\nMais do que um especialista em uma ferramenta, buscamos um profissional capaz de compreender o ambiente de forma integrada, avaliar impactos entre aplicações, plataformas, infraestrutura, segurança e processos, além de propor soluções sustentáveis e alinhadas à estratégia do projeto.\r\n\r\nEspera-se uma postura consultiva, autonomia, excelente capacidade de comunicação e facilidade para interagir com diferentes áreas, clientes e fornecedores, apoiando decisões arquiteturais em projetos estratégicos de modernização de integração.\r\n\r\n---\r\n\r\n## Requisitos adicionais\r\n\r\n* Disponibilidade para atuação presencial em Campinas/SP;\r\n* Disponibilidade para atuar nas instalações do cliente durante o período do projeto;\r\n* Disponibilidade para reuniões presenciais com clientes e equipes técnicas;\r\n* Disponibilidade para viagens ocasionais, quando necessário;\r\n* Facilidade para trabalhar em ambientes colaborativos e multidisciplinares.",
+    "ideal_candidate_context": "",
+    "compensation_type": "pj_hour",
+    "compensation_min": 120.0,
+    "compensation_max": 150.0,
+    "work_location": "Híbrido",
+    "created_at": "2026-08-12T19:28:13.098599+00:00",
+    "updated_at": "2026-08-12T19:28:43.952993+00:00",
+    "analysis": {
+      "version": 2,
+      "role_intent": "Atuar como Arquiteto(a) de Soluções Sênior, liderando a definição e desenho de arquiteturas de integração corporativa, com foco em Oracle Integration Cloud (OIC) e integração de ambientes SAP, apoiando projetos estratégicos de transformação digital e modernização de plataformas de integração.",
+      "must_have": [
+        {
+          "name": "Oracle Integration Cloud",
+          "tier": "MUST_HAVE",
+          "weight": 10,
+          "group": "OIC Platform"
+        },
+        {
+          "name": "Arquitetura de Integração",
+          "tier": "MUST_HAVE",
+          "weight": 9,
+          "group": "Architecture"
+        },
+        {
+          "name": "Desenho de Soluções de Integração",
+          "tier": "MUST_HAVE",
+          "weight": 8,
+          "group": "Architecture"
+        },
+        {
+          "name": "Orquestração de Serviços",
+          "tier": "MUST_HAVE",
+          "weight": 8,
+          "group": "Integration Patterns"
+        },
+        {
+          "name": "Monitoramento e Rastreamento de Integrações",
+          "tier": "MUST_HAVE",
+          "weight": 7,
+          "group": "Ops"
+        },
+        {
+          "name": "Projetos de Modernização e Migração de Integrações",
+          "tier": "MUST_HAVE",
+          "weight": 7,
+          "group": "Transformation"
+        }
+      ],
+      "core_skills": [
+        {
+          "name": "APIs REST",
+          "tier": "CORE",
+          "weight": 8,
+          "group": "API"
+        },
+        {
+          "name": "Web Services SOAP",
+          "tier": "CORE",
+          "weight": 7,
+          "group": "API"
+        },
+        {
+          "name": "OpenAPI",
+          "tier": "CORE",
+          "weight": 7,
+          "group": "API"
+        },
+        {
+          "name": "API Management",
+          "tier": "CORE",
+          "weight": 7,
+          "group": "API"
+        },
+        {
+          "name": "Microsserviços",
+          "tier": "CORE",
+          "weight": 7,
+          "group": "Architecture"
+        },
+        {
+          "name": "Arquitetura Orientada a Eventos",
+          "tier": "CORE",
+          "weight": 7,
+          "group": "Architecture"
+        },
+        {
+          "name": "Enterprise Integration Patterns",
+          "tier": "CORE",
+          "weight": 7,
+          "group": "Integration Patterns"
+        },
+        {
+          "name": "Mensageria",
+          "tier": "CORE",
+          "weight": 6,
+          "group": "Messaging"
+        },
+        {
+          "name": "Integrações Síncronas e Assíncronas",
+          "tier": "CORE",
+          "weight": 6,
+          "group": "Integration Patterns"
+        },
+        {
+          "name": "OAuth 2.0",
+          "tier": "CORE",
+          "weight": 6,
+          "group": "API Security"
+        },
+        {
+          "name": "OpenID Connect",
+          "tier": "CORE",
+          "weight": 6,
+          "group": "API Security"
+        },
+        {
+          "name": "JWT",
+          "tier": "CORE",
+          "weight": 6,
+          "group": "API Security"
+        },
+        {
+          "name": "CORS",
+          "tier": "CORE",
+          "weight": 5,
+          "group": "API Security"
+        },
+        {
+          "name": "TLS",
+          "tier": "CORE",
+          "weight": 5,
+          "group": "API Security"
+        },
+        {
+          "name": "mTLS",
+          "tier": "CORE",
+          "weight": 5,
+          "group": "API Security"
+        },
+        {
+          "name": "Versionamento de APIs",
+          "tier": "CORE",
+          "weight": 5,
+          "group": "API"
+        }
+      ],
+      "supporting_skills": [
+        {
+          "name": "Observabilidade",
+          "tier": "SUPPORTING",
+          "weight": 6,
+          "group": "Ops"
+        },
+        {
+          "name": "Segurança aplicada a APIs e integrações",
+          "tier": "SUPPORTING",
+          "weight": 6,
+          "group": "API Security"
+        },
+        {
+          "name": "Resiliência",
+          "tier": "SUPPORTING",
+          "weight": 5,
+          "group": "Architecture"
+        },
+        {
+          "name": "Disponibilidade",
+          "tier": "SUPPORTING",
+          "weight": 5,
+          "group": "Architecture"
+        },
+        {
+          "name": "Escalabilidade",
+          "tier": "SUPPORTING",
+          "weight": 5,
+          "group": "Architecture"
+        },
+        {
+          "name": "Arquiteturas Distribuídas",
+          "tier": "SUPPORTING",
+          "weight": 4,
+          "group": "Architecture"
+        },
+        {
+          "name": "Ambientes Híbridos",
+          "tier": "SUPPORTING",
+          "weight": 4,
+          "group": "Architecture"
+        },
+        {
+          "name": "SAP S/4HANA",
+          "tier": "SUPPORTING",
+          "weight": 4,
+          "group": "SAP Ecosystem"
+        },
+        {
+          "name": "SAP Process Orchestration",
+          "tier": "SUPPORTING",
+          "weight": 4,
+          "group": "SAP Ecosystem"
+        },
+        {
+          "name": "SAP Business Technology Platform",
+          "tier": "SUPPORTING",
+          "weight": 4,
+          "group": "SAP Ecosystem"
+        },
+        {
+          "name": "RFC",
+          "tier": "SUPPORTING",
+          "weight": 3,
+          "group": "SAP Integration"
+        },
+        {
+          "name": "BAPI",
+          "tier": "SUPPORTING",
+          "weight": 3,
+          "group": "SAP Integration"
+        },
+        {
+          "name": "IDoc",
+          "tier": "SUPPORTING",
+          "weight": 3,
+          "group": "SAP Integration"
+        },
+        {
+          "name": "OData",
+          "tier": "SUPPORTING",
+          "weight": 3,
+          "group": "SAP Integration"
+        },
+        {
+          "name": "Integração baseada em arquivos",
+          "tier": "SUPPORTING",
+          "weight": 2,
+          "group": "SAP Integration"
+        },
+        {
+          "name": "Mensageria e eventos (SAP)",
+          "tier": "SUPPORTING",
+          "weight": 2,
+          "group": "SAP Integration"
+        }
+      ],
+      "differentials": [
+        {
+          "name": "Migração SAP PO para Oracle Integration Cloud",
+          "tier": "DIFFERENTIAL",
+          "weight": 4,
+          "group": "Transformation"
+        },
+        {
+          "name": "Oracle Cloud Infrastructure",
+          "tier": "DIFFERENTIAL",
+          "weight": 4,
+          "group": "Cloud"
+        },
+        {
+          "name": "SAP Integration Suite",
+          "tier": "DIFFERENTIAL",
+          "weight": 4,
+          "group": "SAP Ecosystem"
+        },
+        {
+          "name": "MuleSoft",
+          "tier": "DIFFERENTIAL",
+          "weight": 3,
+          "group": "Integration Platform"
+        },
+        {
+          "name": "Kafka",
+          "tier": "DIFFERENTIAL",
+          "weight": 3,
+          "group": "Messaging"
+        },
+        {
+          "name": "RabbitMQ",
+          "tier": "DIFFERENTIAL",
+          "weight": 2,
+          "group": "Messaging"
+        },
+        {
+          "name": "Azure Integration Services",
+          "tier": "DIFFERENTIAL",
+          "weight": 2,
+          "group": "Cloud"
+        },
+        {
+          "name": "TOGAF",
+          "tier": "DIFFERENTIAL",
+          "weight": 2,
+          "group": "Architecture Framework"
+        },
+        {
+          "name": "ArchiMate",
+          "tier": "DIFFERENTIAL",
+          "weight": 2,
+          "group": "Architecture Framework"
+        },
+        {
+          "name": "BPMN",
+          "tier": "DIFFERENTIAL",
+          "weight": 2,
+          "group": "Modeling"
+        },
+        {
+          "name": "CI/CD para plataformas de integração",
+          "tier": "DIFFERENTIAL",
+          "weight": 2,
+          "group": "Ops"
+        },
+        {
+          "name": "DevSecOps",
+          "tier": "DIFFERENTIAL",
+          "weight": 2,
+          "group": "Ops"
+        }
+      ],
+      "soft_skills": [
+        {
+          "name": "Visão holística de arquitetura corporativa",
+          "tier": "SOFT",
+          "weight": 6,
+          "group": "Behavioral"
+        },
+        {
+          "name": "Perfil consultivo",
+          "tier": "SOFT",
+          "weight": 6,
+          "group": "Behavioral"
+        },
+        {
+          "name": "Pensamento sistêmico",
+          "tier": "SOFT",
+          "weight": 6,
+          "group": "Behavioral"
+        },
+        {
+          "name": "Capacidade analítica",
+          "tier": "SOFT",
+          "weight": 5,
+          "group": "Behavioral"
+        },
+        {
+          "name": "Capacidade de compreender ambientes tecnológicos complexos",
+          "tier": "SOFT",
+          "weight": 5,
+          "group": "Behavioral"
+        },
+        {
+          "name": "Comunicação clara",
+          "tier": "SOFT",
+          "weight": 5,
+          "group": "Behavioral"
+        },
+        {
+          "name": "Liderança técnica",
+          "tier": "SOFT",
+          "weight": 5,
+          "group": "Behavioral"
+        },
+        {
+          "name": "Autonomia",
+          "tier": "SOFT",
+          "weight": 5,
+          "group": "Behavioral"
+        },
+        {
+          "name": "Organização",
+          "tier": "SOFT",
+          "weight": 4,
+          "group": "Behavioral"
+        },
+        {
+          "name": "Capacidade de documentação",
+          "tier": "SOFT",
+          "weight": 4,
+          "group": "Behavioral"
+        },
+        {
+          "name": "Facilidade para atuar em equipes multidisciplinares",
+          "tier": "SOFT",
+          "weight": 4,
+          "group": "Behavioral"
+        },
+        {
+          "name": "Capacidade de conduzir discussões e decisões arquiteturais",
+          "tier": "SOFT",
+          "weight": 4,
+          "group": "Behavioral"
+        }
+      ],
+      "role_expectations": "Atuação sênior e consultiva na definição de arquiteturas de integração, desenho de soluções, apoio técnico e liderança técnica em projetos estratégicos de integração corporativa, especialmente envolvendo Oracle Integration Cloud e ambientes SAP. Espera-se visão holística, autonomia, capacidade de comunicação com diferentes áreas e habilidade para conduzir discussões técnicas de alto nível.",
+      "context_signals": [
+        "setor utilities",
+        "presencial Campinas",
+        "cliente CPFL",
+        "projetos de transformação digital",
+        "integração SAP e OIC",
+        "ambientes corporativos complexos"
+      ],
+      "skill_groups": [
+        {
+          "name": "OIC Platform",
+          "skills": [
+            "Oracle Integration Cloud"
+          ]
+        },
+        {
+          "name": "Architecture",
+          "skills": [
+            "Arquitetura de Integração",
+            "Desenho de Soluções de Integração",
+            "Microsserviços",
+            "Arquitetura Orientada a Eventos",
+            "Resiliência",
+            "Disponibilidade",
+            "Escalabilidade",
+            "Arquiteturas Distribuídas",
+            "Ambientes Híbridos"
+          ]
+        },
+        {
+          "name": "API",
+          "skills": [
+            "APIs REST",
+            "Web Services SOAP",
+            "OpenAPI",
+            "API Management",
+            "Versionamento de APIs"
+          ]
+        },
+        {
+          "name": "API Security",
+          "skills": [
+            "OAuth 2.0",
+            "OpenID Connect",
+            "JWT",
+            "CORS",
+            "TLS",
+            "mTLS",
+            "Segurança aplicada a APIs e integrações"
+          ]
+        },
+        {
+          "name": "Integration Patterns",
+          "skills": [
+            "Orquestração de Serviços",
+            "Enterprise Integration Patterns",
+            "Integrações Síncronas e Assíncronas"
+          ]
+        },
+        {
+          "name": "Messaging",
+          "skills": [
+            "Mensageria",
+            "Kafka",
+            "RabbitMQ",
+            "Mensageria e eventos (SAP)"
+          ]
+        },
+        {
+          "name": "Ops",
+          "skills": [
+            "Monitoramento e Rastreamento de Integrações",
+            "Observabilidade",
+            "CI/CD para plataformas de integração",
+            "DevSecOps"
+          ]
+        },
+        {
+          "name": "SAP Ecosystem",
+          "skills": [
+            "SAP S/4HANA",
+            "SAP Process Orchestration",
+            "SAP Business Technology Platform",
+            "SAP Integration Suite"
+          ]
+        },
+        {
+          "name": "SAP Integration",
+          "skills": [
+            "RFC",
+            "BAPI",
+            "IDoc",
+            "OData",
+            "Integração baseada em arquivos"
+          ]
+        },
+        {
+          "name": "Cloud",
+          "skills": [
+            "Oracle Cloud Infrastructure",
+            "Azure Integration Services"
+          ]
+        },
+        {
+          "name": "Architecture Framework",
+          "skills": [
+            "TOGAF",
+            "ArchiMate"
+          ]
+        },
+        {
+          "name": "Modeling",
+          "skills": [
+            "BPMN"
+          ]
+        }
+      ],
+      "hard_skills": [
+        {
+          "name": "Oracle Integration Cloud",
+          "weight": 5,
+          "tier": "MUST_HAVE",
+          "group": "OIC Platform"
+        },
+        {
+          "name": "Arquitetura de Integração",
+          "weight": 5,
+          "tier": "MUST_HAVE",
+          "group": "Architecture"
+        },
+        {
+          "name": "Desenho de Soluções de Integração",
+          "weight": 5,
+          "tier": "MUST_HAVE",
+          "group": "Architecture"
+        },
+        {
+          "name": "Orquestração de Serviços",
+          "weight": 5,
+          "tier": "MUST_HAVE",
+          "group": "Integration Patterns"
+        },
+        {
+          "name": "Monitoramento e Rastreamento de Integrações",
+          "weight": 5,
+          "tier": "MUST_HAVE",
+          "group": "Ops"
+        },
+        {
+          "name": "Projetos de Modernização e Migração de Integrações",
+          "weight": 5,
+          "tier": "MUST_HAVE",
+          "group": "Transformation"
+        },
+        {
+          "name": "APIs REST",
+          "weight": 4,
+          "tier": "CORE",
+          "group": "API"
+        },
+        {
+          "name": "Web Services SOAP",
+          "weight": 4,
+          "tier": "CORE",
+          "group": "API"
+        },
+        {
+          "name": "OpenAPI",
+          "weight": 4,
+          "tier": "CORE",
+          "group": "API"
+        },
+        {
+          "name": "API Management",
+          "weight": 4,
+          "tier": "CORE",
+          "group": "API"
+        },
+        {
+          "name": "Microsserviços",
+          "weight": 4,
+          "tier": "CORE",
+          "group": "Architecture"
+        },
+        {
+          "name": "Arquitetura Orientada a Eventos",
+          "weight": 4,
+          "tier": "CORE",
+          "group": "Architecture"
+        },
+        {
+          "name": "Enterprise Integration Patterns",
+          "weight": 4,
+          "tier": "CORE",
+          "group": "Integration Patterns"
+        },
+        {
+          "name": "Mensageria",
+          "weight": 4,
+          "tier": "CORE",
+          "group": "Messaging"
+        },
+        {
+          "name": "Integrações Síncronas e Assíncronas",
+          "weight": 4,
+          "tier": "CORE",
+          "group": "Integration Patterns"
+        },
+        {
+          "name": "OAuth 2.0",
+          "weight": 4,
+          "tier": "CORE",
+          "group": "API Security"
+        },
+        {
+          "name": "OpenID Connect",
+          "weight": 4,
+          "tier": "CORE",
+          "group": "API Security"
+        },
+        {
+          "name": "JWT",
+          "weight": 4,
+          "tier": "CORE",
+          "group": "API Security"
+        },
+        {
+          "name": "CORS",
+          "weight": 4,
+          "tier": "CORE",
+          "group": "API Security"
+        },
+        {
+          "name": "TLS",
+          "weight": 4,
+          "tier": "CORE",
+          "group": "API Security"
+        },
+        {
+          "name": "mTLS",
+          "weight": 4,
+          "tier": "CORE",
+          "group": "API Security"
+        },
+        {
+          "name": "Versionamento de APIs",
+          "weight": 4,
+          "tier": "CORE",
+          "group": "API"
+        },
+        {
+          "name": "Observabilidade",
+          "weight": 3,
+          "tier": "SUPPORTING",
+          "group": "Ops"
+        },
+        {
+          "name": "Segurança aplicada a APIs e integrações",
+          "weight": 3,
+          "tier": "SUPPORTING",
+          "group": "API Security"
+        },
+        {
+          "name": "Resiliência",
+          "weight": 3,
+          "tier": "SUPPORTING",
+          "group": "Architecture"
+        },
+        {
+          "name": "Disponibilidade",
+          "weight": 3,
+          "tier": "SUPPORTING",
+          "group": "Architecture"
+        },
+        {
+          "name": "Escalabilidade",
+          "weight": 3,
+          "tier": "SUPPORTING",
+          "group": "Architecture"
+        },
+        {
+          "name": "Arquiteturas Distribuídas",
+          "weight": 3,
+          "tier": "SUPPORTING",
+          "group": "Architecture"
+        },
+        {
+          "name": "Ambientes Híbridos",
+          "weight": 3,
+          "tier": "SUPPORTING",
+          "group": "Architecture"
+        },
+        {
+          "name": "SAP S/4HANA",
+          "weight": 3,
+          "tier": "SUPPORTING",
+          "group": "SAP Ecosystem"
+        },
+        {
+          "name": "SAP Process Orchestration",
+          "weight": 3,
+          "tier": "SUPPORTING",
+          "group": "SAP Ecosystem"
+        },
+        {
+          "name": "SAP Business Technology Platform",
+          "weight": 3,
+          "tier": "SUPPORTING",
+          "group": "SAP Ecosystem"
+        },
+        {
+          "name": "RFC",
+          "weight": 3,
+          "tier": "SUPPORTING",
+          "group": "SAP Integration"
+        },
+        {
+          "name": "BAPI",
+          "weight": 3,
+          "tier": "SUPPORTING",
+          "group": "SAP Integration"
+        },
+        {
+          "name": "IDoc",
+          "weight": 3,
+          "tier": "SUPPORTING",
+          "group": "SAP Integration"
+        },
+        {
+          "name": "OData",
+          "weight": 3,
+          "tier": "SUPPORTING",
+          "group": "SAP Integration"
+        },
+        {
+          "name": "Integração baseada em arquivos",
+          "weight": 3,
+          "tier": "SUPPORTING",
+          "group": "SAP Integration"
+        },
+        {
+          "name": "Mensageria e eventos (SAP)",
+          "weight": 3,
+          "tier": "SUPPORTING",
+          "group": "SAP Integration"
+        }
+      ],
+      "desired_skills": [
+        {
+          "name": "Migração SAP PO para Oracle Integration Cloud",
+          "weight": 2,
+          "tier": "DIFFERENTIAL",
+          "group": "Transformation"
+        },
+        {
+          "name": "Oracle Cloud Infrastructure",
+          "weight": 2,
+          "tier": "DIFFERENTIAL",
+          "group": "Cloud"
+        },
+        {
+          "name": "SAP Integration Suite",
+          "weight": 2,
+          "tier": "DIFFERENTIAL",
+          "group": "SAP Ecosystem"
+        },
+        {
+          "name": "MuleSoft",
+          "weight": 2,
+          "tier": "DIFFERENTIAL",
+          "group": "Integration Platform"
+        },
+        {
+          "name": "Kafka",
+          "weight": 2,
+          "tier": "DIFFERENTIAL",
+          "group": "Messaging"
+        },
+        {
+          "name": "RabbitMQ",
+          "weight": 2,
+          "tier": "DIFFERENTIAL",
+          "group": "Messaging"
+        },
+        {
+          "name": "Azure Integration Services",
+          "weight": 2,
+          "tier": "DIFFERENTIAL",
+          "group": "Cloud"
+        },
+        {
+          "name": "TOGAF",
+          "weight": 2,
+          "tier": "DIFFERENTIAL",
+          "group": "Architecture Framework"
+        },
+        {
+          "name": "ArchiMate",
+          "weight": 2,
+          "tier": "DIFFERENTIAL",
+          "group": "Architecture Framework"
+        },
+        {
+          "name": "BPMN",
+          "weight": 2,
+          "tier": "DIFFERENTIAL",
+          "group": "Modeling"
+        },
+        {
+          "name": "CI/CD para plataformas de integração",
+          "weight": 2,
+          "tier": "DIFFERENTIAL",
+          "group": "Ops"
+        },
+        {
+          "name": "DevSecOps",
+          "weight": 2,
+          "tier": "DIFFERENTIAL",
+          "group": "Ops"
+        }
+      ],
+      "weight_policy": "v3",
+      "analysis_version": 2,
+      "prompt_set": "openai",
+      "llm_provider": "openai",
+      "llm_model": "gpt-4.1",
+      "analyzed_at": "2026-08-12T19:29:11.721865+00:00",
+      "audit": {
+        "prompt_files": [
+          "openai/analyse_job.system.txt",
+          "openai/analyse_job.user.txt"
+        ],
+        "prompt_version": "v2",
+        "llm_provider": "openai",
+        "llm_model": "gpt-4.1",
+        "attempts": 1,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 2517,
+          "completion_tokens": 3390,
+          "total_tokens": 5907,
+          "estimated_cost_usd": 0.032154,
+          "calls": 1
+        }
+      }
+    }
   }
 ]

@@ -1,11 +1,16 @@
 {
+  "id": "671bb12e8d6c_e475d1052f49_20260812T183448Z_local",
   "job_id": "671bb12e8d6c",
   "candidate_id": "e475d1052f49",
   "job_title": "Arquiteto OIC - CPFL",
   "candidate_name": "Bruno Libanio",
   "final_score": 54.9,
+  "verdict_label": "evaluate",
   "method": "hybrid",
   "scoring_model_version": "v2",
+  "llm_provider": "local",
+  "llm_model": "qwen2.5:14b",
+  "created_at": "2026-08-12T18:34:48.169191+00:00",
   "items": [
     {
       "category": "Must-have",
@@ -357,21 +362,19 @@
   "interview_validation": [
     "Validar profundidade prática em OIC em projetos de migração SAP PO → OIC"
   ],
-  "profile_summary": "Bruno Libanio é um profissional com mais de cinco anos de experiência em liderança técnica, focado na otimização de processos e arquiteturas para garantir soluções eficientes em sistemas distribuídos. Ele possui sólido conhecimento em API Management e Oracle Integration Cloud (OIC), além de experiência em SAP Process Orchestration. Bruno atua como Arquiteto de Soluções na CPFL, onde é responsável pela definição arquitetural de projetos estratégicos.",
-  "verdict": "Bruno Libanio apresenta uma sólida experiência em Oracle Integration Cloud e SAP Process Orchestration, além de conhecimento em API Management. No entanto, ele tem lacunas significativas em Enterprise Integration Patterns, SAP Business Technology Platform e outras habilidades essenciais para a posição. Considerando o score final de 54.9%, recomenda-se uma avaliação mais detalhada antes da contratação.",
-  "verdict_label": "evaluate",
+  "profile_summary": "Bruno Libanio é um profissional com mais de cinco anos de experiência em liderança técnica, focado na otimização de processos e arquiteturas para garantir soluções eficientes em sistemas distribuídos. Ele possui sólido conhecimento em API Management e Oracle Integration Cloud (OIC), além de experiência em SAP Process Orchestration. Bruno atua como Arquiteto de Soluções na CPFL, sendo responsável pela definição arquitetural de projetos estratégicos.",
+  "verdict": "Bruno Libanio é um candidato recomendado para a vaga de Arquiteto OIC da CPFL. Ele possui experiência sólida em Oracle Integration Cloud e SAP Process Orchestration, além de conhecimento em API Management. No entanto, ele apresenta lacunas em Enterprise Integration Patterns, SAP Business Technology Platform e outras áreas que são consideradas essenciais para a posição.",
   "audit": {
     "scoring_model_version": "v2",
     "job_analysis_version": 2,
     "job_updated_at": "2026-08-08T02:38:31.904297+00:00",
     "candidate_updated_at": "2026-08-07T20:15:51.383975+00:00",
-    "scored_at": "2026-08-12T20:00:52.065844+00:00",
+    "scored_at": "2026-08-12T18:34:34.068113+00:00",
     "prompt_versions": {
       "analyse_job": "v2",
       "score_skills": "v2",
       "score_fit": "v1",
-      "score_narrative": "v2",
-      "score_weights": "v1"
+      "score_narrative": "v2"
     },
     "llm_provider": "local",
     "llm_model": "qwen2.5:14b",
@@ -384,10 +387,10 @@
         "temperature": 0.1,
         "error": "",
         "attempts": 1,
-        "prompt_tokens": 0,
-        "completion_tokens": 0,
-        "total_tokens": 0,
-        "estimated_cost_usd": 0.0,
+        "prompt_tokens": null,
+        "completion_tokens": null,
+        "total_tokens": null,
+        "estimated_cost_usd": null,
         "usable": false
       },
       {
@@ -397,10 +400,10 @@
         "temperature": 0.1,
         "error": null,
         "attempts": 1,
-        "prompt_tokens": 3345,
-        "completion_tokens": 195,
-        "total_tokens": 3540,
-        "estimated_cost_usd": 0.0,
+        "prompt_tokens": null,
+        "completion_tokens": null,
+        "total_tokens": null,
+        "estimated_cost_usd": null,
         "usable": true
       }
     ],
@@ -411,37 +414,26 @@
       "temperature": 0.1,
       "error": null,
       "attempts": 1,
-      "prompt_tokens": 2655,
-      "completion_tokens": 74,
-      "total_tokens": 2729,
-      "estimated_cost_usd": 0.0
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "total_tokens": null,
+      "estimated_cost_usd": null
     },
     "narrative_llm": {
       "parsed": {
-        "profile_summary": "Bruno Libanio é um profissional com mais de cinco anos de experiência em liderança técnica, focado na otimização de processos e arquiteturas para garantir soluções eficientes em sistemas distribuídos. Ele possui sólido conhecimento em API Management e Oracle Integration Cloud (OIC), além de experiência em SAP Process Orchestration. Bruno atua como Arquiteto de Soluções na CPFL, onde é responsável pela definição arquitetural de projetos estratégicos.",
+        "profile_summary": "Bruno Libanio é um profissional com mais de cinco anos de experiência em liderança técnica, focado na otimização de processos e arquiteturas para garantir soluções eficientes em sistemas distribuídos. Ele possui sólido conhecimento em API Management e Oracle Integration Cloud (OIC), além de experiência em SAP Process Orchestration. Bruno atua como Arquiteto de Soluções na CPFL, sendo responsável pela definição arquitetural de projetos estratégicos.",
         "verdict_label": "recommended",
-        "verdict": "Bruno Libanio apresenta uma sólida experiência em Oracle Integration Cloud e SAP Process Orchestration, além de conhecimento em API Management. No entanto, ele tem lacunas significativas em Enterprise Integration Patterns, SAP Business Technology Platform e outras habilidades essenciais para a posição. Considerando o score final de 54.9%, recomenda-se uma avaliação mais detalhada antes da contratação."
+        "verdict": "Bruno Libanio é um candidato recomendado para a vaga de Arquiteto OIC da CPFL. Ele possui experiência sólida em Oracle Integration Cloud e SAP Process Orchestration, além de conhecimento em API Management. No entanto, ele apresenta lacunas em Enterprise Integration Patterns, SAP Business Technology Platform e outras áreas que são consideradas essenciais para a posição."
       },
-      "raw": "{\n  \"profile_summary\": \"Bruno Libanio é um profissional com mais de cinco anos de experiência em liderança técnica, focado na otimização de processos e arquiteturas para garantir soluções eficientes em sistemas distribuídos. Ele possui sólido conhecimento em API Management e Oracle Integration Cloud (OIC), além de experiência em SAP Process Orchestration. Bruno atua como Arquiteto de Soluções na CPFL, onde é responsável pela definição arquitetural de projetos estratégicos.\",\n  \"verdict_label\": \"recommended\",\n  \"verdict\": \"Bruno Libanio apresenta uma sólida experiência em Oracle Integration Cloud e SAP Process Orchestration, além de conhecimento em API Management. No entanto, ele tem lacunas significativas em Enterprise Integration Patterns, SAP Business Technology Platform e outras habilidades essenciais para a posição. Considerando o score final de 54.9%, recomenda-se uma avaliação mais detalhada antes da contratação.\"\n}",
+      "raw": "{\n  \"profile_summary\": \"Bruno Libanio é um profissional com mais de cinco anos de experiência em liderança técnica, focado na otimização de processos e arquiteturas para garantir soluções eficientes em sistemas distribuídos. Ele possui sólido conhecimento em API Management e Oracle Integration Cloud (OIC), além de experiência em SAP Process Orchestration. Bruno atua como Arquiteto de Soluções na CPFL, sendo responsável pela definição arquitetural de projetos estratégicos.\",\n  \"verdict_label\": \"recommended\",\n  \"verdict\": \"Bruno Libanio é um candidato recomendado para a vaga de Arquiteto OIC da CPFL. Ele possui experiência sólida em Oracle Integration Cloud e SAP Process Orchestration, além de conhecimento em API Management. No entanto, ele apresenta lacunas em Enterprise Integration Patterns, SAP Business Technology Platform e outras áreas que são consideradas essenciais para a posição.\"\n}",
       "model": "qwen2.5:14b",
       "provider": "local",
       "temperature": 0.1,
       "error": null,
-      "attempts": 1,
-      "prompt_tokens": 3445,
-      "completion_tokens": 220,
-      "total_tokens": 3665,
-      "estimated_cost_usd": 0.0
-    },
-    "usage": {
-      "prompt_tokens": 9445,
-      "completion_tokens": 489,
-      "total_tokens": 9934,
-      "estimated_cost_usd": 0.0,
-      "calls": 3
+      "attempts": 1
     }
   },
-  "llm_provider": "local",
-  "id": "671bb12e8d6c_e475d1052f49",
-  "created_at": "2026-08-12T20:01:19.956570+00:00"
+  "score_id": "671bb12e8d6c_e475d1052f49",
+  "archived_at": "2026-08-12T19:43:01.773874+00:00",
+  "is_history": true
 }
