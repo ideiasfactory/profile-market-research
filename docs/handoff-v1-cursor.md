@@ -159,14 +159,14 @@ CLT_TO_PJ_FACTOR=1.50
 WORK_HOURS_MONTH=168
 MAX_PARALLEL_SEARCHES=4
 MAX_PARALLEL_CRAWLS=5
-CACHE_TTL_DAYS=7
+CACHE_TTL_DAYS=30
 HTTP_TIMEOUT_SECONDS=10
 PLAYWRIGHT_TIMEOUT_SECONDS=20
 RESEARCH_TIMEOUT_SECONDS=120
 APP_API_KEY=
 ```
 
-`CLT_TO_PJ_FACTOR` e `WORK_HOURS_MONTH` também existem como parâmetros editáveis em `data/business_settings.json` (UI `/settings`); o catálogo tem precedência quando as chaves estão presentes (ADR-017).
+`CLT_TO_PJ_FACTOR`, `WORK_HOURS_MONTH` e `CACHE_TTL_DAYS` também existem como parâmetros editáveis em `data/business_settings.json` (UI `/settings`; chave `cache_ttl_days`, padrão **30** dias). O catálogo tem precedência quando as chaves estão presentes (ADR-017). Cache com idade maior que o TTL é invalidado e a research roda de novo.
 
 Observação operacional:
 

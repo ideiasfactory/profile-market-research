@@ -96,7 +96,7 @@ ADRs: ADR-017 (catálogo), ADR-018 (prompts).
 - `data/observations.jsonl` — observações append-only.
 - `data/compensation_cache/{cache_key}.json` — resposta completa + fonte do histórico da UI.
 - `data/business_settings.json` — catálogo de parâmetros de negócio (UI `/settings`).
-- Cache key determinística da consulta; TTL via `CACHE_TTL_DAYS`.
+- Cache key determinística da consulta; TTL via parâmetro de negócio `cache_ttl_days` (padrão 30; fallback `.env` `CACHE_TTL_DAYS`).
 
 ## Observabilidade
 

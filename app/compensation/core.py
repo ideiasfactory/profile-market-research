@@ -51,7 +51,7 @@ def get_settings() -> CompensationSettings:
         work_hours_month=int(pricing.get("work_hours_month", os.getenv("WORK_HOURS_MONTH", "168"))),
         max_parallel_searches=int(os.getenv("MAX_PARALLEL_SEARCHES", "4")),
         max_parallel_crawls=int(os.getenv("MAX_PARALLEL_CRAWLS", "5")),
-        cache_ttl_days=int(os.getenv("CACHE_TTL_DAYS", "7")),
+        cache_ttl_days=max(1, int(pricing.get("cache_ttl_days", os.getenv("CACHE_TTL_DAYS", "30")))),
         http_timeout_seconds=int(os.getenv("HTTP_TIMEOUT_SECONDS", "10")),
         playwright_timeout_seconds=int(os.getenv("PLAYWRIGHT_TIMEOUT_SECONDS", "20")),
         research_timeout_seconds=int(os.getenv("RESEARCH_TIMEOUT_SECONDS", "120")),

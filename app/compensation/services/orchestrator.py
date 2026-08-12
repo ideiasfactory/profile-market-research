@@ -372,7 +372,15 @@ class CompensationResearchOrchestrator:
         if not path.exists():
             return None
         age_seconds = datetime.now(timezone.utc).timestamp() - path.stat().st_mtime
-        if age_seconds > self.settings.cache_ttl_days * 86400:
+        ttl_seconds = max(1, int(self.settings.cache_ttl_days)) * 86400
+        if age_seconds > ttl_seconds:
+            log_event(
+                "research_cache_expired",
+                cache_path=str(path),
+                age_days=round(age_seconds / 86400, 2),
+                ttl_days=self.settings.cache_ttl_days,
+                profile=request.profile,
+            )
             return None
         with path.open("r", encoding="utf-8") as file:
             return CompensationResearchResponse.model_validate(json.load(file))

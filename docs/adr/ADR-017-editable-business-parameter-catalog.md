@@ -16,7 +16,8 @@ Já existiam fatores de conversão em `.env` (`CLT_TO_PJ_FACTOR`, `WORK_HOURS_MO
 2. Cada parâmetro tem: `id`, `key` (snake_case), `label`, `value`, `value_type` (`number` | `percent` | `text` | `boolean`), `category`, `description`, `inject_in_prompts`.
 3. Expor CRUD na UI (`GET/POST /settings`, create/delete de parâmetros) e na API (`GET/PUT /api/v1/settings/business`, upsert/delete de itens).
 4. Seeds iniciais (ISS, PIS/COFINS, overhead, margem, fator CLT→PJ, horas/mês) são **exemplos**; o operador pode incluir, alterar ou remover qualquer chave.
-5. Chaves conhecidas (`clt_to_pj_factor`, `work_hours_month`) alimentam `CompensationSettings` quando presentes; `.env` permanece fallback de bootstrap.
+5. Chaves conhecidas (`clt_to_pj_factor`, `work_hours_month`, `cache_ttl_days`) alimentam `CompensationSettings` quando presentes; `.env` permanece fallback de bootstrap.
+6. `cache_ttl_days` é parâmetro operacional obrigatório no catálogo (seed padrão **30**): se ausente em instalações antigas, é inserido automaticamente. Na research, cache com idade > TTL é tratado como miss e a consulta roda de novo.
 
 ## Consequences
 

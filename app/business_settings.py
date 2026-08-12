@@ -33,6 +33,20 @@ DEFAULT_PARAMETERS: list[dict[str, Any]] = [
         "inject_in_prompts": True,
     },
     {
+        "id": "param_cache_ttl_days",
+        "key": "cache_ttl_days",
+        "label": "TTL do cache de compensation (dias)",
+        "value": 30,
+        "value_type": "number",
+        "category": "compensation",
+        "description": (
+            "Validade do cache de research por perfil/consulta. "
+            "Se o arquivo em data/compensation_cache/ tiver idade maior que este TTL, "
+            "a consulta invalida o cache e executa nova pesquisa."
+        ),
+        "inject_in_prompts": True,
+    },
+    {
         "id": "param_iss_pct",
         "key": "iss_pct",
         "label": "ISS (%)",
@@ -78,6 +92,9 @@ DEFAULT_BUSINESS_SETTINGS: dict[str, Any] = {
     "parameters": deepcopy(DEFAULT_PARAMETERS),
     "updated_at": None,
 }
+
+# Always ensure these keys exist on existing catalogs (ops-critical).
+REQUIRED_PARAMETER_KEYS = ("cache_ttl_days",)
 
 
 business_settings_store = JsonStore(DATA_DIR / "business_settings.json", deepcopy(DEFAULT_BUSINESS_SETTINGS))
@@ -181,6 +198,18 @@ def normalize_business_settings(raw: dict[str, Any] | None = None) -> dict[str, 
         seen_keys.add(normalized["key"])
         parameters.append(normalized)
 
+    defaults_by_key = {item["key"]: item for item in DEFAULT_PARAMETERS}
+    for key in REQUIRED_PARAMETER_KEYS:
+        if key in seen_keys:
+            continue
+        seed = defaults_by_key.get(key)
+        if not seed:
+            continue
+        normalized = _normalize_parameter(deepcopy(seed))
+        if normalized:
+            parameters.append(normalized)
+            seen_keys.add(normalized["key"])
+
     parameters.sort(key=lambda item: (item["category"], item["label"].lower(), item["key"]))
     return {
         "parameters": parameters,
@@ -192,15 +221,21 @@ def normalize_business_settings(raw: dict[str, Any] | None = None) -> dict[str, 
 def get_business_settings() -> dict[str, Any]:
     raw = business_settings_store.read()
     settings = normalize_business_settings(raw)
-    # Persist migration from legacy {pricing: ...} shape once.
-    if isinstance(raw, dict) and "parameters" not in raw and "pricing" in raw:
+    raw_keys = {
+        str(item.get("key"))
+        for item in (raw.get("parameters") if isinstance(raw, dict) else []) or []
+        if isinstance(item, dict)
+    }
+    missing_required = [key for key in REQUIRED_PARAMETER_KEYS if key not in raw_keys]
+    legacy = isinstance(raw, dict) and "parameters" not in raw and "pricing" in raw
+    if legacy or missing_required:
+        settings["updated_at"] = settings.get("updated_at") or _now_iso()
         business_settings_store.write(
             {
                 "parameters": settings["parameters"],
-                "updated_at": settings.get("updated_at") or _now_iso(),
+                "updated_at": settings["updated_at"],
             }
         )
-        settings["updated_at"] = settings.get("updated_at") or _now_iso()
     return settings
 
 

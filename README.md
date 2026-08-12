@@ -144,6 +144,7 @@ Pesquisa auditável de remuneração de mercado (evidência + URL; LLM extrai, P
 
 - `/compensation` — formulário livre, histórico (`data/compensation_cache`), overlay de progresso e resultados.
 - `/compensation?job_id=...` — mesmo fluxo pré-preenchido a partir da vaga (também há botão no detalhe da vaga).
+- TTL do cache: parâmetro `cache_ttl_days` (UI `/settings`, padrão **30** dias). Consultas reutilizam o cache enquanto a idade do arquivo for ≤ TTL; acima disso o cache é invalidado e a research roda de novo (`force_refresh=true` ignora o cache imediatamente).
 
 Exemplo síncrono:
 

@@ -21,6 +21,16 @@
       "inject_in_prompts": true
     },
     {
+      "id": "param_cache_ttl_days",
+      "key": "cache_ttl_days",
+      "label": "TTL do cache de compensation (dias)",
+      "value": 30,
+      "value_type": "number",
+      "category": "compensation",
+      "description": "Validade do cache de research por perfil/consulta. Se o arquivo em data/compensation_cache/ tiver idade maior que este TTL, a consulta invalida o cache e executa nova pesquisa.",
+      "inject_in_prompts": true
+    },
+    {
       "id": "param_iss_pct",
       "key": "iss_pct",
       "label": "ISS (%)",
