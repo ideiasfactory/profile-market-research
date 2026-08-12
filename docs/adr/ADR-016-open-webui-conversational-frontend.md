@@ -23,3 +23,4 @@ Compensation research is expensive (search + crawl). Users and models often over
 - Models are steered (prompt + OpenAPI descriptions) away from unnecessary cache busting.
 - Sync/`wait` calls may hit client HTTP timeouts on cold research; async+poll remains available when the tool layer supports it.
 - Custom GPT OpenAPI remains the fuller Actions catalog; the Open WebUI slim spec is a deliberate subset.
+- Repository layout for these packages is fixed in ADR-019 (`llm-tools/`).

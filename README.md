@@ -53,6 +53,7 @@ python -m unittest discover -s tests -v
 Os dados ficam em JSON dentro de `data/`:
 
 - `data/domains.json` — domínios de perfil e senioridade
+- `data/business_settings.json` — catálogo editável de parâmetros de negócio (impostos/margem são exemplos; qualquer chave)
 - `data/jobs.json` — vagas (ainda monolítico; inclui `ideal_candidate_context` e analysis v2)
 - `data/candidates.json` — índice leve de candidatos (sem `resume_text`)
 - `data/candidates/{id}_{slug}_profile.json` — currículo completo de cada candidato
@@ -60,6 +61,17 @@ Os dados ficam em JSON dentro de `data/`:
 - `data/scores/{job_id}_{candidate_id}_{slug}_score.json` — detalhe completo de cada score
 
 Na primeira carga, entradas monolíticas antigas em `candidates.json` / `scores.json` são migradas automaticamente para arquivos individuais (idempotente).
+
+## Parâmetros de negócio
+
+UI: `http://127.0.0.1:8000/settings` (menu **Parâmetros**).
+
+- Catálogo genérico (CRUD): chave, rótulo, valor, tipo, categoria, descrição, flag “embutir em prompts”.
+- Persistência: `data/business_settings.json` (`app/business_settings.py`).
+- API: `GET/PUT /api/v1/settings/business`, `POST/DELETE .../parameters`.
+- Chaves `clt_to_pj_factor` e `work_hours_month` alimentam a normalização de Compensation (fallback: `.env`).
+
+Nos prompts (`prompts/`), use `{business_context}` ou `{<chave>}` — injetados por `load_prompt` quando `inject_in_prompts` está ativo (ADR-017, ADR-018).
 
 ## Prompts
 
@@ -72,11 +84,12 @@ Os prompts da LLM ficam externalizados em `prompts/` (fora do código da aplica�
 - `prompts/score_narrative.system.txt` / `score_narrative.user.txt`
 - `prompts/score_candidate.system.txt` / `score_candidate.user.txt` (legado)
 
-Edite esses arquivos para ajustar o comportamento da análise sem alterar o código Python.
+Edite esses arquivos para ajustar o comportamento da análise sem alterar o código Python. Parâmetros de negócio habilitados entram automaticamente via placeholders (ver seção acima).
 
 ## Escopo do MVP
 
 - Cadastro, consulta e edição de domínios de perfil e senioridade.
+- Catálogo editável de parâmetros de negócio (UI `/settings` + API), com injeção opcional nos prompts.
 - Cadastro, consulta e edição de vagas (com `ideal_candidate_context` e tiers Must-have/Core/Supporting/Differentials).
 - Job description em texto livre ou Markdown.
 - Currículo via PDF, link de perfil no LinkedIn ou texto colado.
@@ -156,4 +169,4 @@ Configuração: `config/providers.yaml`, `config/source_registry.yaml`, `.env.ex
 
 Persistência: `data/research_history.jsonl`, `data/observations.jsonl`, `data/compensation_cache/`.
 
-Docs: `docs/architecture.md`, `docs/api-contract.md`, `docs/adr/` (ADR-001 … ADR-016).
+Docs: `docs/architecture.md`, `docs/api-contract.md`, `docs/adr/` (ADR-001 … ADR-019).

@@ -1,4 +1,6 @@
-# API Contract — Compensation Intelligence v1
+# API Contract — Compensation Intelligence v1 (+ settings)
+
+Contrato da API de Compensation e do catálogo de parâmetros de negócio.
 
 ## `POST /api/v1/compensation/research`
 
@@ -168,3 +170,44 @@ Unhealthy responses include `error`.
 ```
 
 `api_keys` values are `set` or `missing` (never the secret itself). Search engine values come from each adapter’s `health()` (e.g. `healthy`, `missing_api_key`).
+
+## Business parameters
+
+Editable catalog (generic keys; tax/margin seeds are examples only). See ADR-017 / ADR-018.
+
+### `GET /api/v1/settings/business`
+
+```json
+{
+  "parameters": [
+    {
+      "id": "param_target_margin_pct",
+      "key": "target_margin_pct",
+      "label": "Margem alvo (%)",
+      "value": 25.0,
+      "value_type": "percent",
+      "category": "pricing",
+      "description": "...",
+      "inject_in_prompts": true
+    }
+  ],
+  "values": {"target_margin_pct": 25.0, "clt_to_pj_factor": 1.5},
+  "updated_at": "2026-08-12T15:00:00+00:00"
+}
+```
+
+### `PUT /api/v1/settings/business`
+
+Replace the full catalog. Body: `{ "parameters": [ ... ] }`. Returns the normalized settings (including `values`).
+
+### `POST /api/v1/settings/business/parameters`
+
+Upsert one parameter (by `id` or `key`).
+
+### `DELETE /api/v1/settings/business/parameters/{item_id}`
+
+Delete by parameter `id` (or `key` if it matches).
+
+### UI
+
+- `GET /settings` — list/edit/create/delete parameters; preview of `{business_context}` for prompts.

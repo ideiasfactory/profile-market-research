@@ -39,6 +39,28 @@ Client (UI /compensation ou API)
 - Pesquisa assíncrona com overlay de progresso (poll em `/api/tasks/{id}`).
 - Histórico: lista pesquisas em `data/compensation_cache` (`GET /api/v1/compensation/history`).
 - Reabertura: `GET /api/v1/compensation/history/{cache_key}` ou `?cache_key=...`.
+- Parâmetros de negócio: `GET /settings` (catálogo genérico; ver seção abaixo).
+
+## Parâmetros de negócio
+
+Catálogo editável (não é schema fixo de impostos/margem):
+
+```text
+UI /settings  ou  API /api/v1/settings/business
+  -> app/business_settings.py
+  -> data/business_settings.json
+  -> values[key] usado por CompensationSettings (clt_to_pj_factor, work_hours_month)
+  -> load_prompt() injeta {key} e {business_context} quando inject_in_prompts=true
+```
+
+| Área | Caminho |
+| --- | --- |
+| Domínio + store | `app/business_settings.py` |
+| UI | `app/templates/settings.html` |
+| Rotas HTML/API | `app/main.py` (`/settings`, `/api/v1/settings/business*`) |
+| Injeção em prompts | `app/prompts.py` → `load_prompt` |
+
+ADRs: ADR-017 (catálogo), ADR-018 (prompts).
 
 ## Princípios
 
@@ -63,13 +85,17 @@ Client (UI /compensation ou API)
 | Registry | `app/compensation/registry.py` |
 | Env startup | `app/env_loader.py` (chamado em `app/main.py`) |
 | Tasks async | `app/tasks.py` |
+| Parâmetros de negócio | `app/business_settings.py`, `data/business_settings.json` |
+| Prompts + injeção | `app/prompts.py`, `prompts/` |
 | Config | `config/providers.yaml`, `config/source_registry.yaml`, `.env.example` |
+| Pacotes conversacionais | `llm-tools/custom-gpt/`, `llm-tools/tool-openwebui/` (ADR-016, ADR-019) |
 
 ## Persistência
 
 - `data/research_history.jsonl` — audit trail de pesquisas.
 - `data/observations.jsonl` — observações append-only.
 - `data/compensation_cache/{cache_key}.json` — resposta completa + fonte do histórico da UI.
+- `data/business_settings.json` — catálogo de parâmetros de negócio (UI `/settings`).
 - Cache key determinística da consulta; TTL via `CACHE_TTL_DAYS`.
 
 ## Observabilidade
@@ -91,6 +117,8 @@ Client (UI /compensation ou API)
 
 ## ADRs relevantes
 
+Índice completo: [`docs/adr/README.md`](adr/README.md).
+
 - ADR-001 — Separação LLM × compensation engine
 - ADR-002–004 — Abstração e registry de search/crawlers
 - ADR-005–006 — Glassdoor + Playwright fallback
@@ -103,6 +131,10 @@ Client (UI /compensation ou API)
 - ADR-013 — Prefill a partir de vaga vs free-form
 - ADR-014 — Load `.env` no startup
 - ADR-015 — Cache como histórico da UI
+- ADR-016 — Open WebUI como frontend conversacional + cache-default
+- ADR-017 — Catálogo editável de parâmetros de negócio
+- ADR-018 — Injeção de parâmetros de negócio nos prompts
+- ADR-019 — Pacotes conversacionais consolidados em `llm-tools/`
 
 ## Roadmap Pós-MVP
 

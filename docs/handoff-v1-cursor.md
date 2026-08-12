@@ -36,6 +36,7 @@ Implementado e validado:
 - prefill de vaga `GET /api/v1/compensation/prefill/{job_id}` e UI `/compensation?job_id=...`;
 - health checks `/health`, `/health/llm`, `/health/providers` (inclui status de API keys);
 - UI operacional em `/compensation` (formulário, histórico, progresso, resultados);
+- catálogo de parâmetros de negócio em `/settings` + API `/api/v1/settings/business*` (ADR-017/018);
 - load de `.env` no startup (`app/env_loader.py`);
 - logs estruturados JSON por `research_id` (`app/compensation/logging_utils.py`);
 - contratos Pydantic da v1;
@@ -57,7 +58,8 @@ Implementado e validado:
 - outlier detection por IQR quando `N >= 5`;
 - confidence engine;
 - persistência JSONL/cache;
-- documentação e ADRs (ADR-001 … ADR-015; ver `docs/architecture.md`).
+- pacotes conversacionais em `llm-tools/` (Custom GPT + Open WebUI; ADR-016/019);
+- documentação e ADRs (ADR-001 … ADR-019; ver `docs/architecture.md`).
 
 Validação executada:
 
@@ -90,16 +92,19 @@ Config:
 - `config/providers.yaml`
 - `config/source_registry.yaml`
 - `.env.example`
+- `data/business_settings.json` (parâmetros de negócio editáveis)
 
 Docs:
 
-- `docs/architecture.md` (fluxo atual, UI, async, qualidade, ADRs)
-- `docs/api-contract.md` (sync/async, history, prefill, health)
-- `docs/adr/` (ADR-001 … ADR-015)
+- `docs/architecture.md` (fluxo atual, UI, async, qualidade, parâmetros de negócio, ADRs)
+- `docs/api-contract.md` (sync/async, history, prefill, health, settings/business)
+- `docs/adr/` (ADR-001 … ADR-019)
+- `llm-tools/README.md` (Custom GPT + Open WebUI)
 
 Testes v1:
 
 - `tests/unit/test_compensation_engine.py`
+- `tests/unit/test_business_settings.py`
 
 ## Contrato Principal
 
@@ -160,6 +165,8 @@ PLAYWRIGHT_TIMEOUT_SECONDS=20
 RESEARCH_TIMEOUT_SECONDS=120
 APP_API_KEY=
 ```
+
+`CLT_TO_PJ_FACTOR` e `WORK_HOURS_MONTH` também existem como parâmetros editáveis em `data/business_settings.json` (UI `/settings`); o catálogo tem precedência quando as chaves estão presentes (ADR-017).
 
 Observação operacional:
 
