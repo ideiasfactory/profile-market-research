@@ -42,9 +42,17 @@ class CompensationSettings:
 
 def get_settings() -> CompensationSettings:
     pricing = _business_pricing()
+    from app.system_settings import get_system_value
+
+    ollama_url = get_system_value("OLLAMA_BASE_URL") or os.getenv("OLLAMA_BASE_URL") or os.getenv(
+        "LOCAL_LLM_URL", "http://gpu-server-01:11434"
+    )
+    ollama_model = get_system_value("OLLAMA_MODEL") or os.getenv("OLLAMA_MODEL") or os.getenv(
+        "LOCAL_LLM_MODEL", "qwen2.5:14b"
+    )
     return CompensationSettings(
-        ollama_base_url=os.getenv("OLLAMA_BASE_URL") or os.getenv("LOCAL_LLM_URL", "http://gpu-server-01:11434"),
-        ollama_model=os.getenv("OLLAMA_MODEL") or os.getenv("LOCAL_LLM_MODEL", "qwen2.5:14b"),
+        ollama_base_url=ollama_url,
+        ollama_model=ollama_model,
         search_engines=_split_env("SEARCH_ENGINES", "tavily"),
         enabled_crawlers=_split_env("ENABLED_CRAWLERS", "glassdoor,indeed,vagas,generic"),
         clt_to_pj_factor=float(pricing.get("clt_to_pj_factor", os.getenv("CLT_TO_PJ_FACTOR", "1.50"))),

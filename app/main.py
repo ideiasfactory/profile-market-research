@@ -23,6 +23,7 @@ from app.business_settings import (
     upsert_business_parameter,
 )
 from app.env_loader import load_app_env
+from app.external_api_usage import fetch_all_external_api_usage
 from app.gpt import router as gpt_router
 from app.llm import LocalLLM
 from app.logging_config import configure_logging
@@ -30,10 +31,16 @@ from app.resume_ingest import resolve_resume_content
 from app.scoring_config import SCORING_MODEL, active_scoring_model
 from app.services import analyse_job, build_score_chart_data, extract_candidate, normalize_job_analysis, score_candidate
 from app.storage import candidates_store, domains_store, find_by_id, jobs_store, new_id, scores_store, upsert
+from app.system_settings import (
+    apply_system_settings_to_environ,
+    get_system_settings,
+    save_system_settings,
+)
 from app.tasks import task_store
 
 
 load_app_env()
+apply_system_settings_to_environ()
 configure_logging()
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -283,40 +290,48 @@ def save_domain(domain_type: str, name: str = Form(...), item_id: str = Form("")
 
 
 @app.get("/settings")
-def settings_page(request: Request, saved: int = 0):
+def settings_page(request: Request, saved: int = 0, tab: str = "negocio"):
+    active_tab = "sistema" if tab == "sistema" else "negocio"
     settings = get_business_settings()
     grouped: dict[str, list] = {}
     for item in settings["parameters"]:
         grouped.setdefault(item["category"], []).append(item)
+    system = get_system_settings(reveal_secrets=False)
     return templates.TemplateResponse(
         request,
         "settings.html",
         {
-            "title": "Parâmetros de negócio",
+            "title": "Parâmetros",
+            "active_tab": active_tab,
             "settings": settings,
             "grouped": grouped,
             "value_types": VALUE_TYPES,
             "business_context": format_business_context(settings["parameters"]),
+            "system": system,
             "saved": bool(saved),
             "error": None,
         },
     )
 
 
-def _settings_error_response(request: Request, error: str, status_code: int = 400):
+def _settings_error_response(request: Request, error: str, *, tab: str = "negocio", status_code: int = 400):
+    active_tab = "sistema" if tab == "sistema" else "negocio"
     settings = get_business_settings()
     grouped: dict[str, list] = {}
     for item in settings["parameters"]:
         grouped.setdefault(item["category"], []).append(item)
+    system = get_system_settings(reveal_secrets=False)
     return templates.TemplateResponse(
         request,
         "settings.html",
         {
-            "title": "Parâmetros de negócio",
+            "title": "Parâmetros",
+            "active_tab": active_tab,
             "settings": settings,
             "grouped": grouped,
             "value_types": VALUE_TYPES,
             "business_context": format_business_context(settings["parameters"]),
+            "system": system,
             "saved": False,
             "error": error,
         },
@@ -356,8 +371,22 @@ async def save_settings_page(request: Request):
     try:
         save_business_settings({"parameters": parameters})
     except ValueError as exc:
-        return _settings_error_response(request, str(exc))
-    return redirect("/settings?saved=1")
+        return _settings_error_response(request, str(exc), tab="negocio")
+    return redirect("/settings?tab=negocio&saved=1")
+
+
+@app.post("/settings/system")
+async def save_system_settings_page(request: Request):
+    form = await request.form()
+    updates: dict[str, Any] = {}
+    for key in form.keys():
+        if key.startswith("sys_"):
+            updates[key[4:]] = form.get(key)
+    try:
+        save_system_settings(updates)
+    except ValueError as exc:
+        return _settings_error_response(request, str(exc), tab="sistema")
+    return redirect("/settings?tab=sistema&saved=1")
 
 
 @app.post("/settings/parameters")
@@ -384,8 +413,8 @@ async def create_settings_parameter(
             }
         )
     except ValueError as exc:
-        return _settings_error_response(request, str(exc))
-    return redirect("/settings?saved=1")
+        return _settings_error_response(request, str(exc), tab="negocio")
+    return redirect("/settings?tab=negocio&saved=1")
 
 
 @app.post("/settings/parameters/{item_id}/delete")
@@ -393,8 +422,8 @@ async def remove_settings_parameter(request: Request, item_id: str):
     try:
         delete_business_parameter(item_id)
     except ValueError as exc:
-        return _settings_error_response(request, str(exc))
-    return redirect("/settings?saved=1")
+        return _settings_error_response(request, str(exc), tab="negocio")
+    return redirect("/settings?tab=negocio&saved=1")
 
 
 @app.get("/api/v1/settings/business")
@@ -430,6 +459,41 @@ def api_delete_business_parameter(item_id: str):
         return delete_business_parameter(item_id)
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@app.get("/api/v1/settings/system")
+def api_get_system_settings():
+    return get_system_settings(reveal_secrets=False)
+
+
+@app.put("/api/v1/settings/system")
+async def api_put_system_settings(request: Request):
+    body = await request.json()
+    if not isinstance(body, dict):
+        raise HTTPException(status_code=400, detail="Payload JSON inválido")
+    values = body.get("values") if isinstance(body.get("values"), dict) else body
+    try:
+        return save_system_settings(values)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/external-apis")
+async def external_apis_page(request: Request):
+    usage = await fetch_all_external_api_usage()
+    return templates.TemplateResponse(
+        request,
+        "external_apis.html",
+        {
+            "title": "APIs Externas",
+            "usage": usage,
+        },
+    )
+
+
+@app.get("/api/v1/external-apis/usage")
+async def api_external_apis_usage():
+    return await fetch_all_external_api_usage()
 
 @app.get("/jobs")
 def list_jobs(request: Request):

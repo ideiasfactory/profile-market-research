@@ -3,11 +3,11 @@
 <section class="title-row">
   <div>
     <p class="eyebrow">Gestão</p>
-    <h1>Parâmetros de negócio</h1>
-    <p>Catálogo editável de regras e constantes do negócio. Valores com “embutir em prompts” ficam disponíveis como <code>{chave}</code> e no bloco <code>{business_context}</code>.</p>
+    <h1>Parâmetros</h1>
+    <p>Regras de negócio e configuração de sistema (chaves e endpoints de serviços externos).</p>
   </div>
-  {% if settings.updated_at %}
-  <div class="status ok">Atualizado {{ settings.updated_at[:19].replace('T', ' ') }} UTC</div>
+  {% if settings.updated_at or system.updated_at %}
+  <div class="status ok">Atualizado</div>
   {% endif %}
 </section>
 
@@ -22,9 +22,15 @@
 </section>
 {% endif %}
 
+<div class="tabs settings-tabs" role="tablist" aria-label="Tipos de parâmetros">
+  <a class="tab-btn {{ 'is-active' if active_tab == 'negocio' else '' }}" href="/settings?tab=negocio" role="tab" aria-selected="{{ 'true' if active_tab == 'negocio' else 'false' }}">Parâmetros de negócio</a>
+  <a class="tab-btn {{ 'is-active' if active_tab == 'sistema' else '' }}" href="/settings?tab=sistema" role="tab" aria-selected="{{ 'true' if active_tab == 'sistema' else 'false' }}">Parâmetros de Sistema</a>
+</div>
+
+{% if active_tab == 'negocio' %}
 <section class="panel form-section">
   <h2>Como usar nos prompts</h2>
-  <p class="hint">Nos arquivos em <code>prompts/</code>, referencie qualquer chave (ex.: <code>{target_margin_pct}</code>, <code>{iss_pct}</code>) ou o bloco completo <code>{business_context}</code>. Impostos e margem abaixo são apenas exemplos — cadastre o que o negócio precisar (SLA, seniority premium, política comercial, etc.).</p>
+  <p class="hint">Nos arquivos em <code>prompts/</code>, referencie qualquer chave (ex.: <code>{target_margin_pct}</code>, <code>{cache_ttl_days}</code>) ou o bloco <code>{business_context}</code>.</p>
   <pre class="markdown-body" style="white-space: pre-wrap; background: var(--panel-2); padding: 14px; border-radius: 12px;">{{ business_context }}</pre>
 </section>
 
@@ -76,14 +82,13 @@
   {% endfor %}
 
   <div class="title-row compact">
-    <p class="hint" style="margin:0;">Salva alterações de todos os parâmetros listados.</p>
-    <button type="submit">Salvar alterações</button>
+    <p class="hint" style="margin:0;">Salva alterações de todos os parâmetros de negócio listados.</p>
+    <button type="submit">Salvar parâmetros de negócio</button>
   </div>
 </form>
 
 <section class="panel form-section">
-  <h2>Novo parâmetro</h2>
-  <p class="hint">Ex.: <code>seniority_premium_pct</code>, <code>default_allocation_model</code>, <code>commercial_policy</code> — qualquer regra de negócio reutilizável.</p>
+  <h2>Novo parâmetro de negócio</h2>
   <form method="post" action="/settings/parameters" class="form">
     <div class="grid two">
       <label>Chave
@@ -118,4 +123,37 @@
     <button type="submit">Cadastrar parâmetro</button>
   </form>
 </section>
+{% else %}
+<section class="panel form-section">
+  <h2>Parâmetros de Sistema</h2>
+  <p class="hint">Chaves e endereços de serviços. Segredos são mascarados na tela; deixe o campo em branco para manter o valor atual. Valores salvos aqui sobrescrevem o <code>.env</code> no processo em execução e ficam em <code>data/system_settings.json</code> (não versionado).</p>
+  <p class="hint">Uso e planos das APIs: <a href="/external-apis">APIs Externas</a>.</p>
+</section>
+
+<form method="post" action="/settings/system" class="form">
+  {% for category, items in system.grouped.items() %}
+  <section class="panel form-section">
+    <h2>{{ category }}</h2>
+    <div class="list">
+      {% for item in items %}
+      <div class="list-item">
+        <label>{{ item.label }}
+          <span class="field-help">{{ item.description }} · origem: {{ item.source }}{% if item.has_value and item.value_type == 'secret' %} · {{ item.value }}{% endif %}</span>
+          {% if item.value_type == 'secret' %}
+          <input name="sys_{{ item.key }}" type="password" autocomplete="off" placeholder="{{ '•••••••• (em branco = manter)' if item.has_value else 'Cole a API key' }}">
+          {% else %}
+          <input name="sys_{{ item.key }}" type="text" value="{{ item.value }}" placeholder="{{ item.default }}">
+          {% endif %}
+        </label>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+  <div class="title-row compact">
+    <p class="hint" style="margin:0;">Alterações de chave passam a valer imediatamente para novas requests deste processo.</p>
+    <button type="submit">Salvar parâmetros de sistema</button>
+  </div>
+</form>
+{% endif %}
 {% endblock %}

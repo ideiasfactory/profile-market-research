@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="title-row">
+  <div>
+    <p class="eyebrow">Operação</p>
+    <h1>APIs Externas</h1>
+    <p>Plano contratado, créditos/uso e reset do ciclo para Tavily e Firecrawl. Dados consultados ao vivo nas APIs dos provedores.</p>
+  </div>
+  <div style="display:flex; gap:10px; align-items:center;">
+    <a class="button secondary" href="/settings?tab=sistema">Parâmetros de Sistema</a>
+    <a class="button" href="/external-apis">Atualizar</a>
+  </div>
+</section>
+
+<p class="hint">Consulta em {{ usage.fetched_at[:19].replace('T', ' ') }} UTC. Tavily: <code>GET /usage</code>. Firecrawl: <code>GET /v1/team/credit-usage</code> (fallback v2).</p>
+
+<section class="grid two">
+  {% for provider in usage.providers %}
+  <article class="panel api-usage-card">
+    <div class="title-row compact">
+      <div>
+        <h2 style="margin:0; text-transform: capitalize;">{{ provider.provider }}</h2>
+        <p class="hint" style="margin:6px 0 0;">{{ provider.plan_name if provider.ok else (provider.error or 'Indisponível') }}</p>
+      </div>
+      {% if not provider.configured %}
+      <div class="status warn">key missing</div>
+      {% elif provider.ok %}
+      <div class="status ok">online</div>
+      {% else %}
+      <div class="status warn">erro</div>
+      {% endif %}
+    </div>
+
+    {% if provider.ok %}
+    <p class="hint" style="margin-top:14px;">Incluído no plano: <strong>{{ provider.includes }}</strong></p>
+
+    <div class="usage-meter" aria-label="Uso do plano">
+      <div class="usage-meter-track">
+        <div class="usage-meter-bar" style="width: {{ provider.usage_pct or 0 }}%;"></div>
+      </div>
+      <div class="usage-meter-legend">
+        <span>Usado: {{ provider.used if provider.used is not none else '—' }}</span>
+        <span>Limite: {{ provider.limit if provider.limit is not none else '—' }}</span>
+        <span>Restante: {{ provider.remaining if provider.remaining is not none else '—' }}</span>
+        <span>{{ provider.usage_pct if provider.usage_pct is not none else '—' }}%</span>
+      </div>
+    </div>
+
+    <div class="list" style="margin-top:16px;">
+      <div class="list-item">
+        <span>Início do ciclo</span>
+        <strong>{{ provider.period_start or '—' }}</strong>
+      </div>
+      <div class="list-item">
+        <span>Reset / fim do ciclo</span>
+        <strong>{{ provider.period_end or '—' }}</strong>
+      </div>
+    </div>
+    <p class="hint">{{ provider.reset_note }}</p>
+
+    {% if provider.breakdown %}
+    <h3>Detalhamento</h3>
+    <div class="grid two">
+      {% for name, value in provider.breakdown.items() %}
+      {% if value is not none %}
+      <div class="list-item">
+        <span>{{ name }}</span>
+        <strong>{{ value }}</strong>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if provider.docs_url %}
+    <p class="hint"><a href="{{ provider.docs_url }}" target="_blank" rel="noopener">Documentação do endpoint de usage</a></p>
+    {% endif %}
+    {% elif not provider.configured %}
+    <p class="hint">Configure a API key em <a href="/settings?tab=sistema">Parâmetros de Sistema</a> ou no <code>.env</code>.</p>
+    {% else %}
+    <p class="hint" style="color: var(--warn);">{{ provider.error }}</p>
+    {% endif %}
+  </article>
+  {% endfor %}
+</section>
+{% endblock %}

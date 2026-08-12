@@ -1,0 +1,13 @@
+{
+  "values": {
+    "TAVILY_API_KEY": "",
+    "TAVILY_BASE_URL": "https://api.tavily.com",
+    "FIRECRAWL_API_KEY": "",
+    "FIRECRAWL_BASE_URL": "https://api.firecrawl.dev",
+    "OLLAMA_BASE_URL": "http://gpu-server-01:11434",
+    "OLLAMA_MODEL": "qwen2.5:14b",
+    "PROFESSIONAL_PROFILE_API_KEY": ""
+  },
+  "updated_at": null,
+  "_comment": "Copy to data/system_settings.json or edit via UI /settings?tab=sistema. File with secrets is gitignored."
+}

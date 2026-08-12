@@ -445,3 +445,32 @@ button.danger {
 .job-prefill-banner h2 {
   margin: 0;
 }
+
+.settings-tabs a.tab-btn {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.usage-meter { margin-top: 12px; }
+.usage-meter-track {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.usage-meter-bar {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+}
+.usage-meter-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.api-usage-card h3 { margin-top: 18px; }

@@ -14,7 +14,12 @@ from fastapi import Header, HTTPException, status
 
 
 def configured_api_key() -> str | None:
-    raw = (os.getenv("PROFESSIONAL_PROFILE_API_KEY") or "").strip()
+    try:
+        from app.system_settings import get_system_value
+
+        raw = (get_system_value("PROFESSIONAL_PROFILE_API_KEY") or "").strip()
+    except Exception:
+        raw = (os.getenv("PROFESSIONAL_PROFILE_API_KEY") or "").strip()
     return raw or None
 
 

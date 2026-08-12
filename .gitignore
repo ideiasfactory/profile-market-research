@@ -15,6 +15,7 @@ __pycache__/
 secrets/
 *.secret
 credentials.json
+data/system_settings.json
 
 # Real candidate PII dumps outside fixtures
 data/private/

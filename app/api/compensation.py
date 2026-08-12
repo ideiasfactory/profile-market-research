@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import os
-
 import httpx
 from fastapi import APIRouter, BackgroundTasks, HTTPException, Request
 from fastapi.templating import Jinja2Templates
@@ -13,6 +11,7 @@ from app.compensation.services.history import list_cached_research, load_cached_
 from app.compensation.services.job_prefill import DEFAULT_PREFILL, map_job_to_compensation_prefill
 from app.compensation.services.orchestrator import CompensationResearchOrchestrator
 from app.storage import find_by_id, jobs_store
+from app.system_settings import get_system_value
 from app.tasks import task_store
 
 
@@ -48,8 +47,8 @@ async def health_providers():
         "crawlers": crawlers,
         "configured_search_engines": settings.search_engines,
         "api_keys": {
-            "tavily": "set" if os.getenv("TAVILY_API_KEY", "").strip() else "missing",
-            "firecrawl": "set" if os.getenv("FIRECRAWL_API_KEY", "").strip() else "missing",
+            "tavily": "set" if get_system_value("TAVILY_API_KEY") else "missing",
+            "firecrawl": "set" if get_system_value("FIRECRAWL_API_KEY") else "missing",
         },
     }
 
@@ -146,8 +145,8 @@ def compensation_page(request: Request):
             "all_search_engines": ["tavily", "firecrawl"],
             "all_crawlers": ["glassdoor", "indeed", "vagas", "catho", "generic"],
             "api_keys": {
-                "tavily": "set" if os.getenv("TAVILY_API_KEY", "").strip() else "missing",
-                "firecrawl": "set" if os.getenv("FIRECRAWL_API_KEY", "").strip() else "missing",
+                "tavily": "set" if get_system_value("TAVILY_API_KEY") else "missing",
+                "firecrawl": "set" if get_system_value("FIRECRAWL_API_KEY") else "missing",
             },
             "configured_search_engines": settings.search_engines,
             "history": history,

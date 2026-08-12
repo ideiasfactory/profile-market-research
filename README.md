@@ -64,7 +64,7 @@ Na primeira carga, entradas monolíticas antigas em `candidates.json` / `scores.
 
 ## Parâmetros de negócio
 
-UI: `http://127.0.0.1:8000/settings` (menu **Parâmetros**).
+UI: `http://127.0.0.1:8000/settings` (abas **Parâmetros de negócio** e **Parâmetros de Sistema**).
 
 - Catálogo genérico (CRUD): chave, rótulo, valor, tipo, categoria, descrição, flag “embutir em prompts”.
 - Persistência: `data/business_settings.json` (`app/business_settings.py`).
@@ -72,6 +72,13 @@ UI: `http://127.0.0.1:8000/settings` (menu **Parâmetros**).
 - Chaves `clt_to_pj_factor` e `work_hours_month` alimentam a normalização de Compensation (fallback: `.env`).
 
 Nos prompts (`prompts/`), use `{business_context}` ou `{<chave>}` — injetados por `load_prompt` quando `inject_in_prompts` está ativo (ADR-017, ADR-018).
+
+### Parâmetros de Sistema e APIs Externas
+
+- Aba **Parâmetros de Sistema** (`/settings?tab=sistema`): API keys e URLs (Tavily, Firecrawl, Ollama, API key do PPA). Persistência local em `data/system_settings.json` (gitignored); `.env` continua como fallback.
+- Tela **APIs Externas** (`/external-apis`): plano, créditos usados/restantes e reset do ciclo via APIs oficiais:
+  - Tavily `GET /usage` (reset documentado no 1º dia do mês)
+  - Firecrawl `GET /v1/team/credit-usage` (período de billing na resposta)
 
 ## Prompts
 
@@ -170,4 +177,4 @@ Configuração: `config/providers.yaml`, `config/source_registry.yaml`, `.env.ex
 
 Persistência: `data/research_history.jsonl`, `data/observations.jsonl`, `data/compensation_cache/`.
 
-Docs: `docs/architecture.md`, `docs/api-contract.md`, `docs/adr/` (ADR-001 … ADR-019).
+Docs: `docs/architecture.md`, `docs/api-contract.md`, `docs/adr/` (ADR-001 … ADR-020).

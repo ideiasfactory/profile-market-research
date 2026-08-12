@@ -135,6 +135,7 @@ ADRs: ADR-017 (catálogo), ADR-018 (prompts).
 - ADR-017 — Catálogo editável de parâmetros de negócio
 - ADR-018 — Injeção de parâmetros de negócio nos prompts
 - ADR-019 — Pacotes conversacionais consolidados em `llm-tools/`
+- ADR-020 — Dashboard de uso de APIs externas + aba Parâmetros de Sistema
 
 ## Roadmap Pós-MVP
 

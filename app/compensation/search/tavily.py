@@ -1,20 +1,20 @@
 from __future__ import annotations
 
 import logging
-import os
 
 import httpx
 
 from app.compensation.domain.schemas import SearchResult
 from app.compensation.logging_utils import log_event
 from app.compensation.search.base import SearchEngine
+from app.system_settings import get_system_value
 
 
 class TavilySearchEngine(SearchEngine):
     name = "tavily"
 
     async def search(self, query: str, max_results: int) -> list[SearchResult]:
-        api_key = os.getenv("TAVILY_API_KEY", "").strip()
+        api_key = get_system_value("TAVILY_API_KEY")
         if not api_key:
             log_event(
                 "search_provider_skipped",
@@ -24,9 +24,10 @@ class TavilySearchEngine(SearchEngine):
                 query=query,
             )
             return []
+        base_url = get_system_value("TAVILY_BASE_URL", "https://api.tavily.com").rstrip("/")
         async with httpx.AsyncClient(timeout=self.config.timeout_seconds) as client:
             response = await client.post(
-                "https://api.tavily.com/search",
+                f"{base_url}/search",
                 json={
                     "api_key": api_key,
                     "query": query,
@@ -54,4 +55,4 @@ class TavilySearchEngine(SearchEngine):
         return results
 
     async def health(self) -> str:
-        return "healthy" if os.getenv("TAVILY_API_KEY") else "missing_api_key"
+        return "healthy" if get_system_value("TAVILY_API_KEY") else "missing_api_key"
