@@ -31,11 +31,18 @@
     </label>
     <button>Gerar / reprocessar score</button>
   </form>
-  <p class="hint">Scores existentes não são recalculados automaticamente. Use o botão acima para reprocessar com o modelo e provedor escolhidos. Compensation continua no LLM local.</p>
+  <p class="hint">Scores existentes não são recalculados automaticamente. Reprocessar arquiva o resultado anterior no histórico (comparativo Local vs OpenAI sem perda). Compensation continua no LLM local.</p>
 </section>
 {% if selected %}
 <section class="panel">
   <h2>{{ selected.candidate_name }} → {{ selected.job_title }}</h2>
+  {% if viewing_history %}
+  <p class="hint">
+    Visualizando execução histórica
+    {% if selected.created_at %}· {{ selected.created_at }}{% endif %}
+    · <a href="/scores?job_id={{ job_id }}&candidate_id={{ candidate_id }}">ver score atual</a>
+  </p>
+  {% endif %}
   <p class="big-score">{{ selected.final_score }}%</p>
   <p>
     Overall Fit · Método: {{ selected.method }}
@@ -45,8 +52,8 @@
     {% if selected.llm_provider or (selected.audit and selected.audit.llm_provider) %}
     · LLM: {{ selected.llm_provider or selected.audit.llm_provider }}
     {% endif %}
-    {% if selected.audit and selected.audit.llm_model %}
-    · {{ selected.audit.llm_model }}
+    {% if selected.llm_model or (selected.audit and selected.audit.llm_model) %}
+    · {{ selected.llm_model or selected.audit.llm_model }}
     {% endif %}
     {% if selected.verdict_label %}
     · <span class="verdict-badge verdict-{{ selected.verdict_label }}">{{ selected.verdict_label.replace('_', ' ') }}</span>
@@ -58,6 +65,78 @@
     · {{ selected.audit.usage.total_tokens or 0 }} tokens
     · {{ selected.audit.usage.calls or 0 }} calls
   </p>
+  {% elif selected.estimated_cost_usd is defined and selected.estimated_cost_usd is not none %}
+  <p class="hint">
+    Custo estimado OpenAI: ${{ (selected.estimated_cost_usd or 0) | round(4) }}
+    {% if selected.total_tokens %}· {{ selected.total_tokens }} tokens{% endif %}
+  </p>
+  {% endif %}
+
+  {% if latest or score_history %}
+  <h3>Histórico de execuções</h3>
+  <p class="hint">Reprocessar o mesmo par arquiva o score anterior (ex.: Local vs OpenAI) sem perda de dados.</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Quando</th>
+          <th>Provedor</th>
+          <th>Modelo</th>
+          <th>Score</th>
+          <th>Veredito</th>
+          <th>Método</th>
+          <th>Custo</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if latest %}
+        <tr class="{{ 'is-active-row' if not viewing_history else '' }}">
+          <td>{{ latest.created_at or '—' }}</td>
+          <td>{{ latest.llm_provider or (latest.audit.llm_provider if latest.audit else None) or '—' }}</td>
+          <td>{{ latest.llm_model or (latest.audit.llm_model if latest.audit else None) or '—' }}</td>
+          <td>{{ latest.final_score }}%</td>
+          <td>{{ latest.verdict_label.replace('_', ' ') if latest.verdict_label else '—' }}</td>
+          <td>{{ latest.method or '—' }}</td>
+          <td>
+            {% if latest.audit and latest.audit.usage and latest.audit.usage.estimated_cost_usd is defined %}
+            ${{ (latest.audit.usage.estimated_cost_usd or 0) | round(4) }}
+            {% else %}
+            —
+            {% endif %}
+          </td>
+          <td>
+            {% if viewing_history %}
+            <a href="/scores?job_id={{ job_id }}&candidate_id={{ candidate_id }}">atual</a>
+            {% else %}
+            <strong>atual</strong>
+            {% endif %}
+          </td>
+        </tr>
+        {% endif %}
+        {% for run in score_history %}
+        <tr class="{{ 'is-active-row' if viewing_history and history_id == run.id else '' }}">
+          <td>{{ run.created_at or run.archived_at or '—' }}</td>
+          <td>{{ run.llm_provider or '—' }}</td>
+          <td>{{ run.llm_model or '—' }}</td>
+          <td>{{ run.final_score }}%</td>
+          <td>{{ run.verdict_label.replace('_', ' ') if run.verdict_label else '—' }}</td>
+          <td>{{ run.method or '—' }}</td>
+          <td>
+            {% if run.estimated_cost_usd is defined and run.estimated_cost_usd is not none %}
+            ${{ (run.estimated_cost_usd or 0) | round(4) }}
+            {% else %}
+            —
+            {% endif %}
+          </td>
+          <td>
+            <a href="/scores?job_id={{ job_id }}&candidate_id={{ candidate_id }}&history_id={{ run.id }}">abrir</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
   {% endif %}
 
   {% if selected.score_breakdown %}

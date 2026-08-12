@@ -47,3 +47,20 @@ Hoje `OPENAI_API_KEY` (Bearer) funciona com Project secret key ou secret de serv
 - Garantir que `.env.example` / README recomendem service account secret como caminho preferido de longo prazo.
 - Avaliar se há mudança de auth além de API key (hoje não há).
 - Eventual rotação / secrets management.
+
+## BL-003 — Gráfico multi-score (comparativo visual Local vs OpenAI)
+
+| Campo | Valor |
+| --- | --- |
+| **Prioridade** | Backlog / nice-to-have |
+| **Urgência** | Baixa — histórico tabular já cobre A/B sem perda de dados |
+| **Status** | Aberto (adiado) |
+
+### Contexto
+
+Com score history, o PO já compara runs (quando, provider, modelo, score, veredito, método, custo) na página Scores e via API. Falta um **gráfico** que plote duas (ou N) execuções do mesmo par lado a lado (ex.: radar/barras Local vs OpenAI).
+
+### Escopo sugerido
+
+- Selecionar 2+ entradas do histórico (ou atual + histórico) e sobrepor eixos no chart existente.
+- Não alterar o contrato de score; só UX de comparação.

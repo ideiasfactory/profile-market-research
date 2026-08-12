@@ -79,8 +79,10 @@ Os dados ficam em JSON dentro de `data/`:
 - `data/jobs.json` — vagas (ainda monolítico; inclui `ideal_candidate_context` e analysis v2)
 - `data/candidates.json` — índice leve de candidatos (sem `resume_text`)
 - `data/candidates/{id}_{slug}_profile.json` — currículo completo de cada candidato
-- `data/scores.json` — índice leve de scores
-- `data/scores/{job_id}_{candidate_id}_{slug}_score.json` — detalhe completo de cada score
+- `data/scores.json` — índice leve de scores (sempre o **mais recente** por par vaga×candidato)
+- `data/scores/{job_id}_{candidate_id}_{slug}_score.json` — detalhe completo do score atual
+- `data/score_history.json` — índice de execuções arquivadas (reprocessamentos)
+- `data/scores/history/{pair}_{timestamp}_{provider}_score.json` — detalhe de cada execução histórica
 - `data/llm_usage.jsonl` — eventos de tokens/custo OpenAI (append-only)
 
 Na primeira carga, entradas monolíticas antigas em `candidates.json` / `scores.json` são migradas automaticamente para arquivos individuais (idempotente).

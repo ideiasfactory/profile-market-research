@@ -789,12 +789,27 @@ def candidate_detail(request: Request, candidate_id: str):
 
 
 @app.get("/scores")
-def scores(request: Request, job_id: str = "", candidate_id: str = ""):
+def scores(request: Request, job_id: str = "", candidate_id: str = "", history_id: str = ""):
     all_scores = scores_store.read()
     selected = None
+    latest = None
+    score_history: list[dict] = []
+    viewing_history = False
     chart_data = None
     if job_id and candidate_id:
-        selected = scores_store.find(job_id, candidate_id)
+        latest = scores_store.find(job_id, candidate_id)
+        score_history = scores_store.history_for(job_id, candidate_id)
+        if history_id:
+            historical = scores_store.get_history(history_id)
+            if (
+                historical
+                and historical.get("job_id") == job_id
+                and historical.get("candidate_id") == candidate_id
+            ):
+                selected = historical
+                viewing_history = True
+        if selected is None:
+            selected = latest
         if selected:
             chart_data = build_score_chart_data(selected.get("items") or [])
             breakdown = selected.get("score_breakdown") or {}
@@ -813,6 +828,10 @@ def scores(request: Request, job_id: str = "", candidate_id: str = ""):
             "candidates": candidates_store.read(),
             "scores": all_scores,
             "selected": selected,
+            "latest": latest,
+            "score_history": score_history,
+            "viewing_history": viewing_history,
+            "history_id": history_id,
             "chart_data": chart_data,
             "job_id": job_id,
             "candidate_id": candidate_id,

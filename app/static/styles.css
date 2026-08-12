@@ -408,6 +408,9 @@ button.danger {
 .table-wrap {
   overflow-x: auto;
 }
+table tr.is-active-row td {
+  background: rgba(148, 163, 184, 0.12);
+}
 .cell-meta {
   color: var(--muted);
   font-size: 0.85rem;

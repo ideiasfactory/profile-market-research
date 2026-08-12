@@ -43,9 +43,9 @@ Par: **Bruno Libanio** · `job_id=671bb12e8d6c` · `candidate_id=e475d1052f49` �
 | `llm_provider` | `openai` | `local` |
 | Modelo | `gpt-4.1` | `qwen2.5:14b` |
 | `method` | `llm` | `hybrid` |
-| `final_score` | *não retido* (arquivo sobrescrito pelo run local) | **54.9** |
-| `verdict_label` | *não retido* | **evaluate** |
-| `must_have_coverage` | *não retido* | 1/1 (ratio 1.0, OIC) |
+| `final_score` | *não retido na época* (arquivo sobrescrito; histórico de score corrige isso daqui em diante) | **54.9** |
+| `verdict_label` | *não retido na época* | **evaluate** |
+| `must_have_coverage` | *não retido na época* | 1/1 (ratio 1.0, OIC) |
 | Tokens / custo API | 13 001 · ~US$ 0.038 | n/a · **US$ 0** API |
 | Latência | ~16,6 s (só LLM calls) | ~139 s até `scored_at` / ~154 s task (`b71a5004-…`) |
 | Sinal de qualidade | 2/2 batches skills usable; fit/narrative sem erro | batch0 skills `usable=false` → heurística; batch1 OK; fit/narrative OK |
@@ -67,7 +67,7 @@ Proxies honestos neste sample:
 - Latência local depende de **carga GPU / Ollama** e do modelo; outro host muda o comparativo.
 - Valor em USD OpenAI é estimado pela tabela do `.env`, não pela fatura em tempo real.
 - Compensation Intelligence **não** entra neste baseline (permanece em Ollama, ADR-001).
-- Para A/B futuros: evitar sobrescrever o score do outro provider (salvar cópia ou incluir provider no path/`id`) para conservar `final_score` / `verdict_label`.
+- Para A/B futuros: o histórico de score já evita sobrescrever o outro provider; reprocessar arquiva o run anterior.
 
 ## Onde ver métricas ao vivo
 
@@ -75,3 +75,11 @@ Proxies honestos neste sample:
 - Log append-only: `data/llm_usage.jsonl` (OpenAI)
 - Por score: `audit.llm_provider`, `audit.llm_model`, `method`, `audit.usage` (OpenAI)
 - API: `GET /api/llm/usage` (e resumo agregado em `GET /api/v1/external-apis/usage`)
+
+## Histórico de score (Local vs OpenAI)
+
+Reprocessar o mesmo par **arquiva** o detalhe anterior em `data/scores/history/` e no índice `data/score_history.json`; o arquivo/índice “atual” (`job_id_candidate_id`) continua apontando para o último run.
+
+Assim o A/B Local vs OpenAI **não perde** `final_score` / `verdict_label` / custo do run anterior. Na UI **Scores**, abra o par e use a tabela **Histórico de execuções** (link *abrir* em cada run). Na API, `GET /api/gpt/evaluations/{id}?include_history=true` lista arquivos; ids históricos também resolvem em `GET /api/gpt/evaluations/{history_id}`.
+
+Gráfico multi-score lado a lado na UI fica em backlog (BL-003).
