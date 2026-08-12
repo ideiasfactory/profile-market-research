@@ -41,7 +41,7 @@ uvicorn app.main:app --reload
 
 ```bash
 export LLM_PROVIDER=local          # default; ou openai
-export OPENAI_API_KEY=sk-...
+export OPENAI_API_KEY=sk-...       # Project secret key (não User/Legacy)
 export OPENAI_BASE_URL=https://api.openai.com/v1
 export OPENAI_MODEL=gpt-4.1        # default recomendado
 export OPENAI_TIMEOUT=90
@@ -50,6 +50,7 @@ export OPENAI_PRICE_INPUT_PER_1M=2.00
 export OPENAI_PRICE_OUTPUT_PER_1M=8.00
 ```
 
+- Preferir **Project API Keys** → **"+ Create new secret key"** (evitar User API Keys / Legacy). Service account secret é follow-up opcional (mesmo `OPENAI_API_KEY`).
 - Sem `OPENAI_API_KEY`, o modo openai falha graceful → mesma heurística do local.
 - Alternativa mais barata após validar qualidade: `OPENAI_MODEL=gpt-4.1-mini`.
 - Uso/custo: append-only em `data/llm_usage.jsonl`; resumo em `GET /api/llm/usage`. Scores OpenAI incluem `audit.usage` (tokens + custo estimado).
