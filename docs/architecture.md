@@ -115,6 +115,7 @@ ADRs: ADR-017 (catálogo), ADR-018 (prompts).
 - Escopo OpenAI: `analyse_job`, `extract_candidate`, `score_*`. Compensation permanece em Ollama (ADR-001).
 - Override por request (`llm_provider` form/GPT) ou `LLM_PROVIDER` no `.env`. Sem key OpenAI → `configured=False` → heurística.
 - Métricas: `app/llm_usage.py` + `audit.usage` agregado no score.
+- Baseline de custo (negócio): [`docs/openai-score-baseline.md`](openai-score-baseline.md) — US$ 0.04 / score evaluation (OpenAI).
 
 ## Deploy
 
