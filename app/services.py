@@ -16,7 +16,8 @@ from app.job_understanding import (
     normalize_job_analysis,
     skill_group_index,
 )
-from app.llm import LocalLLM
+from app.llm import LLMClient
+from app.llm_usage import aggregate_usage, aggregate_usage_from_audits, usage_from_audit_payload
 from app.prompts import load_prompt
 from app.scoring_config import (
     JOB_ANALYSIS_VERSION,
@@ -245,7 +246,7 @@ def _skill_is_desired(text: str, spans: list[tuple[int, int]], desired_ranges: l
     return all(_window_has_marker(text, start, DESIRED_MARKERS, line_only=True) for start, _end in outside)
 
 
-async def analyse_job(job: dict[str, Any], llm: LocalLLM) -> dict[str, Any]:
+async def analyse_job(job: dict[str, Any], llm: LLMClient) -> dict[str, Any]:
     system = load_prompt("analyse_job.system.txt")
     prompt = load_prompt(
         "analyse_job.user.txt",
@@ -256,7 +257,12 @@ async def analyse_job(job: dict[str, Any], llm: LocalLLM) -> dict[str, Any]:
         job_description=str(job.get("job_description", "")),
         ideal_candidate_context=str(job.get("ideal_candidate_context") or ""),
     )
-    result = await llm.json_completion(system, prompt)
+    result = await llm.json_completion(
+        system,
+        prompt,
+        operation="analyse_job",
+        job_id=str(job.get("id") or "") or None,
+    )
     if result:
         cleaned = normalize_job_analysis(result)
         if (
@@ -274,13 +280,23 @@ async def analyse_job(job: dict[str, Any], llm: LocalLLM) -> dict[str, Any]:
     return heuristic
 
 
-async def extract_candidate(resume_text: str, llm: LocalLLM) -> dict[str, str]:
+async def extract_candidate(
+    resume_text: str,
+    llm: LLMClient,
+    *,
+    candidate_id: str | None = None,
+) -> dict[str, str]:
     system = load_prompt("extract_candidate.system.txt")
     prompt = load_prompt(
         "extract_candidate.user.txt",
         resume_text=resume_text[:12000],
     )
-    result = await llm.json_completion(system, prompt)
+    result = await llm.json_completion(
+        system,
+        prompt,
+        operation="extract_candidate",
+        candidate_id=candidate_id,
+    )
     if result:
         return {
             "name": str(result.get("name", ""))[:120],
@@ -297,7 +313,7 @@ SCORE_BATCH_SIZE = 12
 async def score_candidate(
     job: dict[str, Any],
     candidate: dict[str, Any],
-    llm: LocalLLM,
+    llm: LLMClient,
     *,
     scoring_model: str | None = None,
 ) -> dict[str, Any]:
@@ -305,17 +321,44 @@ async def score_candidate(
     analysis = normalize_job_analysis(job.get("analysis") or heuristic_job_analysis(job))
     resume_text = str(candidate.get("resume_text", ""))
     resume_excerpt = resume_text[:10000]
+    job_id = str(job.get("id") or "") or None
+    candidate_id = str(candidate.get("id") or "") or None
+    provider_name = getattr(llm, "provider_name", "local")
 
     if model == "v2":
-        return await _score_candidate_v2(job, candidate, analysis, resume_excerpt, llm)
+        return await _score_candidate_v2(
+            job,
+            candidate,
+            analysis,
+            resume_excerpt,
+            llm,
+            job_id=job_id,
+            candidate_id=candidate_id,
+        )
 
     skills = flatten_skills(analysis)
-    scores, scoring_method = await _score_skills_with_llm(skills, resume_excerpt, llm, model="v1")
+    scores, scoring_method, skills_audit = await _score_skills_with_llm(
+        skills,
+        resume_excerpt,
+        llm,
+        model="v1",
+        return_audit=True,
+        job_id=job_id,
+        candidate_id=candidate_id,
+    )
     scores = _ground_skill_scores_to_resume(scores, resume_excerpt, soft_null=False)
     built = build_score(job, candidate, skills, scores, scoring_method)
     built["scoring_model_version"] = "v1"
 
-    narrative = await _score_narrative_with_llm(job, candidate, built, resume_excerpt, llm)
+    narrative, narrative_audit = await _score_narrative_with_llm(
+        job,
+        candidate,
+        built,
+        resume_excerpt,
+        llm,
+        job_id=job_id,
+        candidate_id=candidate_id,
+    )
     if not narrative:
         narrative = heuristic_score_narrative(candidate, job, built["final_score"], built["items"])
     else:
@@ -336,6 +379,11 @@ async def score_candidate(
     elif not narrative.get("verdict_label"):
         narrative["verdict_label"] = score_label
     built.update(narrative)
+    usage = aggregate_usage(
+        aggregate_usage_from_audits(skills_audit),
+        usage_from_audit_payload(narrative_audit),
+    )
+    built["llm_provider"] = provider_name
     built["audit"] = {
         "scoring_model_version": "v1",
         "job_analysis_version": analysis.get("analysis_version") or analysis.get("version") or 1,
@@ -343,9 +391,14 @@ async def score_candidate(
         "candidate_updated_at": candidate.get("updated_at"),
         "scored_at": datetime.now(timezone.utc).isoformat(),
         "prompt_versions": PROMPT_VERSIONS,
+        "llm_provider": provider_name,
         "llm_model": getattr(llm, "model", None),
         "llm_temperature": getattr(llm, "temperature", None),
+        "skills_llm": skills_audit,
+        "narrative_llm": narrative_audit,
     }
+    if provider_name == "openai" and usage.get("calls"):
+        built["audit"]["usage"] = usage
     return built
 
 
@@ -354,7 +407,10 @@ async def _score_candidate_v2(
     candidate: dict[str, Any],
     analysis: dict[str, Any],
     resume_excerpt: str,
-    llm: LocalLLM,
+    llm: LLMClient,
+    *,
+    job_id: str | None = None,
+    candidate_id: str | None = None,
 ) -> dict[str, Any]:
     skills = flatten_skills_v2(analysis)
     if not skills:
@@ -375,14 +431,30 @@ async def _score_candidate_v2(
             skill["group"] = group_map.get(str(skill["name"]).lower(), "")
 
     scores, scoring_method, skills_audit = await _score_skills_with_llm(
-        skills, resume_excerpt, llm, model="v2", return_audit=True
+        skills,
+        resume_excerpt,
+        llm,
+        model="v2",
+        return_audit=True,
+        job_id=job_id,
+        candidate_id=candidate_id,
     )
     scores = _ground_skill_scores_to_resume(scores, resume_excerpt, soft_null=True)
     items = _build_scored_items_v2(skills, scores)
 
-    fit = await _score_fit_with_llm(job, candidate, analysis, items, resume_excerpt, llm)
+    fit = await _score_fit_with_llm(
+        job,
+        candidate,
+        analysis,
+        items,
+        resume_excerpt,
+        llm,
+        job_id=job_id,
+        candidate_id=candidate_id,
+    )
     role_fit = fit.get("role_fit")
     context_fit = fit.get("context_fit")
+    provider_name = getattr(llm, "provider_name", "local")
 
     result = build_v2_score_result(
         job=job,
@@ -402,6 +474,7 @@ async def _score_candidate_v2(
             "candidate_updated_at": candidate.get("updated_at"),
             "scored_at": datetime.now(timezone.utc).isoformat(),
             "prompt_versions": PROMPT_VERSIONS,
+            "llm_provider": provider_name,
             "llm_model": getattr(llm, "model", None),
             "llm_temperature": getattr(llm, "temperature", None),
             "skills_llm": skills_audit,
@@ -409,7 +482,16 @@ async def _score_candidate_v2(
         },
     )
 
-    narrative = await _score_narrative_with_llm(job, candidate, result, resume_excerpt, llm, model="v2")
+    narrative, narrative_audit = await _score_narrative_with_llm(
+        job,
+        candidate,
+        result,
+        resume_excerpt,
+        llm,
+        model="v2",
+        job_id=job_id,
+        candidate_id=candidate_id,
+    )
     if not narrative:
         narrative = heuristic_score_narrative_v2(candidate, job, result)
     else:
@@ -426,6 +508,16 @@ async def _score_candidate_v2(
 
     result["profile_summary"] = narrative.get("profile_summary", "")
     result["verdict"] = narrative.get("verdict", "")
+    result["llm_provider"] = provider_name
+    result.setdefault("audit", {})
+    result["audit"]["narrative_llm"] = narrative_audit
+    usage = aggregate_usage(
+        aggregate_usage_from_audits(skills_audit),
+        usage_from_audit_payload(fit.get("audit")),
+        usage_from_audit_payload(narrative_audit),
+    )
+    if provider_name == "openai" and usage.get("calls"):
+        result["audit"]["usage"] = usage
     # Backend decides verdict_label (LLM interprets narrative only).
     if not result.get("interview_validation") and fit.get("interview_validation"):
         result["interview_validation"] = fit["interview_validation"]
@@ -491,7 +583,10 @@ async def _score_fit_with_llm(
     analysis: dict[str, Any],
     items: list[dict[str, Any]],
     resume_text: str,
-    llm: LocalLLM,
+    llm: LLMClient,
+    *,
+    job_id: str | None = None,
+    candidate_id: str | None = None,
 ) -> dict[str, Any]:
     must = [i["name"] for i in items if str(i.get("tier") or "").upper() == "MUST_HAVE"]
     scored_lines = []
@@ -518,15 +613,27 @@ async def _score_fit_with_llm(
         candidate_role=str(candidate.get("reported_role") or ""),
         candidate_city=str(candidate.get("city") or ""),
     )
-    audit_payload = await llm.json_completion_with_audit(system, prompt, timeout=max(llm.timeout, 120))
+    audit_payload = await llm.json_completion_with_audit(
+        system,
+        prompt,
+        timeout=max(llm.timeout, 120),
+        operation="score_fit",
+        job_id=job_id,
+        candidate_id=candidate_id,
+    )
     parsed = (audit_payload or {}).get("parsed") or {}
     cleaned = _clean_fit_payload(parsed, items)
     cleaned["audit"] = {
         "raw": (audit_payload or {}).get("raw", "")[:8000],
         "model": (audit_payload or {}).get("model"),
+        "provider": (audit_payload or {}).get("provider"),
         "temperature": (audit_payload or {}).get("temperature"),
         "error": (audit_payload or {}).get("error"),
         "attempts": (audit_payload or {}).get("attempts"),
+        "prompt_tokens": (audit_payload or {}).get("prompt_tokens"),
+        "completion_tokens": (audit_payload or {}).get("completion_tokens"),
+        "total_tokens": (audit_payload or {}).get("total_tokens"),
+        "estimated_cost_usd": (audit_payload or {}).get("estimated_cost_usd"),
     }
     return cleaned
 
@@ -632,10 +739,12 @@ def heuristic_score_narrative_v2(
 async def _score_skills_with_llm(
     skills: list[dict[str, Any]],
     resume_text: str,
-    llm: LocalLLM,
+    llm: LLMClient,
     *,
     model: str = "v1",
     return_audit: bool = False,
+    job_id: str | None = None,
+    candidate_id: str | None = None,
 ) -> Any:
     if not skills:
         empty = ([], "heuristic", []) if return_audit else ([], "heuristic")
@@ -657,7 +766,12 @@ async def _score_skills_with_llm(
             resume_text=resume_text,
         )
         audit_payload = await llm.json_completion_with_audit(
-            system, prompt, timeout=max(llm.timeout, 120)
+            system,
+            prompt,
+            timeout=max(llm.timeout, 120),
+            operation="score_skills",
+            job_id=job_id,
+            candidate_id=candidate_id,
         )
         result = (audit_payload or {}).get("parsed")
         cleaned = _clean_skill_scores(result, batch, model=model)
@@ -671,9 +785,14 @@ async def _score_skills_with_llm(
                 {
                     "raw": (audit_payload or {}).get("raw", "")[:4000],
                     "model": (audit_payload or {}).get("model"),
+                    "provider": (audit_payload or {}).get("provider"),
                     "temperature": (audit_payload or {}).get("temperature"),
                     "error": (audit_payload or {}).get("error"),
                     "attempts": (audit_payload or {}).get("attempts"),
+                    "prompt_tokens": (audit_payload or {}).get("prompt_tokens"),
+                    "completion_tokens": (audit_payload or {}).get("completion_tokens"),
+                    "total_tokens": (audit_payload or {}).get("total_tokens"),
+                    "estimated_cost_usd": (audit_payload or {}).get("estimated_cost_usd"),
                     "usable": bool(_skill_scores_are_usable(cleaned, result)),
                 }
             )
@@ -696,10 +815,12 @@ async def _score_narrative_with_llm(
     candidate: dict[str, Any],
     built: dict[str, Any],
     resume_text: str,
-    llm: LocalLLM,
+    llm: LLMClient,
     *,
     model: str = "v1",
-) -> dict[str, str]:
+    job_id: str | None = None,
+    candidate_id: str | None = None,
+) -> tuple[dict[str, str], dict[str, Any] | None]:
     items = built.get("items", [])
     scored_lines = []
     for item in items:
@@ -738,8 +859,17 @@ async def _score_narrative_with_llm(
         ),
         scoring_model=model,
     )
-    result = await llm.json_completion(system, prompt, timeout=max(llm.timeout, 120))
-    return _clean_score_narrative(result or {}, model=model)
+    audit_payload = await llm.json_completion_with_audit(
+        system,
+        prompt,
+        timeout=max(llm.timeout, 120),
+        operation="score_narrative",
+        job_id=job_id,
+        candidate_id=candidate_id,
+    )
+    result = (audit_payload or {}).get("parsed") or {}
+    narrative = _clean_score_narrative(result, model=model)
+    return narrative, audit_payload
 
 
 def _chunked(items: list[Any], size: int) -> list[list[Any]]:

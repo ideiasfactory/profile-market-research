@@ -25,7 +25,8 @@ from app.business_settings import (
 from app.env_loader import load_app_env
 from app.external_api_usage import fetch_all_external_api_usage
 from app.gpt import router as gpt_router
-from app.llm import LocalLLM
+from app.llm import LocalLLM, OpenAILLM, active_llm_provider, get_llm
+from app.llm_usage import summarize_usage
 from app.logging_config import configure_logging
 from app.resume_ingest import resolve_resume_content
 from app.scoring_config import SCORING_MODEL, active_scoring_model
@@ -78,7 +79,18 @@ templates.env.filters["markdown"] = lambda value: markdown_lib.markdown(
     extensions=["extra", "sane_lists", "nl2br"],
 )
 templates.env.filters["tojson"] = lambda value: json.dumps(value, ensure_ascii=False)
-llm = LocalLLM()
+
+
+def _llm_status() -> dict[str, Any]:
+    local = LocalLLM()
+    openai = OpenAILLM()
+    return {
+        "llm_provider_default": active_llm_provider(),
+        "llm_configured": local.configured,
+        "openai_configured": openai.configured,
+        "openai_model": openai.model,
+        "local_model": local.model,
+    }
 
 
 @app.get("/openapi-gpt-slim.json", include_in_schema=False)
@@ -113,6 +125,8 @@ async def run_analyse_job_task(task_id: str, fields: dict[str, Any]) -> None:
         item_id = str(fields.get("item_id") or "")
         existing = find_by_id(jobs, item_id) if item_id else None
         save_mode = str(fields.get("save_mode") or "reanalyse").strip().lower()
+        provider = active_llm_provider(str(fields.get("llm_provider") or "") or None)
+        llm = get_llm(provider)
         payload = {
             "id": item_id or new_id(),
             "title": str(fields["title"]).strip(),
@@ -140,7 +154,7 @@ async def run_analyse_job_task(task_id: str, fields: dict[str, Any]) -> None:
                 payload["analysis"] = normalize_job_analysis({})
             message = "Vaga e critérios salvos com sucesso"
         else:
-            _progress(task_id, 35, "Analisando vaga com LLM (pode levar alguns segundos)")
+            _progress(task_id, 35, f"Analisando vaga com LLM ({provider})")
             payload["analysis"] = await analyse_job(payload, llm)
             message = "Vaga analisada com sucesso"
 
@@ -170,6 +184,8 @@ async def run_extract_candidate_task(task_id: str, fields: dict[str, Any]) -> No
         _progress(task_id, 10, "Preparando currículo")
         item_id = str(fields.get("item_id") or "")
         target_job_id = str(fields.get("target_job_id") or "").strip()
+        provider = active_llm_provider(str(fields.get("llm_provider") or "") or None)
+        llm = get_llm(provider)
 
         source_hint = str(fields.get("linkedin_url") or "").strip()
         if fields.get("resume_bytes"):
@@ -189,11 +205,12 @@ async def run_extract_candidate_task(task_id: str, fields: dict[str, Any]) -> No
         )
         full_resume_text = resolved["resume_text"]
 
-        _progress(task_id, 40, "Extraindo dados do currículo com LLM")
+        _progress(task_id, 40, f"Extraindo dados do currículo com LLM ({provider})")
         existing = candidates_store.get(item_id) if item_id else None
-        extracted = await extract_candidate(full_resume_text, llm)
+        candidate_id = item_id or new_id()
+        extracted = await extract_candidate(full_resume_text, llm, candidate_id=candidate_id)
         payload = {
-            "id": item_id or new_id(),
+            "id": candidate_id,
             "name": extracted["name"],
             "city": extracted["city"],
             "reported_role": extracted["reported_role"],
@@ -211,7 +228,7 @@ async def run_extract_candidate_task(task_id: str, fields: dict[str, Any]) -> No
         redirect_url = f"/candidates/{payload['id']}"
         if target_job_id:
             _progress(task_id, 75, "Gerando score do candidato contra a vaga")
-            await generate_score(target_job_id, payload["id"])
+            await generate_score(target_job_id, payload["id"], llm_provider=provider)
             redirect_url = f"/scores?job_id={target_job_id}&candidate_id={payload['id']}"
 
         task_store.update(
@@ -237,12 +254,19 @@ async def run_score_task(
     candidate_id: str,
     *,
     scoring_model: str | None = None,
+    llm_provider: str | None = None,
 ) -> None:
     try:
         _progress(task_id, 15, "Carregando vaga e currículo")
         model = active_scoring_model(scoring_model)
-        _progress(task_id, 40, f"Avaliando aderência com LLM (modelo {model})")
-        result = await generate_score(job_id, candidate_id, scoring_model=model)
+        provider = active_llm_provider(llm_provider)
+        _progress(task_id, 40, f"Avaliando aderência com LLM ({provider}, modelo {model})")
+        result = await generate_score(
+            job_id,
+            candidate_id,
+            scoring_model=model,
+            llm_provider=provider,
+        )
         if not result:
             raise ValueError("Vaga ou candidato não encontrado")
 
@@ -268,6 +292,8 @@ def home(request: Request):
     jobs = jobs_store.read()
     candidates = candidates_store.read()
     scores = scores_store.read()
+    status = _llm_status()
+    usage = summarize_usage()
     return templates.TemplateResponse(
         request,
         "index.html",
@@ -276,7 +302,8 @@ def home(request: Request):
             "jobs": jobs,
             "candidates": candidates,
             "scores": scores,
-            "llm_configured": llm.configured,
+            **status,
+            "llm_usage_totals": usage.get("totals") or {},
         },
     )
 
@@ -621,6 +648,7 @@ def job_form(request: Request, job: dict[str, Any] | None = None):
             "domains": domains_store.read(),
             "analysis": analysis,
             "is_edit": bool(job_data.get("id")),
+            "llm_provider_default": active_llm_provider(),
         },
     )
 
@@ -641,6 +669,7 @@ async def save_job(
     work_location: str = Form(...),
     save_mode: str = Form("reanalyse"),
     analysis_json: str = Form(""),
+    llm_provider: str = Form(""),
 ):
     mode = (save_mode or "reanalyse").strip().lower()
     if mode not in {"save", "reanalyse"}:
@@ -668,6 +697,7 @@ async def save_job(
         "work_location": work_location,
         "save_mode": mode,
         "analysis": analysis,
+        "llm_provider": active_llm_provider(llm_provider or None),
     }
     task = task_store.create("analyse_job" if mode == "reanalyse" else "save_job")
     background_tasks.add_task(run_analyse_job_task, task.task_id, fields)
@@ -703,7 +733,11 @@ def candidate_form(request: Request, candidate: dict[str, Any] | None = None):
     return templates.TemplateResponse(
         request,
         "candidate_form.html",
-        {"candidate": candidate or {}, "jobs": jobs_store.read()},
+        {
+            "candidate": candidate or {},
+            "jobs": jobs_store.read(),
+            "llm_provider_default": active_llm_provider(),
+        },
     )
 
 
@@ -714,6 +748,7 @@ async def save_candidate(
     resume_text: str = Form(""),
     linkedin_url: str = Form(""),
     target_job_id: str = Form(""),
+    llm_provider: str = Form(""),
     resume_file: UploadFile | None = File(None),
 ):
     resume_bytes: bytes | None = None
@@ -738,6 +773,7 @@ async def save_candidate(
         "resume_filename": resume_filename,
         "resume_bytes": resume_bytes,
         "target_job_id": target_job_id,
+        "llm_provider": active_llm_provider(llm_provider or None),
     }
     task = task_store.create("extract_candidate")
     background_tasks.add_task(run_extract_candidate_task, task.task_id, fields)
@@ -781,6 +817,7 @@ def scores(request: Request, job_id: str = "", candidate_id: str = ""):
             "job_id": job_id,
             "candidate_id": candidate_id,
             "scoring_model_default": SCORING_MODEL,
+            "llm_provider_default": active_llm_provider(),
         },
     )
 
@@ -791,10 +828,19 @@ async def create_score(
     job_id: str = Form(...),
     candidate_id: str = Form(...),
     scoring_model: str = Form(""),
+    llm_provider: str = Form(""),
 ):
     model = active_scoring_model(scoring_model or None)
+    provider = active_llm_provider(llm_provider or None)
     task = task_store.create("score")
-    background_tasks.add_task(run_score_task, task.task_id, job_id, candidate_id, scoring_model=model)
+    background_tasks.add_task(
+        run_score_task,
+        task.task_id,
+        job_id,
+        candidate_id,
+        scoring_model=model,
+        llm_provider=provider,
+    )
     return JSONResponse(task.public())
 
 
@@ -811,17 +857,24 @@ def get_task(task_id: str):
     return task.public()
 
 
+@app.get("/api/llm/usage")
+def llm_usage_summary(since: str = ""):
+    return summarize_usage(since.strip() or None)
+
+
 async def generate_score(
     job_id: str,
     candidate_id: str,
     *,
     scoring_model: str | None = None,
+    llm_provider: str | None = None,
 ) -> dict[str, Any] | None:
     job = find_by_id(jobs_store.read(), job_id)
     candidate = candidates_store.get(candidate_id)
     if not job or not candidate:
         return None
 
+    llm = get_llm(llm_provider)
     result = await score_candidate(job, candidate, llm, scoring_model=scoring_model)
     result["id"] = f"{job_id}_{candidate_id}"
     result["created_at"] = now_iso()

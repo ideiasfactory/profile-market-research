@@ -20,6 +20,7 @@ from app.compensation.services.history import list_cached_research, load_cached_
 from app.compensation.services.job_prefill import map_job_to_compensation_prefill
 from app.compensation.services.orchestrator import CompensationResearchOrchestrator
 from app.scoring_config import SCORING_MODEL, active_scoring_model
+from app.llm import active_llm_provider
 from app.services import normalize_job_analysis
 from app.storage import candidates_store, find_by_id, jobs_store, scores_store
 from app.tasks import task_store
@@ -38,6 +39,10 @@ class EvaluateRequest(BaseModel):
     scoring_model: str | None = Field(
         default=None,
         description="Optional scoring model override: v1 or v2. Defaults to server SCORING_MODEL.",
+    )
+    llm_provider: str | None = Field(
+        default=None,
+        description="Optional LLM provider override: local or openai. Defaults to server LLM_PROVIDER.",
     )
 
 
@@ -372,6 +377,7 @@ async def evaluate_candidate(
         raise HTTPException(status_code=404, detail="Candidate not found.")
 
     model = active_scoring_model(body.scoring_model)
+    provider = active_llm_provider(body.llm_provider)
     task = task_store.create("score")
     background_tasks.add_task(
         run_score_task,
@@ -379,10 +385,13 @@ async def evaluate_candidate(
         body.job_id,
         body.candidate_id,
         scoring_model=model,
+        llm_provider=provider,
     )
     payload = task.public()
     payload["scoring_model"] = model
     payload["default_scoring_model"] = SCORING_MODEL
+    payload["llm_provider"] = provider
+    payload["default_llm_provider"] = active_llm_provider()
     return payload
 
 

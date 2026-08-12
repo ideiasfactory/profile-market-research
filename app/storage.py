@@ -35,6 +35,7 @@ SCORE_INDEX_KEYS = (
     "verdict_label",
     "method",
     "scoring_model_version",
+    "llm_provider",
     "created_at",
     "path",
 )
