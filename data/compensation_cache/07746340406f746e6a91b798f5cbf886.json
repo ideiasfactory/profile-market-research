@@ -1,0 +1,573 @@
+{
+  "research_id": "f56b6ddf0392e65c",
+  "profile": {
+    "role_family": "Arquiteto",
+    "normalized_role": "Arquiteto de Integração",
+    "seniority": "sênior",
+    "specialization": "Oracle Integration Cloud, SAP Business Technology Platform",
+    "skills": [
+      "Oracle Integration Cloud",
+      "Arquitetura de Integração",
+      "API Management",
+      "Enterprise Integration Patterns",
+      "SAP Process Orchestration",
+      "Observabilidade",
+      "OAuth 2.0"
+    ]
+  },
+  "market": {
+    "currency": "BRL",
+    "unit": "hour",
+    "contract_type": "PJ",
+    "minimum": 53.59,
+    "p25": 88.9,
+    "median": 180.88,
+    "mean": 183.61,
+    "p75": 194.24,
+    "maximum": 429.35,
+    "monthly_equivalent": 30845.62,
+    "recommended_range": {
+      "min": 88.9,
+      "max": 194.24
+    }
+  },
+  "sample": {
+    "observations": 6,
+    "sources": 6
+  },
+  "providers": {
+    "search_engines_used": [
+      "tavily",
+      "firecrawl"
+    ],
+    "crawlers_used": [
+      "generic",
+      "indeed"
+    ]
+  },
+  "confidence": {
+    "score": 0.82,
+    "level": "HIGH"
+  },
+  "sources": [
+    {
+      "name": "indeed",
+      "url": "https://br.indeed.com/career/especialista-de-tecnologia/salaries",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T15:51:07.960816+00:00"
+    },
+    {
+      "name": "indeed",
+      "url": "https://br.indeed.com/q-arquiteto-salesforce-l-s%C3%A3o-paulo,-sp-vagas.html",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T15:51:07.940054+00:00"
+    },
+    {
+      "name": "glassdoor",
+      "url": "https://www.glassdoor.com.br/Sal%C3%A1rio/Kyndryl-Infrastructure-Cloud-Solution-Architect-Campinas-Sp-Sal%C3%A1rios-E5905801_DAO.htm?filter.jobTitleExact=Infrastructure%2FCloud+Solution+Architect&selectedLocationString=C%2C2490130",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T15:51:07.706860+00:00"
+    },
+    {
+      "name": "indeed",
+      "url": "https://br.indeed.com/career/desenvolvedor-front%20end/salaries",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T15:51:07.366998+00:00"
+    },
+    {
+      "name": "generic",
+      "url": "https://br.jooble.org/salary/arquiteto/Campinas%2C-SP",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T15:51:08.012776+00:00"
+    },
+    {
+      "name": "glassdoor",
+      "url": "https://www.glassdoor.com.br/Sal%C3%A1rios/principal-cloud-architect-sal%C3%A1rio-SRCH_KO0,25.htm",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T15:51:08.361138+00:00"
+    }
+  ],
+  "warnings": [
+    "2 observação(ões) excluída(s) das estatísticas por faixa salarial irreal após normalização."
+  ],
+  "observations": [
+    {
+      "id": "716e83cd027e2205",
+      "role": "Arquiteto OIC - CPFL",
+      "normalized_role": "Arquiteto de Integração",
+      "seniority": "senior",
+      "skills": [
+        "Oracle Integration Cloud",
+        "Arquitetura de Integração",
+        "API Management",
+        "Enterprise Integration Patterns",
+        "SAP Process Orchestration",
+        "SAP Business Technology Platform",
+        "Observabilidade",
+        "OAuth 2.0"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 6002.0,
+        "max": null,
+        "average": 6002.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "indeed",
+      "source_url": "https://br.indeed.com/career/especialista-de-tecnologia/salaries",
+      "evidence": "lista de tecnologia para Brasil Quanto ganha uma pessoa no cargo de Especialista de Tecnologia na localidade de Brasil? Salário-base médio R$ 6.002",
+      "evidence_type": "page_content",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T15:51:07.960816+00:00",
+      "crawl_method": "http",
+      "confidence": 0.75,
+      "observed_salary": {
+        "min": 6002.0,
+        "max": null,
+        "average": 6002.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 53.59,
+        "monthly_equivalent": 9003.0
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "b3c47cc9bbe35b60",
+      "role": "Arquiteto",
+      "normalized_role": "Arquiteto de Integração",
+      "seniority": "senior",
+      "skills": [
+        "Oracle Integration Cloud",
+        "Arquitetura de Integração",
+        "API Management",
+        "Enterprise Integration Patterns",
+        "SAP Process Orchestration",
+        "SAP Business Technology Platform",
+        "Observabilidade",
+        "OAuth 2.0"
+      ],
+      "location": {
+        "city": "Pinheiros",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 22000.0,
+        "max": 22000.0,
+        "average": 22000.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "indeed",
+      "source_url": "https://br.indeed.com/q-arquiteto-salesforce-l-s%C3%A3o-paulo,-sp-vagas.html",
+      "evidence": "R$ 22.000 por mês",
+      "evidence_type": "page_content",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T15:51:07.940054+00:00",
+      "crawl_method": "http",
+      "confidence": 0.85,
+      "observed_salary": {
+        "min": 22000.0,
+        "max": 22000.0,
+        "average": 22000.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 196.43,
+        "monthly_equivalent": 33000.0
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "127170a74ef755eb",
+      "role": "Arquiteto OIC - CPFL",
+      "normalized_role": "Arquiteto de Integração",
+      "seniority": "senior",
+      "skills": [
+        "Oracle Integration Cloud",
+        "Arquitetura de Integração",
+        "API Management",
+        "Enterprise Integration Patterns",
+        "SAP Process Orchestration",
+        "SAP Business Technology Platform",
+        "Observabilidade",
+        "OAuth 2.0"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 3076.0,
+        "max": null,
+        "average": 3076.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "indeed",
+      "source_url": "https://br.indeed.com/cmp/Cpfl/salaries?job_category=arch",
+      "evidence": "Arquitetura - Brasil Cargo. Arquitetura Soluções TI Sr Campinas, SP há 6 dias. R$ 3.076 por mês",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T15:51:07.298075+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 3076.0,
+        "max": null,
+        "average": 3076.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 27.46,
+        "monthly_equivalent": 4614.0
+      },
+      "excluded_from_statistics": true
+    },
+    {
+      "id": "e865ffa81dc6fe24",
+      "role": "Arquiteto OIC - CPFL",
+      "normalized_role": "Arquiteto de Integração",
+      "seniority": "senior",
+      "skills": [
+        "Oracle Integration Cloud",
+        "Arquitetura de Integração",
+        "API Management",
+        "Enterprise Integration Patterns",
+        "SAP Process Orchestration",
+        "SAP Business Technology Platform",
+        "Observabilidade",
+        "OAuth 2.0"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 71747.0,
+        "max": null,
+        "average": 71747.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "indeed",
+      "source_url": "https://br.indeed.com/career/arquiteto-de-aplica%C3%A7%C3%B5es/salaries/Campinas--SP",
+      "evidence": "A faixa salarial média para o cargo de Arquiteto de Aplicações é de R$ 71.747 por ano para Campinas, SP. Saiba mais sobre salários, benefícios,",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T15:51:07.297820+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 71747.0,
+        "max": null,
+        "average": 71747.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 640.6,
+        "monthly_equivalent": 107620.5
+      },
+      "excluded_from_statistics": true
+    },
+    {
+      "id": "e54463bca1cc571c",
+      "role": "Arquiteto OIC - CPFL",
+      "normalized_role": "Arquiteto de Integração",
+      "seniority": "senior",
+      "skills": [
+        "Oracle Integration Cloud",
+        "Arquitetura de Integração",
+        "API Management",
+        "Enterprise Integration Patterns",
+        "SAP Process Orchestration",
+        "SAP Business Technology Platform",
+        "Observabilidade",
+        "OAuth 2.0"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 18000.0,
+        "max": 21000.0,
+        "average": 19500.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "glassdoor",
+      "source_url": "https://www.glassdoor.com.br/Sal%C3%A1rio/Kyndryl-Infrastructure-Cloud-Solution-Architect-Campinas-Sp-Sal%C3%A1rios-E5905801_DAO.htm?filter.jobTitleExact=Infrastructure%2FCloud+Solution+Architect&selectedLocationString=C%2C2490130",
+      "evidence": "Infrastructure/Cloud Solution Architect. |. Mais de 15 anos. R$ 18 mil - R$ 21 mil/mês",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T15:51:07.706860+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 18000.0,
+        "max": 21000.0,
+        "average": 19500.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 174.11,
+        "monthly_equivalent": 29250.0
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "aa72920af4a5c203",
+      "role": "Arquiteto OIC - CPFL",
+      "normalized_role": "Arquiteto de Integração",
+      "seniority": "senior",
+      "skills": [
+        "Oracle Integration Cloud",
+        "Arquitetura de Integração",
+        "API Management",
+        "Enterprise Integration Patterns",
+        "SAP Process Orchestration",
+        "SAP Business Technology Platform",
+        "Observabilidade",
+        "OAuth 2.0"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 2847.0,
+        "max": 10705.0,
+        "average": 6776.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "indeed",
+      "source_url": "https://br.indeed.com/career/desenvolvedor-front%20end/salaries",
+      "evidence": "Desenvolvedor Front-end salaries typically range between a low of R$2.847 and a high of R$10.705 por mês",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T15:51:07.366998+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 2847.0,
+        "max": 10705.0,
+        "average": 6776.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 60.5,
+        "monthly_equivalent": 10164.0
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "a6dbb9f8eb24f63d",
+      "role": "Arquiteto OIC - CPFL",
+      "normalized_role": "Arquiteto de Integração",
+      "seniority": "senior",
+      "skills": [
+        "Oracle Integration Cloud",
+        "Arquitetura de Integração",
+        "API Management",
+        "Enterprise Integration Patterns",
+        "SAP Process Orchestration",
+        "SAP Business Technology Platform",
+        "Observabilidade",
+        "OAuth 2.0"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 639.0,
+        "max": 31728.0,
+        "average": 21017.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "generic",
+      "source_url": "https://br.jooble.org/salary/arquiteto/Campinas%2C-SP",
+      "evidence": "Salário médio para solicitação arquiteto em Campinas, SP: R$31.728 por ano. Dados retirados de 36 salários reais. ganha R$ 30.684; R$ 639 por semana, ou R$ 15,",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T15:51:08.012776+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 639.0,
+        "max": 31728.0,
+        "average": 21017.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 187.65,
+        "monthly_equivalent": 31525.5
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "28b7c8fbc962e707",
+      "role": "Arquiteto OIC - CPFL",
+      "normalized_role": "Arquiteto de Integração",
+      "seniority": "principal",
+      "skills": [
+        "Oracle Integration Cloud",
+        "Arquitetura de Integração",
+        "API Management",
+        "Enterprise Integration Patterns",
+        "SAP Process Orchestration",
+        "SAP Business Technology Platform",
+        "Observabilidade",
+        "OAuth 2.0"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 17000.0,
+        "max": 72000.0,
+        "average": 48087.5,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "glassdoor",
+      "source_url": "https://www.glassdoor.com.br/Sal%C3%A1rios/principal-cloud-architect-sal%C3%A1rio-SRCH_KO0,25.htm",
+      "evidence": "A média salarial anual de Principal Cloud Architect é de R$ 41.350 (Brasil). - R$ 17 mil/mês Campinas, SP. R$ 62 mil - R$ 72 mil/mês",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T15:51:08.361138+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 17000.0,
+        "max": 72000.0,
+        "average": 48087.5,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 429.35,
+        "monthly_equivalent": 72131.25
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "a0bfb86ef246caf3",
+      "role": "Arquiteto OIC - CPFL",
+      "normalized_role": "Arquiteto de Integração",
+      "seniority": "senior",
+      "skills": [
+        "Oracle Integration Cloud",
+        "Arquitetura de Integração",
+        "API Management",
+        "Enterprise Integration Patterns",
+        "SAP Process Orchestration",
+        "SAP Business Technology Platform",
+        "Observabilidade",
+        "OAuth 2.0"
+      ],
+      "location": {
+        "city": "Campinas",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "hybrid",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 108727.0,
+        "max": 108727.0,
+        "average": 108727.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "indeed",
+      "source_url": "https://br.indeed.com/career/engenheiro-de-devops/salaries",
+      "evidence": "ngenheiro de devops para Brasil ## Quanto ganha uma pessoa no cargo de Engenheiro de Devops na localidade de Brasil? ## Salário-base médio R$ 108.727 * Hora * Dia * Semana * Mês * Ano A faixa salarial para o cargo de engenheiro de devops é de R$ 108.727 por mês para Brasil. 24 salários informados. Atualização em 12 de nov",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T15:51:08.244204+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 108727.0,
+        "max": 108727.0,
+        "average": 108727.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 970.78,
+        "monthly_equivalent": 163090.5
+      },
+      "excluded_from_statistics": true
+    }
+  ],
+  "created_at": "2026-08-12T15:52:45.911029Z"
+}

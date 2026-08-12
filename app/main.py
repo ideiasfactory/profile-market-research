@@ -31,6 +31,14 @@ from app.resume_ingest import resolve_resume_content
 from app.scoring_config import SCORING_MODEL, active_scoring_model
 from app.services import analyse_job, build_score_chart_data, extract_candidate, normalize_job_analysis, score_candidate
 from app.storage import candidates_store, domains_store, find_by_id, jobs_store, new_id, scores_store, upsert
+from app.prompt_store import (
+    get_managed_prompt,
+    get_prompt_version_content,
+    grouped_managed_prompts,
+    list_managed_prompts,
+    revert_prompt_version,
+    save_prompt_edit,
+)
 from app.system_settings import (
     apply_system_settings_to_environ,
     get_system_settings,
@@ -274,67 +282,81 @@ def home(request: Request):
 
 
 @app.get("/domains")
-def domains(request: Request):
-    return templates.TemplateResponse(request, "domains.html", {"domains": domains_store.read()})
+def domains():
+    return redirect("/settings?tab=dominio")
 
 
 @app.post("/domains/{domain_type}")
 def save_domain(domain_type: str, name: str = Form(...), item_id: str = Form("")):
     domains_data = domains_store.read()
     if domain_type not in {"profiles", "seniorities"}:
-        return redirect("/domains")
+        return redirect("/settings?tab=dominio")
     item = {"id": item_id or new_id(), "name": name.strip()}
     upsert(domains_data[domain_type], item)
     domains_store.write(domains_data)
-    return redirect("/domains")
+    return redirect("/settings?tab=dominio&saved=1")
 
 
-@app.get("/settings")
-def settings_page(request: Request, saved: int = 0, tab: str = "negocio"):
-    active_tab = "sistema" if tab == "sistema" else "negocio"
+def _resolve_settings_tab(tab: str) -> str:
+    if tab in {"sistema", "prompts", "dominio"}:
+        return tab
+    return "negocio"
+
+
+def _settings_page_context(
+    *,
+    active_tab: str,
+    saved: bool = False,
+    error: str | None = None,
+    prompt: str = "",
+) -> dict[str, Any]:
     settings = get_business_settings()
     grouped: dict[str, list] = {}
     for item in settings["parameters"]:
         grouped.setdefault(item["category"], []).append(item)
     system = get_system_settings(reveal_secrets=False)
+    prompt_groups = grouped_managed_prompts() if active_tab == "prompts" else {}
+    selected_prompt = None
+    if active_tab == "prompts":
+        flat = [item for items in prompt_groups.values() for item in items]
+        selected_id = prompt or (flat[0]["id"] if flat else "")
+        if selected_id:
+            try:
+                selected_prompt = get_managed_prompt(selected_id)
+            except Exception:
+                selected_prompt = get_managed_prompt(flat[0]["id"]) if flat else None
+    return {
+        "title": "Parâmetros",
+        "active_tab": active_tab,
+        "settings": settings,
+        "grouped": grouped,
+        "value_types": VALUE_TYPES,
+        "business_context": format_business_context(settings["parameters"]),
+        "system": system,
+        "domains": domains_store.read(),
+        "prompt_groups": prompt_groups,
+        "selected_prompt": selected_prompt,
+        "saved": saved,
+        "error": error,
+    }
+
+
+@app.get("/settings")
+def settings_page(request: Request, saved: int = 0, tab: str = "negocio", prompt: str = ""):
+    active_tab = _resolve_settings_tab(tab)
     return templates.TemplateResponse(
         request,
         "settings.html",
-        {
-            "title": "Parâmetros",
-            "active_tab": active_tab,
-            "settings": settings,
-            "grouped": grouped,
-            "value_types": VALUE_TYPES,
-            "business_context": format_business_context(settings["parameters"]),
-            "system": system,
-            "saved": bool(saved),
-            "error": None,
-        },
+        _settings_page_context(active_tab=active_tab, saved=bool(saved), prompt=prompt),
     )
 
 
 def _settings_error_response(request: Request, error: str, *, tab: str = "negocio", status_code: int = 400):
-    active_tab = "sistema" if tab == "sistema" else "negocio"
-    settings = get_business_settings()
-    grouped: dict[str, list] = {}
-    for item in settings["parameters"]:
-        grouped.setdefault(item["category"], []).append(item)
-    system = get_system_settings(reveal_secrets=False)
+    active_tab = _resolve_settings_tab(tab)
     return templates.TemplateResponse(
         request,
         "settings.html",
-        {
-            "title": "Parâmetros",
-            "active_tab": active_tab,
-            "settings": settings,
-            "grouped": grouped,
-            "value_types": VALUE_TYPES,
-            "business_context": format_business_context(settings["parameters"]),
-            "system": system,
-            "saved": False,
-            "error": error,
-        },
+        _settings_page_context(active_tab=active_tab, saved=False, error=error),
         status_code=status_code,
     )
 
@@ -474,6 +496,83 @@ async def api_put_system_settings(request: Request):
     values = body.get("values") if isinstance(body.get("values"), dict) else body
     try:
         return save_system_settings(values)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/settings/prompts/{prompt_id:path}/revert")
+async def revert_prompt_settings_page(
+    request: Request,
+    prompt_id: str,
+    version_id: str = Form(...),
+):
+    try:
+        revert_prompt_version(prompt_id, version_id)
+    except ValueError as exc:
+        return _settings_error_response(request, str(exc), tab="prompts")
+    return redirect(f"/settings?tab=prompts&prompt={prompt_id}&saved=1")
+
+
+@app.post("/settings/prompts/{prompt_id:path}")
+async def save_prompt_settings_page(
+    request: Request,
+    prompt_id: str,
+    title: str = Form(...),
+    description: str = Form(""),
+    content: str = Form(...),
+    note: str = Form(""),
+):
+    try:
+        save_prompt_edit(prompt_id, content=content, title=title, description=description, note=note)
+    except ValueError as exc:
+        return _settings_error_response(request, str(exc), tab="prompts")
+    except FileNotFoundError as exc:
+        return _settings_error_response(request, str(exc), tab="prompts", status_code=404)
+    return redirect(f"/settings?tab=prompts&prompt={prompt_id}&saved=1")
+
+
+@app.get("/api/v1/settings/prompts")
+def api_list_prompts():
+    return {"items": list_managed_prompts()}
+
+
+@app.post("/api/v1/settings/prompts/{prompt_id:path}/revert")
+async def api_revert_prompt(prompt_id: str, request: Request):
+    body = await request.json()
+    if not isinstance(body, dict) or not body.get("version_id"):
+        raise HTTPException(status_code=400, detail="Informe version_id")
+    try:
+        return revert_prompt_version(prompt_id, str(body["version_id"]))
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/api/v1/settings/prompts/{prompt_id:path}")
+def api_get_prompt(prompt_id: str, version_id: str = ""):
+    try:
+        payload = get_managed_prompt(prompt_id, version_id=version_id or None)
+        if version_id:
+            payload["content"] = get_prompt_version_content(prompt_id, version_id)
+        return payload
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@app.put("/api/v1/settings/prompts/{prompt_id:path}")
+async def api_put_prompt(prompt_id: str, request: Request):
+    body = await request.json()
+    if not isinstance(body, dict):
+        raise HTTPException(status_code=400, detail="Payload JSON inválido")
+    try:
+        return save_prompt_edit(
+            prompt_id,
+            content=str(body.get("content") or ""),
+            title=str(body.get("title") or "") or None,
+            description=str(body.get("description") or ""),
+            note=str(body.get("note") or ""),
+        )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 

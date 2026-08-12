@@ -76,6 +76,7 @@ Nos prompts (`prompts/`), use `{business_context}` ou `{<chave>}` — injetados 
 ### Parâmetros de Sistema e APIs Externas
 
 - Aba **Parâmetros de Sistema** (`/settings?tab=sistema`): API keys e URLs (Tavily, Firecrawl, Ollama, API key do PPA). Persistência local em `data/system_settings.json` (gitignored); `.env` continua como fallback.
+- Aba **Prompts IA** (`/settings?tab=prompts`): edita prompts LLM com título, descrição, conteúdo e histórico versionado (salvar cria versão; dropdown + reverter). Store em `data/prompt_store.json`.
 - Tela **APIs Externas** (`/external-apis`): plano, créditos usados/restantes e reset do ciclo via APIs oficiais:
   - Tavily `GET /usage` (reset documentado no 1º dia do mês)
   - Firecrawl `GET /v1/team/credit-usage` (período de billing na resposta)
@@ -95,7 +96,7 @@ Edite esses arquivos para ajustar o comportamento da análise sem alterar o cód
 
 ## Escopo do MVP
 
-- Cadastro, consulta e edição de domínios de perfil e senioridade.
+- Cadastro, consulta e edição de domínios de perfil e senioridade (aba **Domínio** em `/settings`).
 - Catálogo editável de parâmetros de negócio (UI `/settings` + API), com injeção opcional nos prompts.
 - Cadastro, consulta e edição de vagas (com `ideal_candidate_context` e tiers Must-have/Core/Supporting/Differentials).
 - Job description em texto livre ou Markdown.
@@ -177,4 +178,4 @@ Configuração: `config/providers.yaml`, `config/source_registry.yaml`, `.env.ex
 
 Persistência: `data/research_history.jsonl`, `data/observations.jsonl`, `data/compensation_cache/`.
 
-Docs: `docs/architecture.md`, `docs/api-contract.md`, `docs/adr/` (ADR-001 … ADR-020).
+Docs: `docs/architecture.md`, `docs/api-contract.md`, `docs/adr/` (ADR-001 … ADR-021).

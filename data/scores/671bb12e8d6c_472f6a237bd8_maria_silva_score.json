@@ -3,82 +3,411 @@
   "candidate_id": "472f6a237bd8",
   "job_title": "Arquiteto OIC - CPFL",
   "candidate_name": "Maria Silva",
-  "final_score": 46.67,
+  "final_score": 39.34,
   "method": "llm",
+  "scoring_model_version": "v2",
   "items": [
     {
-      "category": "Hard skill",
-      "name": "Azure",
-      "weight": 4,
-      "score": 1,
-      "weighted_score": 4.0,
-      "evidence": "Não há menção a experiência com Azure no currículo."
-    },
-    {
-      "category": "Hard skill",
-      "name": "Ci/Cd",
-      "weight": 4,
+      "category": "Must-have",
+      "name": "Oracle Integration Cloud",
+      "weight": 10,
+      "tier": "MUST_HAVE",
+      "group": "OIC Platform",
       "score": 3,
-      "weighted_score": 12.0,
-      "evidence": "Experiência com Docker e Kubernetes sugere alguma familiaridade com CI/CD, mas não é explicitamente mencionado."
+      "confidence": 0.95,
+      "evidence_status": "explicit",
+      "evidence": [
+        {
+          "text": "Experiência com Oracle Integration Cloud",
+          "source": "resume"
+        }
+      ],
+      "weighted_score": 30.0,
+      "evidence_text": "Experiência com Oracle Integration Cloud"
     },
     {
-      "category": "Hard skill",
-      "name": "GIT",
-      "weight": 4,
-      "score": 1,
-      "weighted_score": 4.0,
-      "evidence": "Não há menção de experiência ou uso do GIT no currículo."
+      "category": "Must-have",
+      "name": "Arquitetura de Integração",
+      "weight": 7,
+      "tier": "CORE",
+      "group": "Architecture",
+      "score": 0,
+      "confidence": 0.1,
+      "evidence_status": "needs_validation",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual; validar em entrevista."
     },
     {
-      "category": "Hard skill",
-      "name": "API",
-      "weight": 4,
-      "score": 4,
-      "weighted_score": 16.0,
-      "evidence": "Menciona experiência com APIs REST e OAuth, indicando um entendimento prático na criação e utilização de APIs."
+      "category": "Core skill",
+      "name": "API Management",
+      "weight": 6,
+      "tier": "CORE",
+      "group": "Architecture",
+      "score": 0,
+      "confidence": 0.2,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
     },
     {
-      "category": "Hard skill",
-      "name": "Rest",
-      "weight": 4,
-      "score": 4,
-      "weighted_score": 16.0,
-      "evidence": "Experiência em APIs REST é mencionada, sugerindo conhecimento sólido sobre o padrão REST."
+      "category": "Core skill",
+      "name": "Enterprise Integration Patterns",
+      "weight": 6,
+      "tier": "CORE",
+      "group": "Architecture",
+      "score": 0,
+      "confidence": 0.1,
+      "evidence_status": "needs_validation",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual; validar em entrevista."
+    },
+    {
+      "category": "Core skill",
+      "name": "SAP Process Orchestration",
+      "weight": 7,
+      "tier": "CORE",
+      "group": "SAP Ecosystem",
+      "score": 3,
+      "confidence": 0.95,
+      "evidence_status": "explicit",
+      "evidence": [
+        {
+          "text": "Experiência com SAP PO",
+          "source": "resume"
+        }
+      ],
+      "weighted_score": 21.0,
+      "evidence_text": "Experiência com SAP PO"
+    },
+    {
+      "category": "Core skill",
+      "name": "SAP Business Technology Platform",
+      "weight": 7,
+      "tier": "CORE",
+      "group": "SAP Ecosystem",
+      "score": 0,
+      "confidence": 0.1,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Supporting skill",
+      "name": "Observabilidade",
+      "weight": 3,
+      "tier": "SUPPORTING",
+      "group": "Ops",
+      "score": 0,
+      "confidence": 0.1,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Supporting skill",
+      "name": "OAuth 2.0",
+      "weight": 3,
+      "tier": "SUPPORTING",
+      "group": "Security",
+      "score": 3,
+      "confidence": 0.95,
+      "evidence_status": "explicit",
+      "evidence": [
+        {
+          "text": "Experiência com OAuth",
+          "source": "resume"
+        }
+      ],
+      "weighted_score": 9.0,
+      "evidence_text": "Experiência com OAuth"
+    },
+    {
+      "category": "Supporting skill",
+      "name": "OpenAPI",
+      "weight": 3,
+      "tier": "SUPPORTING",
+      "group": "API Security",
+      "score": 0,
+      "confidence": 0.1,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Differential",
+      "name": "Kafka",
+      "weight": 2,
+      "tier": "DIFFERENTIAL",
+      "group": "Messaging",
+      "score": 0,
+      "confidence": 0.1,
+      "evidence_status": "not_found",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual no currículo."
+    },
+    {
+      "category": "Differential",
+      "name": "TOGAF",
+      "weight": 1,
+      "tier": "DIFFERENTIAL",
+      "group": "Architecture Frameworks",
+      "score": 0,
+      "confidence": 0.1,
+      "evidence_status": "needs_validation",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual; validar em entrevista."
+    },
+    {
+      "category": "Differential",
+      "name": "ArchiMate",
+      "weight": 1,
+      "tier": "DIFFERENTIAL",
+      "group": "Architecture Frameworks",
+      "score": 0,
+      "confidence": 0.1,
+      "evidence_status": "needs_validation",
+      "evidence": [],
+      "weighted_score": 0.0,
+      "evidence_text": "Sem evidência textual; validar em entrevista."
     },
     {
       "category": "Soft skill",
       "name": "Comunicação",
-      "weight": 4,
-      "score": 1,
-      "weighted_score": 4.0,
-      "evidence": "Não há informações específicas sobre habilidades de comunicação no currículo."
+      "weight": 3,
+      "tier": "SOFT",
+      "group": "Behavioral",
+      "score": null,
+      "confidence": 0.95,
+      "evidence_status": "needs_validation",
+      "evidence": [],
+      "weighted_score": null,
+      "evidence_text": "Sem evidência textual; validar em entrevista."
     },
     {
       "category": "Soft skill",
-      "name": "Liderança",
-      "weight": 4,
-      "score": 1,
-      "weighted_score": 4.0,
-      "evidence": "Não há menção a experiências de liderança ou gestão de equipes no currículo."
-    },
-    {
-      "category": "Soft skill",
-      "name": "Autonomia",
-      "weight": 4,
-      "score": 3,
-      "weighted_score": 12.0,
-      "evidence": "Como Arquiteto de Integração é possível inferir algum nível de trabalho independente e tomada de decisões autônoma."
-    },
-    {
-      "category": "Soft skill",
-      "name": "Organização",
-      "weight": 4,
-      "score": 3,
-      "weighted_score": 12.0,
-      "evidence": "Cargo de Arquiteto de Integração sugere que há organização na estruturação e manutenção de integrações complexas."
+      "name": "Liderança Técnica",
+      "weight": 2,
+      "tier": "SOFT",
+      "group": "Leadership",
+      "score": null,
+      "confidence": 0.95,
+      "evidence_status": "needs_validation",
+      "evidence": [],
+      "weighted_score": null,
+      "evidence_text": "Sem evidência textual; validar em entrevista."
     }
   ],
+  "score_breakdown": {
+    "dimensions": {
+      "core_technical_fit": 23.08,
+      "role_fit": 60.0,
+      "context_fit": 85.0,
+      "behavioral_fit": 50.0,
+      "differentials": 0.0
+    },
+    "weights": {
+      "core_technical_fit": 0.47500000000000003,
+      "role_fit": 0.225,
+      "context_fit": 0.175,
+      "differentials": 0.125
+    },
+    "final_score": 39.34,
+    "core_technical_fit": 23.08,
+    "role_fit": 60.0,
+    "context_fit": 85.0,
+    "behavioral_fit": 50.0,
+    "differentials": 0.0
+  },
+  "must_have_coverage": {
+    "covered": 1,
+    "total": 1,
+    "ratio": 1.0,
+    "covered_skills": [
+      "Oracle Integration Cloud"
+    ],
+    "missing_skills": [],
+    "min_score": 3
+  },
+  "critical_gaps": [
+    {
+      "name": "Arquitetura de Integração",
+      "severity": "documentation_gap",
+      "tier": "CORE",
+      "score": 0,
+      "evidence_status": "needs_validation",
+      "reason": "Sem evidência textual suficiente; validar em entrevista."
+    },
+    {
+      "name": "API Management",
+      "severity": "important",
+      "tier": "CORE",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito CORE."
+    },
+    {
+      "name": "Enterprise Integration Patterns",
+      "severity": "documentation_gap",
+      "tier": "CORE",
+      "score": 0,
+      "evidence_status": "needs_validation",
+      "reason": "Sem evidência textual suficiente; validar em entrevista."
+    },
+    {
+      "name": "SAP Business Technology Platform",
+      "severity": "important",
+      "tier": "CORE",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito CORE."
+    },
+    {
+      "name": "Observabilidade",
+      "severity": "minor",
+      "tier": "SUPPORTING",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito SUPPORTING."
+    },
+    {
+      "name": "OpenAPI",
+      "severity": "minor",
+      "tier": "SUPPORTING",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito SUPPORTING."
+    },
+    {
+      "name": "Kafka",
+      "severity": "minor",
+      "tier": "DIFFERENTIAL",
+      "score": 0,
+      "evidence_status": "not_found",
+      "reason": "Sem evidência para requisito DIFFERENTIAL."
+    },
+    {
+      "name": "TOGAF",
+      "severity": "documentation_gap",
+      "tier": "DIFFERENTIAL",
+      "score": 0,
+      "evidence_status": "needs_validation",
+      "reason": "Sem evidência textual suficiente; validar em entrevista."
+    },
+    {
+      "name": "ArchiMate",
+      "severity": "documentation_gap",
+      "tier": "DIFFERENTIAL",
+      "score": 0,
+      "evidence_status": "needs_validation",
+      "reason": "Sem evidência textual suficiente; validar em entrevista."
+    },
+    {
+      "name": "Comunicação",
+      "severity": "documentation_gap",
+      "tier": "SOFT",
+      "score": null,
+      "evidence_status": "needs_validation",
+      "reason": "Sem evidência textual suficiente; validar em entrevista."
+    },
+    {
+      "name": "Liderança Técnica",
+      "severity": "documentation_gap",
+      "tier": "SOFT",
+      "score": null,
+      "evidence_status": "needs_validation",
+      "reason": "Sem evidência textual suficiente; validar em entrevista."
+    }
+  ],
+  "group_scores": [
+    {
+      "name": "OIC Platform",
+      "score": 60.0,
+      "skills_total": 1,
+      "skills_covered": 1,
+      "coverage_ratio": 1.0
+    },
+    {
+      "name": "SAP Ecosystem",
+      "score": 30.0,
+      "skills_total": 2,
+      "skills_covered": 1,
+      "coverage_ratio": 0.5
+    },
+    {
+      "name": "API Security",
+      "score": 30.0,
+      "skills_total": 2,
+      "skills_covered": 1,
+      "coverage_ratio": 0.5
+    }
+  ],
+  "role_fit": 60.0,
+  "context_fit": 85.0,
+  "strengths": [
+    "Oracle Integration Cloud",
+    "OAuth 2.0"
+  ],
+  "gaps": [
+    "SAP Business Technology Platform",
+    "Arquitetura de Integração",
+    "API Management",
+    "Enterprise Integration Patterns"
+  ],
+  "interview_validation": [
+    "Validar experiência em Arquitetura de Integração e API Management",
+    "Verificar profundidade prática com OIC em projetos estratégicos"
+  ],
+  "profile_summary": "Maria Silva é uma arquiteta de integração com experiência sólida em Oracle Integration Cloud e SAP Process Orchestration. Ela possui conhecimento avançado sobre OAuth 2.0 e trabalha com APIs REST, Docker e Kubernetes.",
+  "verdict": "Maria Silva apresenta pontos fortes na utilização do Oracle Integration Cloud e SAP Process Orchestration, além de experiência com OAuth 2.0. No entanto, há lacunas significativas em áreas como arquitetura de integração, API Management e padrões de integração empresarial que precisam ser verificadas durante a entrevista para uma avaliação mais precisa.",
+  "verdict_label": "not_recommended",
+  "audit": {
+    "scoring_model_version": "v2",
+    "job_analysis_version": 2,
+    "job_updated_at": "2026-08-08T02:38:31.904297+00:00",
+    "candidate_updated_at": "2026-08-07T19:56:21.798171+00:00",
+    "scored_at": "2026-08-12T15:39:33.986861+00:00",
+    "prompt_versions": {
+      "analyse_job": "v2",
+      "score_skills": "v2",
+      "score_fit": "v1",
+      "score_narrative": "v2"
+    },
+    "llm_model": "qwen2.5:14b",
+    "llm_temperature": 0.1,
+    "skills_llm": [
+      {
+        "raw": "{\n  \"skills\": [\n    {\n      \"name\": \"Oracle Integration Cloud\",\n      \"score\": 3,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [{\"text\": \"Experiência com Oracle Integration Cloud\", \"source\": \"resume\"}]\n    },\n    {\n      \"name\": \"Arquitetura de Integração\",\n      \"score\": null,\n      \"confidence\": 0.1,\n      \"evidence_status\": \"needs_validation\",\n      \"evidence\": []\n    },\n    {\n      \"name\": \"API Management\",\n      \"score\": 3,\n      \"confidence\": 0.85,\n      \"evidence_status\": \"inferred\",\n      \"evidence\": [{\"text\": \"Experiência com APIs REST\", \"source\": \"resume\"}]\n    },\n    {\n      \"name\": \"Enterprise Integration Patterns\",\n      \"score\": null,\n      \"confidence\": 0.1,\n      \"evidence_status\": \"needs_validation\",\n      \"evidence\": []\n    },\n    {\n      \"name\": \"SAP Process Orchestration\",\n      \"score\": 3,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [{\"text\": \"Experiência com SAP PO\", \"source\": \"resume\"}]\n    },\n    {\n      \"name\": \"SAP Business Technology Platform\",\n      \"score\": null,\n      \"confidence\": 0.1,\n      \"evidence_status\": \"not_found\",\n      \"evidence\": []\n    },\n    {\n      \"name\": \"Observabilidade\",\n      \"score\": null,\n      \"confidence\": 0.1,\n      \"evidence_status\": \"not_found\",\n      \"evidence\": []\n    },\n    {\n      \"name\": \"OAuth 2.0\",\n      \"score\": 3,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [{\"text\": \"Experiência com OAuth\", \"source\": \"resume\"}]\n    },\n    {\n      \"name\": \"OpenAPI\",\n      \"score\": null,\n      \"confidence\": 0.1,\n      \"evidence_status\": \"not_found\",\n      \"evidence\": []\n    },\n    {\n      \"name\": \"Kafka\",\n      \"score\": null,\n      \"confidence\": 0.1,\n      \"evidence_status\": \"not_found\",\n      \"evidence\": []\n    },\n    {\n      \"name\": \"TOGAF\",\n      \"score\": null,\n      \"confidence\": 0.1,\n      \"evidence_status\": \"needs_validation\",\n      \"evidence\": []\n    },\n    {\n      \"name\": \"ArchiMate\",\n      \"score\": null,\n      \"confidence\": 0.1,\n      \"evidence_status\": \"needs_validation\",\n      \"evidence\": []\n    }\n  ]\n}",
+        "model": "qwen2.5:14b",
+        "temperature": 0.1,
+        "error": null,
+        "attempts": 1,
+        "usable": true
+      },
+      {
+        "raw": "{\n  \"skills\": [\n    {\n      \"name\": \"Comunicação\",\n      \"score\": null,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"needs_validation\",\n      \"evidence\": []\n    },\n    {\n      \"name\": \"Liderança Técnica\",\n      \"score\": null,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"needs_validation\",\n      \"evidence\": []\n    }\n  ]\n}",
+        "model": "qwen2.5:14b",
+        "temperature": 0.1,
+        "error": null,
+        "attempts": 1,
+        "usable": true
+      }
+    ],
+    "fit_llm": {
+      "raw": "{\n  \"role_fit\": 60,\n  \"context_fit\": 85,\n  \"strengths\": [\"Oracle Integration Cloud\", \"OAuth 2.0\"],\n  \"gaps\": [\"SAP Business Technology Platform\", \"Arquitetura de Integração\", \"API Management\", \"Enterprise Integration Patterns\"],\n  \"interview_validation\": [\"Validar experiência em Arquitetura de Integração e API Management\", \"Verificar profundidade prática com OIC em projetos estratégicos\"]\n}",
+      "model": "qwen2.5:14b",
+      "temperature": 0.1,
+      "error": null,
+      "attempts": 1
+    }
+  },
   "id": "671bb12e8d6c_472f6a237bd8",
-  "created_at": "2026-08-07T19:57:05.951160+00:00"
+  "created_at": "2026-08-12T15:39:44.508294+00:00"
 }

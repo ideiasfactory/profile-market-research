@@ -7,7 +7,7 @@ search_engines:
     retry_count: 2
 
   firecrawl:
-    enabled: false
+    enabled: true
     priority: 20
     timeout_seconds: 20
     max_results: 8

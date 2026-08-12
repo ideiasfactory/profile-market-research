@@ -1,0 +1,824 @@
+{
+  "research_id": "f09b1faab4e94633",
+  "profile": {
+    "role_family": "Arquiteto",
+    "normalized_role": "Arquiteto Java",
+    "seniority": "Senior",
+    "specialization": "Java, Spring Boot, Microsserviços, Kubernetes, AWS, Arquitetura de Software, APIs REST, Mensageria",
+    "skills": [
+      "Java",
+      "Spring Boot",
+      "Microsserviços",
+      "Kubernetes",
+      "AWS",
+      "Arquitetura de Software",
+      "APIs REST",
+      "Mensageria"
+    ]
+  },
+  "market": {
+    "currency": "BRL",
+    "unit": "hour",
+    "contract_type": "PJ",
+    "minimum": 71.43,
+    "p25": 81.22,
+    "median": 96.09,
+    "mean": 99.83,
+    "p75": 114.29,
+    "maximum": 138.39,
+    "monthly_equivalent": 16771.75,
+    "recommended_range": {
+      "min": 81.22,
+      "max": 114.29
+    }
+  },
+  "sample": {
+    "observations": 13,
+    "sources": 13
+  },
+  "providers": {
+    "search_engines_used": [
+      "tavily"
+    ],
+    "crawlers_used": [
+      "generic"
+    ]
+  },
+  "confidence": {
+    "score": 0.9,
+    "level": "HIGH"
+  },
+  "sources": [
+    {
+      "name": "generic",
+      "url": "/goto?url=CAESjwEB7keqTRNG2QfNLorCuhu4Cx1BoiblEAEEGUqcau0OnQic-OOTqkv2jbB1h1uCqplxxwdRH_pw7ffVln2LKO5tC3cj54AsXX09sK71sulHHe3GQiSXDoSgU5UH2VAFbPPvgg_Xm9GTXWNqeRqUSAQiIYgwhSKT_OFE7XLTlMW8AgoJaZLV6AuzbGGXo-bISQ%3D%3D",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T15:06:48.697964+00:00"
+    },
+    {
+      "name": "indeed",
+      "url": "https://br.indeed.com/career/arquiteto-java/salaries/S%C3%A3o-Paulo--SP",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T15:06:48.910325+00:00"
+    },
+    {
+      "name": "indeed",
+      "url": "https://br.indeed.com/career/arquiteto-java/salaries",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T15:06:48.921429+00:00"
+    },
+    {
+      "name": "generic",
+      "url": "https://br.linkedin.com/jobs/view/backend-developer-java-spring-boot-kubernetes-at-samcorp-solution%C2%AE-4376825377",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T15:06:53.306478+00:00"
+    },
+    {
+      "name": "indeed",
+      "url": "https://br.indeed.com/career/arquiteto-de-software/salaries",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T15:06:48.933307+00:00"
+    },
+    {
+      "name": "generic",
+      "url": "/goto?url=CAESiwEB7keqTaEtHLBEKZHfNPZsJ1X9px5y-U8Bl6-TvGckpyNyCgcQUKpgbzzrITCMJSB3Ci7fKx5LXSgvXgf8Bg_37jyMCdTs-ddto-1BDzAwqKNNImlufxa4HiliFbC3-cHm4p-sUlaXs7TREhEUPABjtF8vIxP-f6OIKC2xV7eb3Kma-FOOcnDYJ0OQ",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T15:06:48.941212+00:00"
+    },
+    {
+      "name": "indeed",
+      "url": "https://br.indeed.com/career/arquiteto-java/salaries/Jundia%C3%AD--SP",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T15:06:49.048634+00:00"
+    },
+    {
+      "name": "generic",
+      "url": "https://www.simplyhired.com.br/pt-BR/salaries/search?q=arquiteto+de+software&l=vinhedo%2C+sp",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T15:06:49.129108+00:00"
+    },
+    {
+      "name": "generic",
+      "url": "https://bebee.com/br/jobs/role/java",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T15:06:50.212030+00:00"
+    },
+    {
+      "name": "indeed",
+      "url": "https://br.indeed.com/career/arquiteto-java/salaries/Estado-de-S%C3%A3o-Paulo",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T15:06:49.466374+00:00"
+    },
+    {
+      "name": "generic",
+      "url": "/goto?url=CAESbAHuR6pNd1JMFFD4Lfwe75ZhFTIzhGxRhz4l1h59YSKFBc6F98AaXpveHzf3NAz8OOBk3yn9_gYmylAMPWHqsP582Gdt6WfID0rgKbRII-K2uRESa9i6BkvDmg9lPUqE5NjN7Iof4pCZRuCoDw%3D%3D",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T15:06:49.381444+00:00"
+    },
+    {
+      "name": "glassdoor",
+      "url": "https://www.glassdoor.com.br/Salários/são-paulo-sp-engenheiro-devops-salário-SRCH_IL.0,12_IC2479061_KO13,30.htm",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T15:06:49.850837+00:00"
+    },
+    {
+      "name": "indeed",
+      "url": "https://br.indeed.com/career/arquiteto-java/salaries/S%C3%A3o-Caetano-do-Sul--SP",
+      "observations": 1,
+      "retrieved_at": "2026-08-12T15:06:49.933347+00:00"
+    }
+  ],
+  "warnings": [],
+  "observations": [
+    {
+      "id": "86c3904cc1e34644",
+      "role": "Arquiteto Java Senior",
+      "normalized_role": "Arquiteto Java",
+      "seniority": "senior",
+      "skills": [
+        "Java",
+        "Spring Boot",
+        "Microsserviços",
+        "Kubernetes",
+        "AWS",
+        "Arquitetura de Software",
+        "APIs REST",
+        "Mensageria"
+      ],
+      "location": {
+        "city": "São Paulo",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "remote",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 10827.0,
+        "max": null,
+        "average": 10827.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "generic",
+      "source_url": "/goto?url=CAESjwEB7keqTRNG2QfNLorCuhu4Cx1BoiblEAEEGUqcau0OnQic-OOTqkv2jbB1h1uCqplxxwdRH_pw7ffVln2LKO5tC3cj54AsXX09sK71sulHHe3GQiSXDoSgU5UH2VAFbPPvgg_Xm9GTXWNqeRqUSAQiIYgwhSKT_OFE7XLTlMW8AgoJaZLV6AuzbGGXo-bISQ%3D%3D",
+      "evidence": "A faixa salarial média para o cargo de Desenvolvedor Java Sênior é de R$ 10.827 por mês para São Paulo, SP. Saiba mais sobre salários, benefícios,",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T15:06:48.697964+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 10827.0,
+        "max": null,
+        "average": 10827.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 96.67,
+        "monthly_equivalent": 16240.5
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "dac431f61bbf627b",
+      "role": "Arquiteto Java Senior",
+      "normalized_role": "Arquiteto Java",
+      "seniority": "senior",
+      "skills": [
+        "Java",
+        "Spring Boot",
+        "Microsserviços",
+        "Kubernetes",
+        "AWS",
+        "Arquitetura de Software",
+        "APIs REST",
+        "Mensageria"
+      ],
+      "location": {
+        "city": "São Paulo",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "remote",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 12428.0,
+        "max": null,
+        "average": 12428.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "indeed",
+      "source_url": "https://br.indeed.com/career/arquiteto-java/salaries/S%C3%A3o-Paulo--SP",
+      "evidence": "A faixa salarial média para o cargo de Arquiteto Java é de R$ 12.428 por mês para São Paulo, SP. Saiba mais sobre salários, benefícios, satisfação salarial",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T15:06:48.910325+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 12428.0,
+        "max": null,
+        "average": 12428.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 110.96,
+        "monthly_equivalent": 18642.0
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "8d4f0e955ed5ba89",
+      "role": "Arquiteto Java Senior",
+      "normalized_role": "Arquiteto Java",
+      "seniority": "senior",
+      "skills": [
+        "Java",
+        "Spring Boot",
+        "Microsserviços",
+        "Kubernetes",
+        "AWS",
+        "Arquitetura de Software",
+        "APIs REST",
+        "Mensageria"
+      ],
+      "location": {
+        "city": "São Paulo",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "remote",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 9097.0,
+        "max": 12428.0,
+        "average": 10762.5,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "indeed",
+      "source_url": "https://br.indeed.com/career/arquiteto-java/salaries",
+      "evidence": "Arquiteto Java é de R$ 9.097 por mês para Brasil. 3 salário informado São Paulo, SP R$ 12.428 por mês",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T15:06:48.921429+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 9097.0,
+        "max": 12428.0,
+        "average": 10762.5,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 96.09,
+        "monthly_equivalent": 16143.75
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "e40e14f2e225cac1",
+      "role": "Arquiteto Java Senior",
+      "normalized_role": "Arquiteto Java",
+      "seniority": "senior",
+      "skills": [
+        "Java",
+        "Spring Boot",
+        "Microsserviços",
+        "Kubernetes",
+        "AWS",
+        "Arquitetura de Software",
+        "APIs REST",
+        "Mensageria"
+      ],
+      "location": {
+        "city": "São Paulo",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "remote",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 12800.0,
+        "max": null,
+        "average": 12800.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "generic",
+      "source_url": "https://br.linkedin.com/jobs/view/backend-developer-java-spring-boot-kubernetes-at-samcorp-solution%C2%AE-4376825377",
+      "evidence": "Java (Spring Boot | Kubernetes) base R$ 12.800,00 por mês",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T15:06:53.306478+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 12800.0,
+        "max": null,
+        "average": 12800.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 114.29,
+        "monthly_equivalent": 19200.0
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "455821dcbf37df60",
+      "role": "Arquiteto Java Senior",
+      "normalized_role": "Arquiteto Java",
+      "seniority": "senior",
+      "skills": [
+        "Java",
+        "Spring Boot",
+        "Microsserviços",
+        "Kubernetes",
+        "AWS",
+        "Arquitetura de Software",
+        "APIs REST",
+        "Mensageria"
+      ],
+      "location": {
+        "city": "São Paulo",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "remote",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 14690.0,
+        "max": null,
+        "average": 14690.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "indeed",
+      "source_url": "https://br.indeed.com/career/arquiteto-de-software/salaries",
+      "evidence": "o cargo de Arquiteto de Software perto da localidade de Brasil · São Paulo, SP. R$ 14.690 por mês",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T15:06:48.933307+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 14690.0,
+        "max": null,
+        "average": 14690.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 131.16,
+        "monthly_equivalent": 22035.0
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "bba3ea19a443b7ad",
+      "role": "Arquiteto Java",
+      "normalized_role": "Arquiteto Java",
+      "seniority": "senior",
+      "skills": [
+        "Java",
+        "Spring Boot",
+        "Microsserviços",
+        "Kubernetes",
+        "AWS",
+        "Arquitetura de Software",
+        "APIs REST",
+        "Mensageria"
+      ],
+      "location": {
+        "city": "São Paulo",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "remote",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 14000.0,
+        "max": 17000.0,
+        "average": 15500.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "generic",
+      "source_url": "/goto?url=CAESiwEB7keqTaEtHLBEKZHfNPZsJ1X9px5y-U8Bl6-TvGckpyNyCgcQUKpgbzzrITCMJSB3Ci7fKx5LXSgvXgf8Bg_37jyMCdTs-ddto-1BDzAwqKNNImlufxa4HiliFbC3-cHm4p-sUlaXs7TREhEUPABjtF8vIxP-f6OIKC2xV7eb3Kma-FOOcnDYJ0OQ",
+      "evidence": "Arquiteto: Mais de 10 anos de experiência (Especifico com Java). Salário: R$ 14.000 a R$ 17.000 por mês.",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T15:06:48.941212+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.7,
+      "observed_salary": {
+        "min": 14000.0,
+        "max": 17000.0,
+        "average": 15500.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 138.39,
+        "monthly_equivalent": 23250.0
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "a5c57c4bc3c132e1",
+      "role": "Arquiteto Java Senior",
+      "normalized_role": "Arquiteto Java",
+      "seniority": "senior",
+      "skills": [
+        "Java",
+        "Spring Boot",
+        "Microsserviços",
+        "Kubernetes",
+        "AWS",
+        "Arquitetura de Software",
+        "APIs REST",
+        "Mensageria"
+      ],
+      "location": {
+        "city": "São Paulo",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "remote",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 8502.0,
+        "max": 12428.0,
+        "average": 10465.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "indeed",
+      "source_url": "https://br.indeed.com/career/arquiteto-java/salaries/Jundia%C3%AD--SP",
+      "evidence": "Arquiteto Java é de R$ 8.502 por mês para Jundiaí, SP. 3 salário informado São Paulo, SP R$ 12.428 por mês",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T15:06:49.048634+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 8502.0,
+        "max": 12428.0,
+        "average": 10465.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 93.44,
+        "monthly_equivalent": 15697.5
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "c55b767f8784d0b7",
+      "role": "Arquiteto Java Senior",
+      "normalized_role": "Arquiteto Java",
+      "seniority": "senior",
+      "skills": [
+        "Java",
+        "Spring Boot",
+        "Microsserviços",
+        "Kubernetes",
+        "AWS",
+        "Arquitetura de Software",
+        "APIs REST",
+        "Mensageria"
+      ],
+      "location": {
+        "city": "São Paulo",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "remote",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 14080.0,
+        "max": null,
+        "average": 14080.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "generic",
+      "source_url": "https://www.simplyhired.com.br/pt-BR/salaries/search?q=arquiteto+de+software&l=vinhedo%2C+sp",
+      "evidence": "Paulo R$ 14.080 média por mês",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T15:06:49.129108+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 14080.0,
+        "max": null,
+        "average": 14080.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 125.71,
+        "monthly_equivalent": 21120.0
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "09dbf0ddab054adb",
+      "role": "Arquiteto Java Senior",
+      "normalized_role": "Arquiteto Java",
+      "seniority": "senior",
+      "skills": [
+        "Java",
+        "Spring Boot",
+        "Microsserviços",
+        "Kubernetes",
+        "AWS",
+        "Arquitetura de Software",
+        "APIs REST",
+        "Mensageria"
+      ],
+      "location": {
+        "city": "São Paulo",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "remote",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 3000.0,
+        "max": 25000.0,
+        "average": 9666.666666666666,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "generic",
+      "source_url": "https://bebee.com/br/jobs/role/java",
+      "evidence": "202 oportunidades de emprego para java em Brasil atualizadas hoje Pesquisar Tudo Emprego Serviços Mais filtros Qualquer salário < R$ 3 mil R$ 3 mil - R$ 5 mil R$ 5 mil - R$ 8 mil R$ 8 mil - R$ 15 mil R$ 15 mil - R$ 25 mil",
+      "evidence_type": "page_content",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T15:06:50.212030+00:00",
+      "crawl_method": "http",
+      "confidence": 0.75,
+      "observed_salary": {
+        "min": 3000.0,
+        "max": 25000.0,
+        "average": 9666.666666666666,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 86.31,
+        "monthly_equivalent": 14500.0
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "fcc791caec33c459",
+      "role": "Arquiteto Java Senior",
+      "normalized_role": "Arquiteto Java",
+      "seniority": "senior",
+      "skills": [
+        "Java",
+        "Spring Boot",
+        "Microsserviços",
+        "Kubernetes",
+        "AWS",
+        "Arquitetura de Software",
+        "APIs REST",
+        "Mensageria"
+      ],
+      "location": {
+        "city": "São Paulo",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "remote",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 8601.0,
+        "max": null,
+        "average": 8601.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "indeed",
+      "source_url": "https://br.indeed.com/career/arquiteto-java/salaries/Estado-de-S%C3%A3o-Paulo",
+      "evidence": "A faixa salarial média para o cargo de Arquiteto Java é de R$ 8.601 por mês para Estado de São Paulo. Saiba mais sobre salários, benefícios,",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T15:06:49.466374+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 8601.0,
+        "max": null,
+        "average": 8601.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 76.79,
+        "monthly_equivalent": 12901.5
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "945e8cb7bfa2f591",
+      "role": "Arquiteto Java Senior",
+      "normalized_role": "Arquiteto Java",
+      "seniority": "senior",
+      "skills": [
+        "Java",
+        "Spring Boot",
+        "Microsserviços",
+        "Kubernetes",
+        "AWS",
+        "Arquitetura de Software",
+        "APIs REST",
+        "Mensageria"
+      ],
+      "location": {
+        "city": "São Paulo",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "remote",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 9097.0,
+        "max": null,
+        "average": 9097.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "generic",
+      "source_url": "/goto?url=CAESbAHuR6pNd1JMFFD4Lfwe75ZhFTIzhGxRhz4l1h59YSKFBc6F98AaXpveHzf3NAz8OOBk3yn9_gYmylAMPWHqsP582Gdt6WfID0rgKbRII-K2uRESa9i6BkvDmg9lPUqE5NjN7Iof4pCZRuCoDw%3D%3D",
+      "evidence": "A faixa salarial média para o cargo de Arquiteto Java é de R$ 9.097 por mês para Brasil. Saiba mais sobre salários, benefícios, satisfação salarial e onde",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T15:06:49.381444+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 9097.0,
+        "max": null,
+        "average": 9097.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 81.22,
+        "monthly_equivalent": 13645.5
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "dbcea1946bf8ef63",
+      "role": "Arquiteto Java Senior",
+      "normalized_role": "Arquiteto Java",
+      "seniority": "senior",
+      "skills": [
+        "Java",
+        "Spring Boot",
+        "Microsserviços",
+        "Kubernetes",
+        "AWS",
+        "Arquitetura de Software",
+        "APIs REST",
+        "Mensageria"
+      ],
+      "location": {
+        "city": "São Paulo",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "remote",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 8000.0,
+        "max": null,
+        "average": 8000.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "glassdoor",
+      "source_url": "https://www.glassdoor.com.br/Salários/são-paulo-sp-engenheiro-devops-salário-SRCH_IL.0,12_IC2479061_KO13,30.htm",
+      "evidence": "## Salários de Engenheiro Devops # Salários de Engenheiro Devops (São Paulo, SP) R$ 8 mil/mêsSalário base médio A “Faixa mais provável” representa valores entre o 25º e o 75º percentis de todos os dados de remuneração disponíveis para o cargo. Os salários do Glassd",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T15:06:49.850837+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 8000.0,
+        "max": null,
+        "average": 8000.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 71.43,
+        "monthly_equivalent": 12000.0
+      },
+      "excluded_from_statistics": false
+    },
+    {
+      "id": "1fe138d46ce06b8e",
+      "role": "Arquiteto Java Senior",
+      "normalized_role": "Arquiteto Java",
+      "seniority": "senior",
+      "skills": [
+        "Java",
+        "Spring Boot",
+        "Microsserviços",
+        "Kubernetes",
+        "AWS",
+        "Arquitetura de Software",
+        "APIs REST",
+        "Mensageria"
+      ],
+      "location": {
+        "city": "São Paulo",
+        "state": "SP",
+        "country": "BR"
+      },
+      "allocation_model": "remote",
+      "employment_type": "CLT",
+      "salary": {
+        "min": 8438.0,
+        "max": null,
+        "average": 8438.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "source": "indeed",
+      "source_url": "https://br.indeed.com/career/arquiteto-java/salaries/S%C3%A3o-Caetano-do-Sul--SP",
+      "evidence": "O salário estimado para o cargo de Arquiteto Java é de R$ 8.438 por mês para São Caetano do Sul, SP. Saiba mais sobre salários, benefícios,",
+      "evidence_type": "search_snippet",
+      "source_date": "",
+      "retrieved_at": "2026-08-12T15:06:49.933347+00:00",
+      "crawl_method": "search_snippet",
+      "confidence": 0.55,
+      "observed_salary": {
+        "min": 8438.0,
+        "max": null,
+        "average": 8438.0,
+        "currency": "BRL",
+        "period": "month"
+      },
+      "normalized_salary": {
+        "currency": "BRL",
+        "contract_type": "PJ",
+        "period": "hour",
+        "value": 75.34,
+        "monthly_equivalent": 12657.0
+      },
+      "excluded_from_statistics": false
+    }
+  ],
+  "created_at": "2026-08-12T15:07:48.938971Z"
+}

@@ -1,24 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Domínios</h1>
-<div class="grid two">
-  {% for key, label in [("profiles", "Perfis"), ("seniorities", "Senioridades")] %}
-  <section class="panel">
-    <h2>{{ label }}</h2>
-    <form method="post" action="/domains/{{ key }}" class="inline-form">
-      <input name="name" placeholder="Novo item" required>
-      <button>Cadastrar</button>
-    </form>
-    <div class="list">
-      {% for item in domains[key] %}
-      <form method="post" action="/domains/{{ key }}" class="row-form">
-        <input type="hidden" name="item_id" value="{{ item.id }}">
-        <input name="name" value="{{ item.name }}" required>
-        <button>Salvar</button>
-      </form>
-      {% endfor %}
-    </div>
-  </section>
-  {% endfor %}
-</div>
+<section class="panel">
+  <p class="hint" style="margin:0;">Esta página foi movida para <a href="/settings?tab=dominio">Parâmetros → Domínio</a>.</p>
+</section>
+<meta http-equiv="refresh" content="0;url=/settings?tab=dominio">
 {% endblock %}

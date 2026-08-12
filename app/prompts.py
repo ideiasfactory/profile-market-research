@@ -13,16 +13,29 @@ class _SafeDict(dict):
         return "{" + key + "}"
 
 
-@lru_cache(maxsize=32)
+@lru_cache(maxsize=64)
 def _read_prompt_file(relative_name: str) -> str:
+    """Read prompt text: active managed version if present, else prompts/ file."""
+    try:
+        from app.prompt_store import get_active_prompt_content
+
+        override = get_active_prompt_content(relative_name)
+        if override is not None and override.strip():
+            return override.strip()
+    except Exception:
+        pass
     path = PROMPTS_DIR / relative_name
     if not path.exists():
         raise FileNotFoundError(f"Prompt não encontrado: {path}")
     return path.read_text(encoding="utf-8").strip()
 
 
+def clear_prompt_cache() -> None:
+    _read_prompt_file.cache_clear()
+
+
 def load_prompt(relative_name: str, **kwargs: str) -> str:
-    """Carrega um prompt da pasta `prompts/` e aplica placeholders.
+    """Carrega um prompt (arquivo ou versão ativa gerenciada) e aplica placeholders.
 
     Sempre mescla parâmetros de negócio (quando `inject_in_prompts=true`):
     - `{business_context}` — bloco textual com label/chave/valor
@@ -42,10 +55,7 @@ def load_prompt(relative_name: str, **kwargs: str) -> str:
     values.update({key: str(value) for key, value in kwargs.items()})
     if not values and "{" not in template:
         return template
-    # Only format fields that exist in the template to avoid surprises with braces in JSON examples.
-    field_names = {
-        name for _, name, _, _ in Formatter().parse(template) if name
-    }
+    field_names = {name for _, name, _, _ in Formatter().parse(template) if name}
     if not field_names:
         return template
     return template.format_map(_SafeDict(values))

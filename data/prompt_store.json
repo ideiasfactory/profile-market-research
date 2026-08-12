@@ -1,0 +1,197 @@
+{
+  "prompts": {
+    "analyse_job.system.txt": {
+      "id": "analyse_job.system.txt",
+      "title": "Análise de vaga — system",
+      "description": "Instruções de sistema para extrair requisitos, tiers e skill groups a partir da job description.",
+      "group": "Análise de vaga",
+      "active_version_id": "v_81009c9fb9",
+      "versions": [
+        {
+          "id": "v_81009c9fb9",
+          "label": "v1 (baseline arquivo)",
+          "created_at": "2026-08-12T16:01:23.362543+00:00",
+          "source": "disk",
+          "content": "Você é um especialista em recrutamento técnico e análise de job descriptions.\nResponda apenas com JSON válido, sem markdown e sem texto fora do JSON.\nExtraia habilidades com fidelidade ao texto da vaga, preservando nomes de tecnologias e plataformas exatamente como aparecem (ou na forma canônica mais reconhecível, ex.: \"Oracle Integration Cloud\").\nClassifique skills em tiers semânticos e agrupe por domínio quando fizer sentido.\nO campo ideal_candidate_context (quando presente) complementa a interpretação do perfil ideal, mas NÃO invente requisitos ausentes na job description."
+        }
+      ]
+    },
+    "analyse_job.user.txt": {
+      "id": "analyse_job.user.txt",
+      "title": "Análise de vaga — user",
+      "description": "Template do usuário com schema JSON esperado e o texto da vaga ({title}, {job_description}, etc.).",
+      "group": "Análise de vaga",
+      "active_version_id": "v_f69fcd2fe6",
+      "versions": [
+        {
+          "id": "v_f69fcd2fe6",
+          "label": "v1 (baseline arquivo)",
+          "created_at": "2026-08-12T16:01:23.363156+00:00",
+          "source": "disk",
+          "content": "Analise a vaga abaixo e retorne JSON estrito no formato:\n{{\n  \"role_intent\": \"resumo do propósito da posição\",\n  \"must_have\": [{{\"name\": \"Oracle Integration Cloud\", \"weight\": 10, \"tier\": \"MUST_HAVE\", \"group\": \"OIC Platform\"}}],\n  \"core_skills\": [{{\"name\": \"Arquitetura de Integração\", \"weight\": 7, \"tier\": \"CORE\", \"group\": \"Architecture\"}}],\n  \"supporting_skills\": [{{\"name\": \"Observabilidade\", \"weight\": 3, \"tier\": \"SUPPORTING\", \"group\": \"Ops\"}}],\n  \"differentials\": [{{\"name\": \"Kafka\", \"weight\": 2, \"tier\": \"DIFFERENTIAL\", \"group\": \"Messaging\"}}],\n  \"soft_skills\": [{{\"name\": \"Comunicação\", \"weight\": 3, \"tier\": \"SOFT\", \"group\": \"Behavioral\"}}],\n  \"role_expectations\": \"expectativas de atuação e seniority\",\n  \"context_signals\": [\"setor utilities\", \"presencial Campinas\", \"cliente CPFL\"],\n  \"skill_groups\": [{{\"name\": \"OIC Platform\", \"skills\": [\"Oracle Integration Cloud\"]}}],\n  \"hard_skills\": [{{\"name\": \"Oracle Integration Cloud\", \"weight\": 5}}],\n  \"desired_skills\": [{{\"name\": \"Kafka\", \"weight\": 2}}]\n}}\n\nRegras obrigatórias:\n1. Extraia habilidades técnicas reais citadas na vaga. Não invente habilidades ausentes no texto.\n2. must_have = requisitos críticos/obrigatórios centrais (peso típico 8–10). Sem estes a vaga não se sustenta.\n3. core_skills = competências técnicas centrais importantes (peso típico 6–7).\n4. supporting_skills = técnicas relevantes mas secundárias (peso típico 2–3).\n5. differentials = diferenciais / desejáveis / nice to have (peso típico 1–2). Também preencha desired_skills (compatibilidade).\n6. soft_skills = competências comportamentais.\n7. hard_skills deve espelhar must_have + core_skills + supporting_skills com pesos legados 1–5 (MUST→5, CORE→4, SUPPORTING→3).\n8. Preserve nomes específicos (OIC, SAP PO, SAP BTP, OpenAPI, OAuth 2.0, EIP). Não confunda plataformas parecidas.\n9. skill_groups: agrupe semanticamente (ex.: OIC Platform, SAP Ecosystem, API Security).\n10. context_signals: sinais de contexto profissional (cliente, setor, modelo de trabalho, stack corporativa). Ignore atributos protegidos (idade, gênero, etnia, religião, etc.).\n11. Se ideal_candidate_context for fornecido, use-o para refinar role_intent, expectations e ênfase de tiers — sem inventar skills.\n12. Limites: até 8 must_have, 16 core, 12 supporting, 12 differentials, 12 soft_skills.\n\nTítulo: {title}\nPerfil: {profile}\nSenioridade: {seniority}\nDescrição: {description}\nContexto do candidato ideal (opcional): {ideal_candidate_context}\nJob description:\n{job_description}"
+        }
+      ]
+    },
+    "extract_candidate.system.txt": {
+      "id": "extract_candidate.system.txt",
+      "title": "Extração de currículo — system",
+      "description": "Instruções para extrair nome, cidade e cargo reportado do texto do currículo.",
+      "group": "Currículo",
+      "active_version_id": "v_3a46998f40",
+      "versions": [
+        {
+          "id": "v_3a46998f40",
+          "label": "v1 (baseline arquivo)",
+          "created_at": "2026-08-12T16:01:23.363697+00:00",
+          "source": "disk",
+          "content": "Você extrai informações factuais de currículos.\nResponda apenas com JSON válido, sem markdown e sem texto fora do JSON.\nNão invente dados: use string vazia quando não houver evidência clara."
+        }
+      ]
+    },
+    "extract_candidate.user.txt": {
+      "id": "extract_candidate.user.txt",
+      "title": "Extração de currículo — user",
+      "description": "Prompt do usuário com o conteúdo do currículo ({resume_text}).",
+      "group": "Currículo",
+      "active_version_id": "v_efff83ec4a",
+      "versions": [
+        {
+          "id": "v_efff83ec4a",
+          "label": "v1 (baseline arquivo)",
+          "created_at": "2026-08-12T16:01:23.364253+00:00",
+          "source": "disk",
+          "content": "Extraia os campos abaixo do currículo. Retorne JSON estrito:\n{{\"name\": \"...\", \"city\": \"...\", \"reported_role\": \"...\"}}\nUse string vazia quando não houver evidência.\n\nCurrículo:\n{resume_text}"
+        }
+      ]
+    },
+    "score_candidate.system.txt": {
+      "id": "score_candidate.system.txt",
+      "title": "Score legado (v1) — system",
+      "description": "Prompt legado de scoring flat (compatibilidade). Preferir o fluxo v2 (skills/fit/narrative).",
+      "group": "Legado",
+      "active_version_id": "v_c479f70f5c",
+      "versions": [
+        {
+          "id": "v_c479f70f5c",
+          "label": "v1 (baseline arquivo)",
+          "created_at": "2026-08-12T16:01:23.364769+00:00",
+          "source": "disk",
+          "content": "Você avalia aderência técnica e comportamental com base no currículo e nos requisitos da vaga.\nResponda apenas com JSON válido, sem markdown e sem texto fora do JSON.\nPontue somente com evidência textual; sem evidência, use score 0.\nO resumo do perfil deve ser factual e baseado no currículo.\nO veredito deve ser claro, justificado e alinhado às notas atribuídas.\nNão invente skills: se score for 0 ou baixo, não diga que o candidato tem experiência forte naquela habilidade.\nNão confunda plataformas parecidas (ex.: SAP CPI ≠ Oracle Integration Cloud / OIC)."
+        }
+      ]
+    },
+    "score_candidate.user.txt": {
+      "id": "score_candidate.user.txt",
+      "title": "Score legado (v1) — user",
+      "description": "Template legado do usuário para scoring flat candidato-vaga.",
+      "group": "Legado",
+      "active_version_id": "v_d0c65a53ae",
+      "versions": [
+        {
+          "id": "v_d0c65a53ae",
+          "label": "v1 (baseline arquivo)",
+          "created_at": "2026-08-12T16:01:23.365293+00:00",
+          "source": "disk",
+          "content": "Pontue o candidato contra cada habilidade de 0 a 5 e produza também um resumo de perfil e um veredito de aderência à vaga.\n0 = sem evidência, 1 = contato básico, 3 = experiência prática, 5 = especialista.\n\nRetorne JSON estrito no formato:\n{{\n  \"skills\": [{{\"name\": \"Python\", \"score\": 4, \"evidence\": \"...\"}}],\n  \"profile_summary\": \"Resumo objetivo do perfil profissional do candidato em 3 a 6 frases.\",\n  \"verdict_label\": \"recomendado\",\n  \"verdict\": \"Veredito final com recomendação clara e justificativa em 2 a 4 frases.\"\n}}\n\nRegras:\n1. Inclua uma entrada em \"skills\" para cada habilidade listada, usando exatamente o mesmo nome.\n2. \"profile_summary\" descreve o candidato (experiência, foco técnico, senioridade aparente), sem inventar fatos.\n3. \"verdict_label\" deve ser exatamente um de: \"recomendado\", \"considerar\", \"nao_recomendado\".\n4. \"verdict\" deve conectar pontos fortes, lacunas e a recomendação em relação a esta vaga.\n5. Use \"recomendado\" para forte aderência, \"considerar\" para aderência parcial com ressalvas, \"nao_recomendado\" quando houver desalinhamento relevante.\n6. Só cite como ponto forte habilidades com score >= 3; trate score <= 1 como lacuna.\n7. Requisitos da vaga não são evidência do candidato.\n\nVaga:\nTítulo: {job_title}\nPerfil: {job_profile}\nSenioridade: {job_seniority}\nDescrição: {job_description}\n\nHabilidades esperadas:\n{skills}\n\nCurrículo:\n{resume_text}"
+        }
+      ]
+    },
+    "score_fit.system.txt": {
+      "id": "score_fit.system.txt",
+      "title": "Role / Context Fit — system",
+      "description": "Avalia aderência de role fit e context fit além das skills pontuadas.",
+      "group": "Scoring",
+      "active_version_id": "v_2740ef160b",
+      "versions": [
+        {
+          "id": "v_2740ef160b",
+          "label": "v1 (baseline arquivo)",
+          "created_at": "2026-08-12T16:01:23.366083+00:00",
+          "source": "disk",
+          "content": "Você avalia aderência de papel (role/seniority) e contexto profissional.\nResponda apenas com JSON válido, sem markdown e sem texto fora do JSON.\n\nRegras:\n- role_fit e context_fit são números 0–100.\n- context_fit considera APENAS contexto profissional (empresa/cliente, setor, domínio, stack, modelo de entrega).\n- IGNORE atributos protegidos (idade, gênero, etnia, religião, estado civil, deficiência, orientação, etc.).\n- Não confunda CPI ≠ OIC; BTP ≠ OCI.\n- Baseie-se no currículo e nas notas já calculadas; não invente experiências.\n- critical must-have ausente deve aparecer em gaps, mas NÃO force descarte total se houver forte fit técnico parcial."
+        }
+      ]
+    },
+    "score_fit.user.txt": {
+      "id": "score_fit.user.txt",
+      "title": "Role / Context Fit — user",
+      "description": "Contexto da vaga, candidato e skills já pontuadas para o fit composto.",
+      "group": "Scoring",
+      "active_version_id": "v_5c0fd4fa11",
+      "versions": [
+        {
+          "id": "v_5c0fd4fa11",
+          "label": "v1 (baseline arquivo)",
+          "created_at": "2026-08-12T16:01:23.366599+00:00",
+          "source": "disk",
+          "content": "Avalie role fit e context fit do candidato para a vaga.\n\nRetorne JSON estrito:\n{{\n  \"role_fit\": 75,\n  \"context_fit\": 80,\n  \"strengths\": [\"Oracle Integration Cloud\", \"API Management\"],\n  \"gaps\": [\"SAP BTP\"],\n  \"interview_validation\": [\"Validar profundidade prática em OIC em projetos de migração SAP PO → OIC\"]\n}}\n\nRegras:\n1. role_fit: alinhamento de senioridade, escopo de arquitetura vs desenvolvimento, liderança técnica.\n2. context_fit: aderência a cliente/setor/ambiente profissional citado (ex.: CPFL, utilities, presencial Campinas). Só contexto profissional.\n3. strengths: somente skills com boa evidência nas notas.\n4. gaps: lacunas reais (especialmente must-haves ausentes).\n5. interview_validation: perguntas objetivas para validar gaps/documentação.\n\nVaga: {job_title} | Perfil: {job_profile} | Senioridade: {job_seniority}\nRole intent: {role_intent}\nRole expectations: {role_expectations}\nContext signals: {context_signals}\nIdeal candidate context: {ideal_candidate_context}\nMust-have: {must_have}\nCandidato: {candidate_role} · {candidate_city}\n\nNotas por critério:\n{scored_skills}\n\nCurrículo:\n{resume_text}"
+        }
+      ]
+    },
+    "score_narrative.system.txt": {
+      "id": "score_narrative.system.txt",
+      "title": "Narrativa / veredito — system",
+      "description": "Gera resumo executivo, pontos fortes/lacunas e veredito textual do score.",
+      "group": "Scoring",
+      "active_version_id": "v_9b1ec6e371",
+      "versions": [
+        {
+          "id": "v_9b1ec6e371",
+          "label": "v1 (baseline arquivo)",
+          "created_at": "2026-08-12T16:01:23.367149+00:00",
+          "source": "disk",
+          "content": "Você consolida a avaliação de um candidato para uma vaga.\nResponda apenas com JSON válido, sem markdown e sem texto fora do JSON.\n\nRegras anti-alucinação (obrigatórias):\n- Baseie-se APENAS no currículo e nas notas já calculadas; não invente experiências, tecnologias ou plataformas.\n- Cite como ponto forte SOMENTE habilidades listadas em \"Pontos fortes\" (score >= 3).\n- Trate habilidades em \"Lacunas\" (score <= 1) como ausência ou evidência fraca — NUNCA diga que o candidato tem experiência forte nelas.\n- Não confunda plataformas parecidas (ex.: SAP CPI / Integration Suite ≠ Oracle Integration Cloud / OIC).\n- Requisitos da vaga NÃO são evidência do candidato: não transfira tecnologias do título/descrição da vaga para o perfil.\n- Se uma habilidade tem score 0 ou null, não a mencione como competência do candidato.\n- O veredito textual deve ser coerente com o score e o scoring_model informado; a decisão final de label é da aplicação."
+        }
+      ]
+    },
+    "score_narrative.user.txt": {
+      "id": "score_narrative.user.txt",
+      "title": "Narrativa / veredito — user",
+      "description": "Entrada com score final, strengths/gaps e trechos do currículo para a narrativa.",
+      "group": "Scoring",
+      "active_version_id": "v_d78a744ac5",
+      "versions": [
+        {
+          "id": "v_d78a744ac5",
+          "label": "v1 (baseline arquivo)",
+          "created_at": "2026-08-12T16:01:23.367542+00:00",
+          "source": "disk",
+          "content": "Com base na vaga, no currículo e nas notas por critério, produza um resumo de perfil e um veredito.\n\nRetorne JSON estrito no formato:\n{{\n  \"profile_summary\": \"Resumo objetivo do perfil profissional do candidato em 3 a 6 frases.\",\n  \"verdict_label\": \"recommended\",\n  \"verdict\": \"Veredito final com recomendação clara e justificativa em 2 a 4 frases.\"\n}}\n\nRegras:\n1. \"verdict_label\" deve ser exatamente um de: {verdict_labels}\n2. Conecte pontos fortes, lacunas e o score final {final_score}%.\n3. scoring_model={scoring_model}; must_have_coverage={must_have_coverage}\n4. \"profile_summary\" descreve o candidato com fatos do currículo e das notas; não invente skills.\n5. \"verdict\" pode mencionar lacunas explicitamente, mas nunca atribua experiência forte a itens de Lacunas.\n6. Só elogie tecnologias que aparecem em Pontos fortes.\n\nVaga:\nTítulo: {job_title}\nPerfil: {job_profile}\nSenioridade: {job_seniority}\nDescrição: {job_description}\n\nPontos fortes (score >= 3) — únicas skills que podem ser citadas como experiência sólida:\n{strengths_list}\n\nLacunas (score <= 1) — NÃO diga que o candidato tem experiência nestas:\n{gaps_list}\n\nNotas por critério (com evidência):\n{scored_skills}\n\nCurrículo:\n{resume_text}"
+        }
+      ]
+    },
+    "score_skills.system.txt": {
+      "id": "score_skills.system.txt",
+      "title": "Score de skills — system",
+      "description": "Avalia evidências de skills do candidato (status, score, evidências) com anti-alucinação.",
+      "group": "Scoring",
+      "active_version_id": "v_9a5646575d",
+      "versions": [
+        {
+          "id": "v_9a5646575d",
+          "label": "v1 (baseline arquivo)",
+          "created_at": "2026-08-12T16:01:23.367784+00:00",
+          "source": "disk",
+          "content": "Você avalia aderência técnica e comportamental com base apenas no currículo.\nResponda apenas com JSON válido, sem markdown e sem texto fora do JSON.\nUse exatamente os nomes das habilidades informadas.\n\nPara cada skill retorne:\n- score: 0–5 para técnicas; para soft skills sem evidência use null (NÃO use 0 automático)\n- confidence: 0–1 (explica certeza; NÃO substitui o score)\n- evidence_status: explicit | inferred | not_found | negative | needs_validation\n- evidence: lista de {{\"text\": \"...\", \"source\": \"resume\"}}\n\nRegras anti-alucinação:\n- Não confunda plataformas parecidas (SAP CPI / Integration Suite ≠ Oracle Integration Cloud / OIC; SAP BTP ≠ OCI).\n- Menções genéricas a \"integração\", \"cloud\" ou \"API\" NÃO bastam para pontuar uma plataforma específica.\n- Soft skills sem evidência: score null + evidence_status needs_validation.\n- Técnicas sem evidência: score 0 + not_found.\n- A evidência deve ser trecho/fato reconhecível no currículo."
+        }
+      ]
+    },
+    "score_skills.user.txt": {
+      "id": "score_skills.user.txt",
+      "title": "Score de skills — user",
+      "description": "Lista de skills da vaga + currículo para pontuação individual.",
+      "group": "Scoring",
+      "active_version_id": "v_655c92a286",
+      "versions": [
+        {
+          "id": "v_655c92a286",
+          "label": "v1 (baseline arquivo)",
+          "created_at": "2026-08-12T16:01:23.367982+00:00",
+          "source": "disk",
+          "content": "Pontue o candidato contra cada habilidade abaixo.\n\nSkills marcadas [soft] são comportamentais: se não houver evidência, use score null e evidence_status needs_validation.\nSkills marcadas [tech] são técnicas: sem evidência → score 0 e not_found.\n\nEscala de score (quando aplicável):\n0 = sem evidência, 1 = contato básico, 3 = experiência prática, 5 = especialista.\n\nRetorne JSON estrito:\n{{\n  \"skills\": [\n    {{\n      \"name\": \"Python\",\n      \"score\": 4,\n      \"confidence\": 0.85,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [{{\"text\": \"trecho do currículo\", \"source\": \"resume\"}}]\n    }}\n  ]\n}}\n\nInclua exatamente uma entrada para cada habilidade listada, com o mesmo nome.\nNão equivaque CPI/Integration Suite a OIC, nem BTP a OCI.\n\nHabilidades:\n{skills}\n\nCurrículo:\n{resume_text}"
+        }
+      ]
+    }
+  },
+  "updated_at": "2026-08-12T16:01:23.367988+00:00"
+}

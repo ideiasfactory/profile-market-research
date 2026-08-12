@@ -212,16 +212,16 @@
       "evidence_status": "explicit",
       "evidence": [
         {
-          "text": "Sou profissional com mais de cinco anos de experiência em liderança técnica, atuando na otimização de processos e arquiteturas para garantir soluções eficientes em sistemas distribuídos.",
+          "text": "Sou profissional com mais de cinco anos de experiência em liderança técnica, atuando na otimização de processos e arquiteturas para garantir soluçõ...",
           "source": "resume"
         },
         {
-          "text": "Liderei equipes de desenvolvimento alinhando estratégias de implementação à visão da empresa, sempre com foco na entrega contínua de valor aos clientes.",
+          "text": "Atuei como líder técnico, sendo responsável pela análise de requisitos e pela elaboração de soluções e arquiteturas técnicas.",
           "source": "resume"
         }
       ],
       "weighted_score": 8.0,
-      "evidence_text": "Sou profissional com mais de cinco anos de experiência em liderança técnica, atuando na otimização de processos e arquiteturas para garantir soluções eficientes em sistemas distribuídos."
+      "evidence_text": "Sou profissional com mais de cinco anos de experiência em liderança técnica, atuando na otimização de processos e arquiteturas para garantir soluçõ..."
     }
   ],
   "score_breakdown": {
@@ -357,15 +357,15 @@
   "interview_validation": [
     "Validar profundidade prática em OIC em projetos de migração SAP PO → OIC"
   ],
-  "profile_summary": "Bruno Libanio é um profissional com mais de cinco anos de experiência em liderança técnica, focado na otimização de processos e arquiteturas para garantir soluções eficientes em sistemas distribuídos. Ele possui sólido conhecimento em API Management e Oracle Integration Cloud (OIC), além de experiência em SAP Process Orchestration. Bruno atuou como Arquiteto de Soluções na CPFL, onde foi responsável pela definição arquitetural de projetos estratégicos.",
-  "verdict": "Bruno Libanio é um candidato recomendado para a posição de Arquiteto OIC - CPFL. Ele possui experiência sólida em Oracle Integration Cloud e SAP Process Orchestration, além de habilidades fortes em API Management e liderança técnica. No entanto, ele apresenta lacunas significativas em Enterprise Integration Patterns, SAP Business Technology Platform e outros aspectos técnicos que são importantes para a posição.",
+  "profile_summary": "Bruno Libanio é um profissional com mais de cinco anos de experiência em liderança técnica, focado na otimização de processos e arquiteturas para garantir soluções eficientes em sistemas distribuídos. Ele possui sólido conhecimento em API Management e Oracle Integration Cloud (OIC), além de experiência em SAP Process Orchestration. Bruno atua como Arquiteto de Soluções na CPFL, sendo responsável pela definição arquitetural de projetos estratégicos.",
+  "verdict": "Bruno Libanio é um candidato recomendado para a vaga de Arquiteto OIC - CPFL. Ele possui experiência sólida em Oracle Integration Cloud e SAP Process Orchestration, além de conhecimento em API Management. No entanto, ele apresenta lacunas em Enterprise Integration Patterns, SAP Business Technology Platform e outros aspectos que podem ser cobertos durante a entrevista ou treinamento.",
   "verdict_label": "evaluate",
   "audit": {
     "scoring_model_version": "v2",
     "job_analysis_version": 2,
     "job_updated_at": "2026-08-08T02:38:31.904297+00:00",
     "candidate_updated_at": "2026-08-07T20:15:51.383975+00:00",
-    "scored_at": "2026-08-08T02:46:35.185967+00:00",
+    "scored_at": "2026-08-12T15:42:02.986644+00:00",
     "prompt_versions": {
       "analyse_job": "v2",
       "score_skills": "v2",
@@ -384,7 +384,7 @@
         "usable": false
       },
       {
-        "raw": "{\n  \"skills\": [\n    {\n      \"name\": \"Comunicação\",\n      \"score\": null,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"needs_validation\",\n      \"evidence\": []\n    },\n    {\n      \"name\": \"Liderança Técnica\",\n      \"score\": 4,\n      \"confidence\": 0.85,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [\n        {\"text\": \"Sou profissional com mais de cinco anos de experiência em liderança técnica, atuando na otimização de processos e arquiteturas para garantir soluções eficientes em sistemas distribuídos.\", \"source\": \"resume\"},\n        {\"text\": \"Liderei equipes de desenvolvimento alinhando estratégias de implementação à visão da empresa, sempre com foco na entrega contínua de valor aos clientes.\", \"source\": \"resume\"}\n      ]\n    }\n  ]\n}",
+        "raw": "{\n  \"skills\": [\n    {\n      \"name\": \"Comunicação\",\n      \"score\": null,\n      \"confidence\": 0.95,\n      \"evidence_status\": \"needs_validation\",\n      \"evidence\": []\n    },\n    {\n      \"name\": \"Liderança Técnica\",\n      \"score\": 4,\n      \"confidence\": 0.85,\n      \"evidence_status\": \"explicit\",\n      \"evidence\": [\n        {\"text\": \"Sou profissional com mais de cinco anos de experiência em liderança técnica, atuando na otimização de processos e arquiteturas para garantir soluçõ...\", \"source\": \"resume\"},\n        {\"text\": \"Atuei como líder técnico, sendo responsável pela análise de requisitos e pela elaboração de soluções e arquiteturas técnicas.\", \"source\": \"resume\"}\n      ]\n    }\n  ]\n}",
         "model": "qwen2.5:14b",
         "temperature": 0.1,
         "error": null,
@@ -401,5 +401,5 @@
     }
   },
   "id": "671bb12e8d6c_e475d1052f49",
-  "created_at": "2026-08-08T02:46:49.049724+00:00"
+  "created_at": "2026-08-12T15:42:16.956986+00:00"
 }

@@ -474,3 +474,17 @@ button.danger {
   font-size: 0.9rem;
 }
 .api-usage-card h3 { margin-top: 18px; }
+
+.prompts-layout {
+  align-items: start;
+}
+.prompt-nav-item.is-selected {
+  border-color: var(--accent);
+}
+.prompt-nav-item strong { display: block; }
+#prompt-content {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  min-height: 320px;
+}

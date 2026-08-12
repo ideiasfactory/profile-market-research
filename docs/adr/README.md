@@ -24,5 +24,6 @@ Decisões de arquitetura do Professional Profile Analyser. Status padrão: **Acc
 | [018](ADR-018-inject-business-parameters-into-prompts.md) | Inject Business Parameters into LLM Prompts |
 | [019](ADR-019-consolidate-conversational-packages-under-llm-tools.md) | Consolidate Conversational Packages under `llm-tools/` |
 | [020](ADR-020-external-api-usage-and-system-settings.md) | External API Usage Dashboard + System Settings Tab |
+| [021](ADR-021-versioned-prompt-management-ui.md) | Versioned Prompt Management UI |
 
 Visão geral do fluxo de Compensation: [`../architecture.md`](../architecture.md).

@@ -4,9 +4,9 @@
   <div>
     <p class="eyebrow">Gestão</p>
     <h1>Parâmetros</h1>
-    <p>Regras de negócio e configuração de sistema (chaves e endpoints de serviços externos).</p>
+    <p>Negócio, sistema, domínio e prompts de IA usados nas análises LLM.</p>
   </div>
-  {% if settings.updated_at or system.updated_at %}
+  {% if saved %}
   <div class="status ok">Atualizado</div>
   {% endif %}
 </section>
@@ -18,19 +18,21 @@
 {% endif %}
 {% if saved %}
 <section class="panel" style="border-color: var(--ok);">
-  <p class="hint" style="color: var(--ok); margin: 0;">Parâmetros salvos.</p>
+  <p class="hint" style="color: var(--ok); margin: 0;">Alterações salvas.</p>
 </section>
 {% endif %}
 
 <div class="tabs settings-tabs" role="tablist" aria-label="Tipos de parâmetros">
-  <a class="tab-btn {{ 'is-active' if active_tab == 'negocio' else '' }}" href="/settings?tab=negocio" role="tab" aria-selected="{{ 'true' if active_tab == 'negocio' else 'false' }}">Parâmetros de negócio</a>
-  <a class="tab-btn {{ 'is-active' if active_tab == 'sistema' else '' }}" href="/settings?tab=sistema" role="tab" aria-selected="{{ 'true' if active_tab == 'sistema' else 'false' }}">Parâmetros de Sistema</a>
+  <a class="tab-btn {{ 'is-active' if active_tab == 'negocio' else '' }}" href="/settings?tab=negocio" role="tab">Parâmetros de negócio</a>
+  <a class="tab-btn {{ 'is-active' if active_tab == 'sistema' else '' }}" href="/settings?tab=sistema" role="tab">Parâmetros de Sistema</a>
+  <a class="tab-btn {{ 'is-active' if active_tab == 'dominio' else '' }}" href="/settings?tab=dominio" role="tab">Domínio</a>
+  <a class="tab-btn {{ 'is-active' if active_tab == 'prompts' else '' }}" href="/settings?tab=prompts" role="tab">Prompts IA</a>
 </div>
 
 {% if active_tab == 'negocio' %}
 <section class="panel form-section">
   <h2>Como usar nos prompts</h2>
-  <p class="hint">Nos arquivos em <code>prompts/</code>, referencie qualquer chave (ex.: <code>{target_margin_pct}</code>, <code>{cache_ttl_days}</code>) ou o bloco <code>{business_context}</code>.</p>
+  <p class="hint">Nos arquivos gerenciados em <strong>Prompts IA</strong>, referencie chaves como <code>{target_margin_pct}</code> ou o bloco <code>{business_context}</code>.</p>
   <pre class="markdown-body" style="white-space: pre-wrap; background: var(--panel-2); padding: 14px; border-radius: 12px;">{{ business_context }}</pre>
 </section>
 
@@ -123,10 +125,11 @@
     <button type="submit">Cadastrar parâmetro</button>
   </form>
 </section>
-{% else %}
+
+{% elif active_tab == 'sistema' %}
 <section class="panel form-section">
   <h2>Parâmetros de Sistema</h2>
-  <p class="hint">Chaves e endereços de serviços. Segredos são mascarados na tela; deixe o campo em branco para manter o valor atual. Valores salvos aqui sobrescrevem o <code>.env</code> no processo em execução e ficam em <code>data/system_settings.json</code> (não versionado).</p>
+  <p class="hint">Chaves e endereços de serviços. Segredos são mascarados na tela; deixe o campo em branco para manter o valor atual. Persistência em <code>data/system_settings.json</code> (não versionado).</p>
   <p class="hint">Uso e planos das APIs: <a href="/external-apis">APIs Externas</a>.</p>
 </section>
 
@@ -155,5 +158,106 @@
     <button type="submit">Salvar parâmetros de sistema</button>
   </div>
 </form>
+
+{% elif active_tab == 'dominio' %}
+<section class="panel form-section">
+  <h2>Domínio</h2>
+  <p class="hint">Cadastre perfis e senioridades usados nos formulários de vagas e filtros do produto.</p>
+</section>
+<div class="grid two">
+  {% for key, label in [("profiles", "Perfis"), ("seniorities", "Senioridades")] %}
+  <section class="panel form-section">
+    <h2>{{ label }}</h2>
+    <form method="post" action="/domains/{{ key }}" class="inline-form">
+      <input name="name" placeholder="Novo item" required>
+      <button>Cadastrar</button>
+    </form>
+    <div class="list">
+      {% for item in domains[key] %}
+      <form method="post" action="/domains/{{ key }}" class="row-form">
+        <input type="hidden" name="item_id" value="{{ item.id }}">
+        <input name="name" value="{{ item.name }}" required>
+        <button>Salvar</button>
+      </form>
+      {% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+</div>
+
+{% elif active_tab == 'prompts' %}
+<section class="panel form-section">
+  <h2>Prompts IA</h2>
+  <p class="hint">Edite os prompts usados pela LLM. Cada salvamento cria uma nova versão; use o dropdown para visualizar ou reverter para um histórico anterior. A versão ativa passa a valer nas próximas análises.</p>
+</section>
+
+<div class="grid two prompts-layout">
+  <aside class="panel form-section">
+    <h2>Catálogo</h2>
+    {% for group, items in prompt_groups.items() %}
+    <h3>{{ group }}</h3>
+    <div class="list">
+      {% for item in items %}
+      <a class="list-item prompt-nav-item {{ 'is-selected' if selected_prompt and selected_prompt.id == item.id else '' }}" href="/settings?tab=prompts&amp;prompt={{ item.id }}">
+        <strong>{{ item.title }}</strong>
+        <span>{{ item.active_label }} · {{ item.version_count }} versão(ões)</span>
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="hint">Nenhum prompt encontrado em <code>prompts/</code>.</p>
+    {% endfor %}
+  </aside>
+
+  {% if selected_prompt %}
+  <section class="panel form-section" id="prompt-editor" data-prompt-id="{{ selected_prompt.id }}">
+    <div class="title-row compact">
+      <div>
+        <h2 style="margin:0;">{{ selected_prompt.title }}</h2>
+        <p class="hint" style="margin:6px 0 0;"><code>{{ selected_prompt.id }}</code></p>
+      </div>
+      <div class="status ok">{{ selected_prompt.active_label }}</div>
+    </div>
+
+    <form method="post" action="/settings/prompts/{{ selected_prompt.id }}/revert" class="form" id="prompt-revert-form" style="margin-top:16px;">
+      <label>Versões
+        <select name="version_id" id="prompt-version-select">
+          {% for version in selected_prompt.versions %}
+          <option value="{{ version.id }}" {{ "selected" if version.is_active else "" }}>
+            {{ version.label }}{% if version.is_active %} (ativa){% endif %}{% if version.created_at %} — {{ version.created_at[:19].replace('T', ' ') }} UTC{% endif %}
+          </option>
+          {% endfor %}
+        </select>
+      </label>
+      <button type="submit" class="button secondary" onclick="return confirm('Reverter para a versão selecionada? Isso cria uma nova versão ativa com o conteúdo histórico.')">Reverter para versão selecionada</button>
+    </form>
+
+    <form method="post" action="/settings/prompts/{{ selected_prompt.id }}" class="form" id="prompt-edit-form" style="margin-top:18px;">
+      <label>Título
+        <input name="title" value="{{ selected_prompt.title }}" required>
+      </label>
+      <label>Descrição / objetivo
+        <textarea name="description" rows="3" required>{{ selected_prompt.description }}</textarea>
+      </label>
+      <label>Conteúdo do prompt
+        <textarea name="content" id="prompt-content" rows="18" required>{{ selected_prompt.content }}</textarea>
+      </label>
+      <label>Nota da versão (opcional)
+        <input name="note" placeholder="ex.: ajuste de anti-alucinação">
+      </label>
+      <div class="title-row compact">
+        <p class="hint" style="margin:0;">Salvar com conteúdo diferente cria uma nova versão e a torna ativa.</p>
+        <button type="submit">Salvar nova versão</button>
+      </div>
+    </form>
+  </section>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if active_tab == 'prompts' and selected_prompt %}
+<script src="/static/prompt-settings.js" defer></script>
 {% endif %}
 {% endblock %}
