@@ -49,6 +49,30 @@ PROMPT_CATALOG: list[dict[str, str]] = [
         "group": "Scoring",
     },
     {
+        "id": "openai/score_weights.system.txt",
+        "title": "Pesos OpenAI (v3) — system",
+        "description": "Recalibra pesos/tiers de skills da vaga via OpenAI no scoring model v3 (sem inventar skills).",
+        "group": "Scoring OpenAI",
+    },
+    {
+        "id": "openai/score_weights.user.txt",
+        "title": "Pesos OpenAI (v3) — user",
+        "description": "JD + current_skills JSON para recalibração discriminativa de pesos (modelo v3).",
+        "group": "Scoring OpenAI",
+    },
+    {
+        "id": "openai/analyse_job.system.txt",
+        "title": "Análise de vaga OpenAI — system",
+        "description": "Extrai requisitos/tiers/pesos discriminativos da JD via OpenAI (comparativo com prompts locais).",
+        "group": "Análise OpenAI",
+    },
+    {
+        "id": "openai/analyse_job.user.txt",
+        "title": "Análise de vaga OpenAI — user",
+        "description": "Schema JSON e regras de pesos amplos (1–10 discriminativos) para análise de vaga com OpenAI.",
+        "group": "Análise OpenAI",
+    },
+    {
         "id": "score_fit.system.txt",
         "title": "Role / Context Fit — system",
         "description": "Avalia aderência de role fit e context fit além das skills pontuadas.",
@@ -99,8 +123,10 @@ def _new_version_id() -> str:
 
 
 def _read_disk_prompt(prompt_id: str) -> str:
-    path = PROMPTS_DIR / prompt_id
-    if not path.exists():
+    path = (PROMPTS_DIR / prompt_id).resolve()
+    if not path.is_relative_to(PROMPTS_DIR.resolve()):
+        raise FileNotFoundError(f"Prompt inválido: {prompt_id}")
+    if not path.exists() or not path.is_file():
         raise FileNotFoundError(f"Prompt não encontrado: {path}")
     return path.read_text(encoding="utf-8").strip()
 
@@ -153,8 +179,8 @@ def _sync_catalog(raw_store: dict[str, Any]) -> bool:
     """Ensure all catalog + disk prompts exist in the store. Returns True if mutated."""
     changed = False
     known_ids = {item["id"] for item in PROMPT_CATALOG}
-    for path in sorted(PROMPTS_DIR.glob("*.txt")):
-        known_ids.add(path.name)
+    for path in sorted(PROMPTS_DIR.rglob("*.txt")):
+        known_ids.add(path.relative_to(PROMPTS_DIR).as_posix())
     for prompt_id in sorted(known_ids):
         if prompt_id not in (raw_store.get("prompts") or {}):
             _ensure_prompt_record(raw_store, prompt_id)

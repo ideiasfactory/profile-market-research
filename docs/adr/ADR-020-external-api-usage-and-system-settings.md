@@ -15,7 +15,7 @@ Both vendors expose usage APIs:
 
 ## Decision
 
-1. Add UI **APIs Externas** (`/external-apis`) that calls those endpoints live and shows plan, used/remaining, period/reset, and breakdown when available.
+1. Add UI **APIs Externas** (`/external-apis`) that calls those endpoints live and shows plan, used/remaining, period/reset, and breakdown when available. The same screen also surfaces **OpenAI** usage from local metering (`data/llm_usage.jsonl` / `summarize_usage`) — tokens and estimated USD cost — not the Billing Admin API.
 2. Split `/settings` into tabs:
    - **Parâmetros de negócio** — existing editable catalog (prompt-injectable).
    - **Parâmetros de Sistema** — fixed catalog of keys/URLs (`app/system_settings.py`), secrets masked, blank secret keeps previous value.

@@ -35,12 +35,34 @@ export SCORING_MODEL=v2   # ou v1 para média ponderada flat
 uvicorn app.main:app --reload
 ```
 
+## Provider OpenAI (opcional)
+
+`analyse_job`, `extract_candidate` e `score_candidate` aceitam provedor **local** ou **openai** (select na UI + `LLM_PROVIDER` no `.env`). Compensation Intelligence permanece no Ollama local (ADR-001).
+
+```bash
+export LLM_PROVIDER=local          # default; ou openai
+export OPENAI_API_KEY=sk-...       # Project secret key (não User/Legacy)
+export OPENAI_BASE_URL=https://api.openai.com/v1
+export OPENAI_MODEL=gpt-4.1        # default recomendado
+export OPENAI_TIMEOUT=90
+export OPENAI_TEMPERATURE=0.1
+export OPENAI_PRICE_INPUT_PER_1M=2.00
+export OPENAI_PRICE_OUTPUT_PER_1M=8.00
+```
+
+- Preferir **Project API Keys** → **"+ Create new secret key"** (evitar User API Keys / Legacy). Service account secret é follow-up opcional (mesmo `OPENAI_API_KEY`).
+- Sem `OPENAI_API_KEY`, o modo openai falha graceful → mesma heurística do local.
+- Alternativa mais barata após validar qualidade: `OPENAI_MODEL=gpt-4.1-mini`.
+- Uso/custo: append-only em `data/llm_usage.jsonl`; resumo em `GET /api/llm/usage`. Scores OpenAI incluem `audit.usage` (tokens + custo estimado).
+- Baseline de planejamento: **US$ 0.04 por avaliação de score** (OpenAI `gpt-4.1`) + comparativo Local vs OpenAI — [`docs/openai-score-baseline.md`](docs/openai-score-baseline.md).
+
 ## Scoring model
 
 - `SCORING_MODEL=v1` — média ponderada flat das skills (legado).
 - `SCORING_MODEL=v2` (padrão) — score hierárquico: Core Technical, Role Fit, Context Fit, Behavioral, Differentials.
 - Avaliações antigas **não** são recalculadas automaticamente; use “Gerar / reprocessar score” na UI.
 - Soft skills sem evidência usam `score: null` + `needs_validation` e saem do denominador (v2).
+- Provedor LLM por operação (Scores / Vaga / Candidato) não altera o contrato de score; só `audit` / `llm_provider` são aditivos.
 
 ## Testes
 
@@ -57,8 +79,11 @@ Os dados ficam em JSON dentro de `data/`:
 - `data/jobs.json` — vagas (ainda monolítico; inclui `ideal_candidate_context` e analysis v2)
 - `data/candidates.json` — índice leve de candidatos (sem `resume_text`)
 - `data/candidates/{id}_{slug}_profile.json` — currículo completo de cada candidato
-- `data/scores.json` — índice leve de scores
-- `data/scores/{job_id}_{candidate_id}_{slug}_score.json` — detalhe completo de cada score
+- `data/scores.json` — índice leve de scores (sempre o **mais recente** por par vaga×candidato)
+- `data/scores/{job_id}_{candidate_id}_{slug}_score.json` — detalhe completo do score atual
+- `data/score_history.json` — índice de execuções arquivadas (reprocessamentos)
+- `data/scores/history/{pair}_{timestamp}_{provider}_score.json` — detalhe de cada execução histórica
+- `data/llm_usage.jsonl` — eventos de tokens/custo OpenAI (append-only)
 
 Na primeira carga, entradas monolíticas antigas em `candidates.json` / `scores.json` são migradas automaticamente para arquivos individuais (idempotente).
 
@@ -77,9 +102,10 @@ Nos prompts (`prompts/`), use `{business_context}` ou `{<chave>}` — injetados 
 
 - Aba **Parâmetros de Sistema** (`/settings?tab=sistema`): API keys e URLs (Tavily, Firecrawl, Ollama, API key do PPA). Persistência local em `data/system_settings.json` (gitignored); `.env` continua como fallback.
 - Aba **Prompts IA** (`/settings?tab=prompts`): edita prompts LLM com título, descrição, conteúdo e histórico versionado (salvar cria versão; dropdown + reverter). Store em `data/prompt_store.json`.
-- Tela **APIs Externas** (`/external-apis`): plano, créditos usados/restantes e reset do ciclo via APIs oficiais:
+- Tela **APIs Externas** (`/external-apis`): plano, créditos usados/restantes e reset do ciclo via APIs oficiais, mais metering OpenAI:
   - Tavily `GET /usage` (reset documentado no 1º dia do mês)
   - Firecrawl `GET /v1/team/credit-usage` (período de billing na resposta)
+  - OpenAI: tokens (prompt/completion/total), custo estimado USD e breakdown por operação/modelo/dia a partir de `data/llm_usage.jsonl` (`GET /api/llm/usage`) — não usa Billing Admin API
 
 ## Prompts
 

@@ -1,0 +1,37 @@
+Analise a vaga abaixo e retorne JSON estrito no formato:
+{{
+  "role_intent": "resumo do propósito da posição",
+  "must_have": [{{"name": "Oracle Integration Cloud", "weight": 10, "tier": "MUST_HAVE", "group": "OIC Platform"}}],
+  "core_skills": [{{"name": "Arquitetura de Integração", "weight": 8, "tier": "CORE", "group": "Architecture"}}],
+  "supporting_skills": [{{"name": "Observabilidade", "weight": 4, "tier": "SUPPORTING", "group": "Ops"}}],
+  "differentials": [{{"name": "Kafka", "weight": 2, "tier": "DIFFERENTIAL", "group": "Messaging"}}],
+  "soft_skills": [{{"name": "Comunicação", "weight": 4, "tier": "SOFT", "group": "Behavioral"}}],
+  "role_expectations": "expectativas de atuação e seniority",
+  "context_signals": ["setor utilities", "presencial Campinas", "cliente CPFL"],
+  "skill_groups": [{{"name": "OIC Platform", "skills": ["Oracle Integration Cloud"]}}],
+  "hard_skills": [{{"name": "Oracle Integration Cloud", "weight": 5}}],
+  "desired_skills": [{{"name": "Kafka", "weight": 2}}]
+}}
+
+Regras obrigatórias:
+1. Extraia habilidades técnicas reais citadas na vaga. Não invente habilidades ausentes no texto.
+2. must_have = requisitos críticos/obrigatórios centrais. Sem estes a vaga não se sustenta. Peso 7–10; diferencie dentro do tier.
+3. core_skills = competências técnicas centrais. Peso 4–9; use a faixa inteira para refletir importância relativa (não force tudo em 6–7).
+4. supporting_skills = técnicas relevantes mas secundárias. Peso 2–6.
+5. differentials = diferenciais / desejáveis / nice to have. Peso 1–4. Também preencha desired_skills (compatibilidade).
+6. soft_skills = competências comportamentais. Peso 1–6.
+7. hard_skills deve espelhar must_have + core_skills + supporting_skills com pesos legados 1–5 (MUST→5, CORE→4, SUPPORTING→3).
+8. Preserve nomes específicos (OIC, SAP PO, SAP BTP, OpenAPI, OAuth 2.0, EIP). Não confunda plataformas parecidas.
+9. skill_groups: agrupe semanticamente (ex.: OIC Platform, SAP Ecosystem, API Security).
+10. context_signals: sinais de contexto profissional (cliente, setor, modelo de trabalho, stack corporativa). Ignore atributos protegidos (idade, gênero, etnia, religião, etc.).
+11. Se ideal_candidate_context for fornecido, use-o para refinar role_intent, expectations e ênfase de tiers/pesos — sem inventar skills.
+12. Limites: até 8 must_have, 16 core, 12 supporting, 12 differentials, 12 soft_skills.
+13. Prefira pesos discriminativos: evite atribuir o mesmo peso a skills de importância claramente distinta.
+
+Título: {title}
+Perfil: {profile}
+Senioridade: {seniority}
+Descrição: {description}
+Contexto do candidato ideal (opcional): {ideal_candidate_context}
+Job description:
+{job_description}

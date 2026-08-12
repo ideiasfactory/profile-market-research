@@ -279,6 +279,7 @@ def build_v2_score_result(
     interview_validation: list[str] | None = None,
     narrative: dict[str, str] | None = None,
     audit: dict[str, Any] | None = None,
+    scoring_model_version: str = "v2",
 ) -> dict[str, Any]:
     coverage = compute_must_have_coverage(items)
     gaps = classify_critical_gaps(items)
@@ -302,6 +303,7 @@ def build_v2_score_result(
     ][:8]
 
     narrative = narrative or {}
+    model_version = scoring_model_version if scoring_model_version in {"v2", "v3"} else "v2"
     return {
         "job_id": job["id"],
         "candidate_id": candidate["id"],
@@ -309,7 +311,7 @@ def build_v2_score_result(
         "candidate_name": candidate.get("name", ""),
         "final_score": breakdown["final_score"],
         "method": method,
-        "scoring_model_version": "v2",
+        "scoring_model_version": model_version,
         "items": items,
         "score_breakdown": breakdown,
         "must_have_coverage": coverage,

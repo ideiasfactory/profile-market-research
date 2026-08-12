@@ -106,6 +106,16 @@ ADRs: ADR-017 (catálogo), ADR-018 (prompts).
   - `GET /health` — liveness.
   - `GET /health/llm` — reachability do Ollama + modelo.
   - `GET /health/providers` — health dos search engines, crawlers habilitados e status `set`/`missing` das API keys.
+  - `GET /api/llm/usage` — resumo de tokens/custo OpenAI (`data/llm_usage.jsonl`).
+  - UI **APIs Externas** (`/external-apis`) inclui o mesmo resumo OpenAI junto com Tavily/Firecrawl (`GET /api/v1/external-apis/usage`).
+
+## Scoring LLM providers
+
+- Factory `get_llm(provider)` em `app/llm.py`: `local` (Ollama) ou `openai` (Chat Completions + `response_format=json_object`, default `gpt-4.1`).
+- Escopo OpenAI: `analyse_job`, `extract_candidate`, `score_*`. Compensation permanece em Ollama (ADR-001).
+- Override por request (`llm_provider` form/GPT) ou `LLM_PROVIDER` no `.env`. Sem key OpenAI → `configured=False` → heurística.
+- Métricas: `app/llm_usage.py` + `audit.usage` agregado no score.
+- Baseline de custo + comparativo Local vs OpenAI: [`docs/openai-score-baseline.md`](openai-score-baseline.md) — US$ 0.04 / score (OpenAI) e A/B de latência/método.
 
 ## Deploy
 

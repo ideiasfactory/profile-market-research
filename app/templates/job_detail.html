@@ -5,8 +5,14 @@
   <div class="form-actions">
     <a class="button" href="/compensation?job_id={{ job.id }}">Pesquisar remuneração</a>
     <a class="button secondary" href="/jobs/{{ job.id }}/edit">Editar</a>
+    <form method="post" action="/jobs/{{ job.id }}/clone" class="inline-form">
+      <button type="submit" class="button secondary">Clonar vaga</button>
+    </form>
   </div>
 </div>
+{% if job.cloned_from %}
+<p class="hint">Clonada a partir de <a href="/jobs/{{ job.cloned_from }}">{{ job.cloned_from }}</a>. Use “Salvar e reanalisar” com outro provedor LLM para comparar Local vs OpenAI.</p>
+{% endif %}
 <section class="panel">
   <p><strong>Perfil:</strong> {{ job.profile }} · <strong>Senioridade:</strong> {{ job.seniority }} · <strong>Local:</strong> {{ job.work_location }}</p>
   <p><strong>Remuneração:</strong> {{ job.compensation_type }} de {{ job.compensation_min }} até {{ job.compensation_max }}</p>
@@ -19,9 +25,23 @@
   <h2>Job description</h2>
   <div class="markdown-body">{{ job.job_description | markdown | safe }}</div>
 </section>
-{% if job.analysis.role_intent or job.analysis.role_expectations or job.analysis.context_signals %}
+{% if job.analysis.role_intent or job.analysis.role_expectations or job.analysis.context_signals or job.analysis.llm_provider %}
 <section class="panel">
   <h2>Job understanding</h2>
+  {% if job.analysis.llm_provider or job.analysis.prompt_set or job.analysis.weight_policy %}
+  <p class="hint">
+    Análise:
+    {% if job.analysis.llm_provider %}{{ job.analysis.llm_provider }}{% else %}—{% endif %}
+    {% if job.analysis.llm_model %} · {{ job.analysis.llm_model }}{% endif %}
+    {% if job.analysis.prompt_set %} · prompts {{ job.analysis.prompt_set }}{% endif %}
+    {% if job.analysis.weight_policy %} · pesos {{ job.analysis.weight_policy }}{% endif %}
+    {% if job.analysis.analyzed_at %} · {{ job.analysis.analyzed_at }}{% endif %}
+    {% if job.analysis.audit and job.analysis.audit.usage %}
+    · custo est. ${{ (job.analysis.audit.usage.estimated_cost_usd or 0) | round(4) }}
+    ({{ job.analysis.audit.usage.total_tokens or 0 }} tokens)
+    {% endif %}
+  </p>
+  {% endif %}
   {% if job.analysis.role_intent %}<p><strong>Role intent:</strong> {{ job.analysis.role_intent }}</p>{% endif %}
   {% if job.analysis.role_expectations %}<p><strong>Expectations:</strong> {{ job.analysis.role_expectations }}</p>{% endif %}
   {% if job.analysis.context_signals %}

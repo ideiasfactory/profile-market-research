@@ -20,7 +20,8 @@ from app.compensation.services.history import list_cached_research, load_cached_
 from app.compensation.services.job_prefill import map_job_to_compensation_prefill
 from app.compensation.services.orchestrator import CompensationResearchOrchestrator
 from app.scoring_config import SCORING_MODEL, active_scoring_model
-from app.services import normalize_job_analysis
+from app.llm import active_llm_provider
+from app.job_understanding import normalize_stored_job_analysis
 from app.storage import candidates_store, find_by_id, jobs_store, scores_store
 from app.tasks import task_store
 
@@ -37,7 +38,11 @@ class EvaluateRequest(BaseModel):
     candidate_id: str = Field(..., description="Candidate identifier to evaluate.")
     scoring_model: str | None = Field(
         default=None,
-        description="Optional scoring model override: v1 or v2. Defaults to server SCORING_MODEL.",
+        description="Optional scoring model override: v1, v2, or v3 (recalibrate weights with selected LLM). Defaults to server SCORING_MODEL.",
+    )
+    llm_provider: str | None = Field(
+        default=None,
+        description="Optional LLM provider override: local or openai. Used for score steps and v3 weight recalibration. Defaults to server LLM_PROVIDER.",
     )
 
 
@@ -69,7 +74,7 @@ def _job_summary(job: dict[str, Any]) -> dict[str, Any]:
 
 
 def _job_detail(job: dict[str, Any]) -> dict[str, Any]:
-    analysis = normalize_job_analysis(job.get("analysis"))
+    analysis = normalize_stored_job_analysis(job.get("analysis"))
     return {
         **_job_summary(job),
         "job_description": job.get("job_description"),
@@ -114,7 +119,9 @@ def _candidate_detail(candidate: dict[str, Any], *, include_resume: bool) -> dic
 
 
 def _evaluation_summary(score: dict[str, Any]) -> dict[str, Any]:
-    return {
+    audit = score.get("audit") if isinstance(score.get("audit"), dict) else {}
+    usage = audit.get("usage") if isinstance(audit.get("usage"), dict) else {}
+    summary = {
         "evaluation_id": score.get("id"),
         "job_id": score.get("job_id"),
         "candidate_id": score.get("candidate_id"),
@@ -125,7 +132,28 @@ def _evaluation_summary(score: dict[str, Any]) -> dict[str, Any]:
         "scoring_model_version": score.get("scoring_model_version") or "v1",
         "method": score.get("method"),
         "created_at": score.get("created_at"),
+        "llm_provider": score.get("llm_provider") or audit.get("llm_provider"),
+        "llm_model": score.get("llm_model") or audit.get("llm_model"),
     }
+    if score.get("is_history") or score.get("history_id"):
+        summary["is_history"] = True
+        summary["history_id"] = score.get("history_id") or score.get("id")
+        summary["score_id"] = score.get("score_id") or (
+            f"{score.get('job_id')}_{score.get('candidate_id')}"
+        )
+        if score.get("archived_at"):
+            summary["archived_at"] = score.get("archived_at")
+    cost = score.get("estimated_cost_usd")
+    if cost is None:
+        cost = usage.get("estimated_cost_usd")
+    tokens = score.get("total_tokens")
+    if tokens is None:
+        tokens = usage.get("total_tokens")
+    if cost is not None:
+        summary["estimated_cost_usd"] = cost
+    if tokens is not None:
+        summary["total_tokens"] = tokens
+    return summary
 
 
 def _evaluation_detail(score: dict[str, Any], *, include_items: bool) -> dict[str, Any]:
@@ -154,6 +182,13 @@ def _evaluation_detail(score: dict[str, Any], *, include_items: bool) -> dict[st
     if include_items:
         payload["items"] = score.get("items") or []
     return payload
+
+
+def _history_summaries(job_id: str, candidate_id: str) -> list[dict[str, Any]]:
+    return [
+        _evaluation_summary({**entry, "is_history": True, "history_id": entry.get("id")})
+        for entry in scores_store.history_for(job_id, candidate_id)
+    ]
 
 
 @router.get(
@@ -313,9 +348,11 @@ def list_job_evaluations(job_id: str) -> dict[str, Any]:
     operation_id="getEvaluation",
     summary="Get evaluation",
     description=(
-        "Retrieve a persisted evaluation by id (format: {job_id}_{candidate_id}). "
+        "Retrieve a persisted evaluation by id (format: {job_id}_{candidate_id}) "
+        "or a historical run id from score history. "
         "Use include_items=true for skill-level evidence. Connected mode must treat "
-        "final_score as authoritative — do not recalculate."
+        "final_score as authoritative — do not recalculate. "
+        "Use include_history=true on a latest evaluation to list archived runs for the pair."
     ),
 )
 def get_evaluation(
@@ -324,28 +361,45 @@ def get_evaluation(
         default=False,
         description="Include per-skill items with evidence when true.",
     ),
+    include_history: bool = Query(
+        default=False,
+        description="When resolving the latest pair evaluation, include archived runs.",
+    ),
 ) -> dict[str, Any]:
-    score = scores_store.get(evaluation_id)
+    score = scores_store.get_any(evaluation_id)
     if not score:
         raise HTTPException(status_code=404, detail="Evaluation not found.")
-    return _evaluation_detail(score, include_items=include_items)
+    payload = _evaluation_detail(score, include_items=include_items)
+    if include_history and not score.get("is_history"):
+        job_id = str(score.get("job_id") or "")
+        candidate_id = str(score.get("candidate_id") or "")
+        if job_id and candidate_id:
+            payload["history"] = _history_summaries(job_id, candidate_id)
+    return payload
 
 
 @router.get(
     "/jobs/{job_id}/evaluations/{candidate_id}",
     operation_id="getJobCandidateEvaluation",
     summary="Get evaluation by job and candidate",
-    description="Retrieve the persisted evaluation for a job × candidate pair.",
+    description=(
+        "Retrieve the latest persisted evaluation for a job × candidate pair. "
+        "Optional include_history returns archived runs for Local vs OpenAI comparison."
+    ),
 )
 def get_job_candidate_evaluation(
     job_id: str,
     candidate_id: str,
     include_items: bool = Query(default=False),
+    include_history: bool = Query(default=False),
 ) -> dict[str, Any]:
     score = scores_store.find(job_id, candidate_id)
     if not score:
         raise HTTPException(status_code=404, detail="Evaluation not found.")
-    return _evaluation_detail(score, include_items=include_items)
+    payload = _evaluation_detail(score, include_items=include_items)
+    if include_history:
+        payload["history"] = _history_summaries(job_id, candidate_id)
+    return payload
 
 
 @router.post(
@@ -372,6 +426,7 @@ async def evaluate_candidate(
         raise HTTPException(status_code=404, detail="Candidate not found.")
 
     model = active_scoring_model(body.scoring_model)
+    provider = active_llm_provider(body.llm_provider)
     task = task_store.create("score")
     background_tasks.add_task(
         run_score_task,
@@ -379,10 +434,13 @@ async def evaluate_candidate(
         body.job_id,
         body.candidate_id,
         scoring_model=model,
+        llm_provider=provider,
     )
     payload = task.public()
     payload["scoring_model"] = model
     payload["default_scoring_model"] = SCORING_MODEL
+    payload["llm_provider"] = provider
+    payload["default_llm_provider"] = active_llm_provider()
     return payload
 
 

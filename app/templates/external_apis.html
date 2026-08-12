@@ -4,7 +4,7 @@
   <div>
     <p class="eyebrow">Operação</p>
     <h1>APIs Externas</h1>
-    <p>Plano contratado, créditos/uso e reset do ciclo para Tavily e Firecrawl. Dados consultados ao vivo nas APIs dos provedores.</p>
+    <p>Plano e créditos (Tavily / Firecrawl) consultados ao vivo; uso OpenAI a partir do metering local de tokens/custo.</p>
   </div>
   <div style="display:flex; gap:10px; align-items:center;">
     <a class="button secondary" href="/settings?tab=sistema">Parâmetros de Sistema</a>
@@ -12,15 +12,15 @@
   </div>
 </section>
 
-<p class="hint">Consulta em {{ usage.fetched_at[:19].replace('T', ' ') }} UTC. Tavily: <code>GET /usage</code>. Firecrawl: <code>GET /v1/team/credit-usage</code> (fallback v2).</p>
+  <p class="hint">Consulta em {{ usage.fetched_at[:19].replace('T', ' ') }} UTC. Tavily: <code>GET /usage</code>. Firecrawl: <code>GET /v1/team/credit-usage</code> (fallback v2). LLM (OpenAI + Local): <code>data/llm_usage.jsonl</code> → <a href="/api/llm/usage">GET /api/llm/usage</a>.</p>
 
 <section class="grid two">
   {% for provider in usage.providers %}
-  <article class="panel api-usage-card">
+  <article class="panel api-usage-card{% if provider.kind == 'llm_tokens' %} api-usage-card-wide{% endif %}">
     <div class="title-row compact">
       <div>
         <h2 style="margin:0; text-transform: capitalize;">{{ provider.provider }}</h2>
-        <p class="hint" style="margin:6px 0 0;">{{ provider.plan_name if provider.ok else (provider.error or 'Indisponível') }}</p>
+        <p class="hint" style="margin:6px 0 0;">{{ provider.plan_name if provider.ok or provider.kind == 'llm_tokens' else (provider.error or 'Indisponível') }}</p>
       </div>
       {% if not provider.configured %}
       <div class="status warn">key missing</div>
@@ -31,7 +31,87 @@
       {% endif %}
     </div>
 
-    {% if provider.ok %}
+    {% if provider.kind == 'llm_tokens' %}
+    <p class="hint" style="margin-top:14px;">{{ provider.includes }}</p>
+
+    {% set totals = provider.totals or {} %}
+    <div class="list" style="margin-top:16px;">
+      <div class="list-item">
+        <span>Prompt tokens</span>
+        <strong>{{ totals.prompt_tokens or 0 }}</strong>
+      </div>
+      <div class="list-item">
+        <span>Completion tokens</span>
+        <strong>{{ totals.completion_tokens or 0 }}</strong>
+      </div>
+      <div class="list-item">
+        <span>Total tokens</span>
+        <strong>{{ totals.total_tokens or 0 }}</strong>
+      </div>
+      <div class="list-item">
+        <span>Custo estimado (USD)</span>
+        <strong>${{ '%.6f'|format(totals.estimated_cost_usd or 0) }}</strong>
+      </div>
+      <div class="list-item">
+        <span>Chamadas</span>
+        <strong>{{ totals.calls or 0 }}{% if totals.ok_calls is defined %} ({{ totals.ok_calls or 0 }} ok){% endif %}</strong>
+      </div>
+      <div class="list-item">
+        <span>Eventos no log</span>
+        <strong>{{ provider.event_count or 0 }}</strong>
+      </div>
+    </div>
+    <p class="hint">{{ provider.reset_note }}</p>
+
+    {% if not provider.configured %}
+    <p class="hint">Configure <code>OPENAI_API_KEY</code> no <code>.env</code> para usar o provedor OpenAI. O histórico de metering local (se houver) continua abaixo.</p>
+    {% endif %}
+
+    {% if provider.by_operation %}
+    <h3>Por operação</h3>
+    <div class="list">
+      {% for row in provider.by_operation %}
+      <div class="list-item">
+        <span>{{ row.name }} · {{ row.calls or 0 }} calls</span>
+        <strong>{{ row.total_tokens or 0 }} tok · ${{ '%.6f'|format(row.estimated_cost_usd or 0) }}</strong>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if provider.by_model %}
+    <h3>Por modelo</h3>
+    <div class="list">
+      {% for row in provider.by_model %}
+      <div class="list-item">
+        <span>{{ row.name }} · {{ row.calls or 0 }} calls</span>
+        <strong>{{ row.total_tokens or 0 }} tok · ${{ '%.6f'|format(row.estimated_cost_usd or 0) }}</strong>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if provider.by_day %}
+    <h3>Por dia</h3>
+    <div class="list">
+      {% for row in provider.by_day[:14] %}
+      <div class="list-item">
+        <span>{{ row.name }} · {{ row.calls or 0 }} calls</span>
+        <strong>{{ row.total_tokens or 0 }} tok · ${{ '%.6f'|format(row.estimated_cost_usd or 0) }}</strong>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if not provider.by_operation and not provider.event_count %}
+    <p class="hint">Nenhum evento OpenAI registrado ainda. Rode análise/score com provedor OpenAI para popular o log.</p>
+    {% endif %}
+
+    {% if provider.docs_url %}
+    <p class="hint"><a href="{{ provider.docs_url }}">JSON de usage (API)</a></p>
+    {% endif %}
+
+    {% elif provider.ok %}
     <p class="hint" style="margin-top:14px;">Incluído no plano: <strong>{{ provider.includes }}</strong></p>
 
     <div class="usage-meter" aria-label="Uso do plano">

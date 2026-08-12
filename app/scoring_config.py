@@ -38,6 +38,15 @@ TIER_WEIGHT_RANGES: dict[str, tuple[int, int]] = {
     "SOFT": (1, 5),
 }
 
+# Wider ranges for scoring model v3 (OpenAI weight recalibration).
+TIER_WEIGHT_RANGES_V3: dict[str, tuple[int, int]] = {
+    "MUST_HAVE": (7, 10),
+    "CORE": (4, 9),
+    "SUPPORTING": (2, 6),
+    "DIFFERENTIAL": (1, 4),
+    "SOFT": (1, 6),
+}
+
 # Composite dimension weights (must sum ~1.0).
 DIMENSION_WEIGHTS: dict[str, float] = {
     "core_technical_fit": _env_float("WEIGHT_CORE_TECHNICAL", 0.45),
@@ -60,9 +69,9 @@ MUST_HAVE_COVERED_MIN_SCORE = int(_env_float("MUST_HAVE_COVERED_MIN_SCORE", 3))
 # If True, any critical must-have gap forces not_recommended.
 AUTO_ELIMINATE_ON_CRITICAL_GAP = _env_bool("AUTO_ELIMINATE_ON_CRITICAL_GAP", False)
 
-# Scoring model: v1 = flat weighted avg; v2 = hierarchical composite.
+# Scoring model: v1 = flat; v2 = hierarchical; v3 = hierarchical + OpenAI weight policy.
 SCORING_MODEL = (os.getenv("SCORING_MODEL") or "v2").strip().lower()
-if SCORING_MODEL not in {"v1", "v2"}:
+if SCORING_MODEL not in {"v1", "v2", "v3"}:
     SCORING_MODEL = "v2"
 
 JOB_ANALYSIS_VERSION = 2
@@ -71,6 +80,7 @@ PROMPT_VERSIONS: dict[str, str] = {
     "score_skills": "v2",
     "score_fit": "v1",
     "score_narrative": "v2",
+    "score_weights": "v1",
 }
 
 EVIDENCE_STATUSES = frozenset(
@@ -89,7 +99,7 @@ NON_EQUIVALENT_SKILL_HINTS: list[tuple[str, str]] = [
 
 
 def active_scoring_model(override: str | None = None) -> str:
-    if override and override.strip().lower() in {"v1", "v2"}:
+    if override and override.strip().lower() in {"v1", "v2", "v3"}:
         return override.strip().lower()
     return SCORING_MODEL
 
@@ -107,9 +117,16 @@ def default_tier_weight(tier: str) -> int:
     return int(TIER_WEIGHTS.get(key, 3))
 
 
-def clamp_tier_weight(tier: str, weight: Any) -> int:
+def tier_weight_ranges(policy: str = "v2") -> dict[str, tuple[int, int]]:
+    if (policy or "").strip().lower() == "v3":
+        return TIER_WEIGHT_RANGES_V3
+    return TIER_WEIGHT_RANGES
+
+
+def clamp_tier_weight(tier: str, weight: Any, *, policy: str = "v2") -> int:
     key = (tier or "").upper()
-    low, high = TIER_WEIGHT_RANGES.get(key, (1, 10))
+    ranges = tier_weight_ranges(policy)
+    low, high = ranges.get(key, (1, 10))
     try:
         value = int(float(weight))
     except (TypeError, ValueError):
