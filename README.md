@@ -54,7 +54,7 @@ export OPENAI_PRICE_OUTPUT_PER_1M=8.00
 - Sem `OPENAI_API_KEY`, o modo openai falha graceful → mesma heurística do local.
 - Alternativa mais barata após validar qualidade: `OPENAI_MODEL=gpt-4.1-mini`.
 - Uso/custo: append-only em `data/llm_usage.jsonl`; resumo em `GET /api/llm/usage`. Scores OpenAI incluem `audit.usage` (tokens + custo estimado).
-- Baseline de planejamento: **US$ 0.04 por avaliação de score** (OpenAI `gpt-4.1`) — detalhes em [`docs/openai-score-baseline.md`](docs/openai-score-baseline.md).
+- Baseline de planejamento: **US$ 0.04 por avaliação de score** (OpenAI `gpt-4.1`) + comparativo Local vs OpenAI — [`docs/openai-score-baseline.md`](docs/openai-score-baseline.md).
 
 ## Scoring model
 
