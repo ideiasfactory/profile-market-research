@@ -211,7 +211,12 @@ When the user asks about market compensation, pay bands, or whether a job’s of
 2. Otherwise accept free-form profile/skills/seniority/location/contract and call `researchCompensationAsync`.
 3. Poll `getTask` until `completed` or `failed`. On success, use `task.result` (or cached history) as the **only** source of salary numbers.
 4. Optionally check `listCompensationHistory` / `getCompensationHistoryItem` before starting a new run if a recent cache may suffice.
-5. Prefer **async** research. Use sync `researchCompensation` only when the user accepts timeout risk or the case is likely cached.
+5. Prefer **async** research. Use sync `researchCompensation` only when the user accepts timeout risk or the case is likely cached. Open WebUI clients may use `researchCompensationWait` instead of poll loops.
+
+**Cache policy (default USE CACHE):**
+
+- Leave `force_refresh` **false** (or omit it). Do **not** force refresh “to be thorough”.
+- Set `force_refresh: true` **only** when the user clearly asks to ignore cache / force a new research (e.g. “ignore o cache”, “ignore cache”, “force refresh”, “forçar nova pesquisa”, “sem cache”, “pesquisa nova obrigatória”).
 
 **Anti-hallucination for pay:**
 

@@ -1,0 +1,75 @@
+{
+  "parameters": [
+    {
+      "id": "param_clt_to_pj_factor",
+      "key": "clt_to_pj_factor",
+      "label": "Fator CLT → PJ",
+      "value": 1.5,
+      "value_type": "number",
+      "category": "compensation",
+      "description": "Conversão de salário CLT mensal para equivalente PJ mensal na research de mercado.",
+      "inject_in_prompts": true
+    },
+    {
+      "id": "param_work_hours_month",
+      "key": "work_hours_month",
+      "label": "Horas por mês",
+      "value": 168,
+      "value_type": "number",
+      "category": "compensation",
+      "description": "Base para converter remuneração mensal ↔ horária.",
+      "inject_in_prompts": true
+    },
+    {
+      "id": "param_iss_pct",
+      "key": "iss_pct",
+      "label": "ISS (%)",
+      "value": 5.0,
+      "value_type": "percent",
+      "category": "pricing",
+      "description": "Exemplo de imposto municipal sobre serviços. Ajuste ou remova conforme o negócio.",
+      "inject_in_prompts": true
+    },
+    {
+      "id": "param_target_margin_pct",
+      "key": "target_margin_pct",
+      "label": "Margem alvo (%)",
+      "value": 25.0,
+      "value_type": "percent",
+      "category": "pricing",
+      "description": "Exemplo de margem desejada sobre o preço de venda ao cliente.",
+      "inject_in_prompts": true
+    },
+    {
+      "id": "param_other_taxes_pct",
+      "key": "other_taxes_pct",
+      "label": "other_taxes_pct",
+      "value": 0.0,
+      "value_type": "percent",
+      "category": "pricing",
+      "description": "",
+      "inject_in_prompts": true
+    },
+    {
+      "id": "param_overhead_pct",
+      "key": "overhead_pct",
+      "label": "Overhead (%)",
+      "value": 10.0,
+      "value_type": "percent",
+      "category": "pricing",
+      "description": "Exemplo de custos indiretos (estrutura, comercial, ferramentas).",
+      "inject_in_prompts": true
+    },
+    {
+      "id": "param_pis_cofins_pct",
+      "key": "pis_cofins_pct",
+      "label": "PIS + COFINS (%)",
+      "value": 3.65,
+      "value_type": "percent",
+      "category": "pricing",
+      "description": "Exemplo de carga federal sobre receita. Pode ser substituído por outro modelo tributário.",
+      "inject_in_prompts": true
+    }
+  ],
+  "updated_at": "2026-08-12T15:16:32.426559+00:00"
+}

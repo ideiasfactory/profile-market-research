@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="title-row">
+  <div>
+    <p class="eyebrow">Gestão</p>
+    <h1>Parâmetros de negócio</h1>
+    <p>Catálogo editável de regras e constantes do negócio. Valores com “embutir em prompts” ficam disponíveis como <code>{chave}</code> e no bloco <code>{business_context}</code>.</p>
+  </div>
+  {% if settings.updated_at %}
+  <div class="status ok">Atualizado {{ settings.updated_at[:19].replace('T', ' ') }} UTC</div>
+  {% endif %}
+</section>
+
+{% if error %}
+<section class="panel" style="border-color: var(--warn);">
+  <p class="hint" style="color: var(--warn); margin: 0;">{{ error }}</p>
+</section>
+{% endif %}
+{% if saved %}
+<section class="panel" style="border-color: var(--ok);">
+  <p class="hint" style="color: var(--ok); margin: 0;">Parâmetros salvos.</p>
+</section>
+{% endif %}
+
+<section class="panel form-section">
+  <h2>Como usar nos prompts</h2>
+  <p class="hint">Nos arquivos em <code>prompts/</code>, referencie qualquer chave (ex.: <code>{target_margin_pct}</code>, <code>{iss_pct}</code>) ou o bloco completo <code>{business_context}</code>. Impostos e margem abaixo são apenas exemplos — cadastre o que o negócio precisar (SLA, seniority premium, política comercial, etc.).</p>
+  <pre class="markdown-body" style="white-space: pre-wrap; background: var(--panel-2); padding: 14px; border-radius: 12px;">{{ business_context }}</pre>
+</section>
+
+<form method="post" action="/settings" class="form" id="business-settings-form">
+  {% for category, items in grouped.items() %}
+  <section class="panel form-section">
+    <h2>{{ category }}</h2>
+    <div class="list">
+      {% for item in items %}
+      <div class="list-item param-row">
+        <input type="hidden" name="id" value="{{ item.id }}">
+        <div class="grid two">
+          <label>Chave
+            <input name="key" value="{{ item.key }}" required pattern="[a-z0-9_]+" title="snake_case: letras, números e _">
+          </label>
+          <label>Rótulo
+            <input name="label" value="{{ item.label }}" required>
+          </label>
+        </div>
+        <div class="grid three">
+          <label>Valor
+            <input name="value" value="{{ item.value }}" required>
+          </label>
+          <label>Tipo
+            <select name="value_type">
+              {% for vt in value_types %}
+              <option value="{{ vt }}" {{ "selected" if item.value_type == vt else "" }}>{{ vt }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label>Categoria
+            <input name="category" value="{{ item.category }}" required>
+          </label>
+        </div>
+        <label>Descrição
+          <input name="description" value="{{ item.description }}">
+        </label>
+        <div class="title-row compact" style="align-items: center;">
+          <label style="display: flex; align-items: center; gap: 10px; font-weight: 600;">
+            <input type="checkbox" name="inject_{{ item.id }}" value="1" {{ "checked" if item.inject_in_prompts else "" }} style="width: auto;">
+            Embutir em prompts
+          </label>
+          <button type="submit" formaction="/settings/parameters/{{ item.id }}/delete" formmethod="post" formnovalidate class="button secondary" onclick="return confirm('Remover este parâmetro?')">Remover</button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+
+  <div class="title-row compact">
+    <p class="hint" style="margin:0;">Salva alterações de todos os parâmetros listados.</p>
+    <button type="submit">Salvar alterações</button>
+  </div>
+</form>
+
+<section class="panel form-section">
+  <h2>Novo parâmetro</h2>
+  <p class="hint">Ex.: <code>seniority_premium_pct</code>, <code>default_allocation_model</code>, <code>commercial_policy</code> — qualquer regra de negócio reutilizável.</p>
+  <form method="post" action="/settings/parameters" class="form">
+    <div class="grid two">
+      <label>Chave
+        <input name="key" required pattern="[a-z0-9_]+" placeholder="ex.: target_margin_pct">
+      </label>
+      <label>Rótulo
+        <input name="label" required placeholder="Margem alvo (%)">
+      </label>
+    </div>
+    <div class="grid three">
+      <label>Valor
+        <input name="value" required placeholder="25">
+      </label>
+      <label>Tipo
+        <select name="value_type">
+          {% for vt in value_types %}
+          <option value="{{ vt }}" {{ "selected" if vt == "number" else "" }}>{{ vt }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>Categoria
+        <input name="category" value="geral" required>
+      </label>
+    </div>
+    <label>Descrição
+      <input name="description" placeholder="Para que este parâmetro existe">
+    </label>
+    <label style="display: flex; align-items: center; gap: 10px; font-weight: 600;">
+      <input type="checkbox" name="inject_in_prompts" value="1" checked style="width: auto;">
+      Embutir em prompts
+    </label>
+    <button type="submit">Cadastrar parâmetro</button>
+  </form>
+</section>
+{% endblock %}

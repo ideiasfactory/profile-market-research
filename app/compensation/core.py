@@ -41,13 +41,14 @@ class CompensationSettings:
 
 
 def get_settings() -> CompensationSettings:
+    pricing = _business_pricing()
     return CompensationSettings(
         ollama_base_url=os.getenv("OLLAMA_BASE_URL") or os.getenv("LOCAL_LLM_URL", "http://gpu-server-01:11434"),
         ollama_model=os.getenv("OLLAMA_MODEL") or os.getenv("LOCAL_LLM_MODEL", "qwen2.5:14b"),
         search_engines=_split_env("SEARCH_ENGINES", "tavily"),
         enabled_crawlers=_split_env("ENABLED_CRAWLERS", "glassdoor,indeed,vagas,generic"),
-        clt_to_pj_factor=float(os.getenv("CLT_TO_PJ_FACTOR", "1.50")),
-        work_hours_month=int(os.getenv("WORK_HOURS_MONTH", "168")),
+        clt_to_pj_factor=float(pricing.get("clt_to_pj_factor", os.getenv("CLT_TO_PJ_FACTOR", "1.50"))),
+        work_hours_month=int(pricing.get("work_hours_month", os.getenv("WORK_HOURS_MONTH", "168"))),
         max_parallel_searches=int(os.getenv("MAX_PARALLEL_SEARCHES", "4")),
         max_parallel_crawls=int(os.getenv("MAX_PARALLEL_CRAWLS", "5")),
         cache_ttl_days=int(os.getenv("CACHE_TTL_DAYS", "7")),
@@ -56,6 +57,16 @@ def get_settings() -> CompensationSettings:
         research_timeout_seconds=int(os.getenv("RESEARCH_TIMEOUT_SECONDS", "120")),
         app_api_key=os.getenv("APP_API_KEY", ""),
     )
+
+
+def _business_pricing() -> dict[str, Any]:
+    """Prefer editable business parameter catalog; fall back to env defaults."""
+    try:
+        from app.business_settings import get_business_values
+
+        return get_business_values()
+    except Exception:
+        return {}
 
 
 def _split_env(name: str, default: str) -> list[str]:

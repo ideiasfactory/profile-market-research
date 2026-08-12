@@ -1,0 +1,1547 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Professional Profile Analyser — Open WebUI Tools",
+    "version": "1.0.0",
+    "description": "Slim OpenAPI for Open WebUI Tools pointed at Professional Profile Analyser `/api/gpt/*`.\n\nPrinciple: **LLM interprets; API decides.** Never invent jobs, candidates, scores, or salaries.\n\n## Compensation cache policy (REQUIRED)\n- Default: **USE CACHE** — send `force_refresh: false` (or omit the field; schema default is false).\n- Set `force_refresh: true` **only** when the user clearly asks to ignore cache / force a new research\n  (e.g. \"ignore o cache\", \"ignore cache\", \"force refresh\", \"force uma nova pesquisa\",\n  \"forçar nova pesquisa\", \"não use o cache\", \"sem cache\", \"pesquisa nova obrigatória\").\n- Prefer `researchCompensationWait` when the tool layer cannot poll reliably.\n- Prefer `researchCompensationAsync` + `getTask` when polling works.\n"
+  },
+  "servers": [
+    {
+      "url": "http://host.docker.internal:8000",
+      "description": "PPA on Docker host (Open WebUI in container)"
+    },
+    {
+      "url": "http://127.0.0.1:8000",
+      "description": "PPA on localhost (Open WebUI on host)"
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    },
+    {
+      "BearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "jobs"
+    },
+    {
+      "name": "candidates"
+    },
+    {
+      "name": "evaluations"
+    },
+    {
+      "name": "compensation"
+    },
+    {
+      "name": "tasks"
+    }
+  ],
+  "paths": {
+    "/api/gpt/jobs": {
+      "get": {
+        "operationId": "listJobs",
+        "tags": [
+          "jobs"
+        ],
+        "summary": "List jobs",
+        "description": "List persisted jobs. Optional `q` filters by title, description, profile, or id.\nUse before answering questions about stored opportunities. Never invent jobs.\n",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Case-insensitive search text"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Job list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/gpt/jobs/{job_id}": {
+      "get": {
+        "operationId": "getJob",
+        "tags": [
+          "jobs"
+        ],
+        "summary": "Get job",
+        "description": "Retrieve a job including analysis. Prefer this over conversational memory for stored jobs.\n",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/jobId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Job detail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobDetail"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/gpt/candidates": {
+      "get": {
+        "operationId": "listCandidates",
+        "tags": [
+          "candidates"
+        ],
+        "summary": "List candidates",
+        "description": "List candidate index entries. Never invent candidates.",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Candidate list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidateListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/gpt/candidates/{candidate_id}": {
+      "get": {
+        "operationId": "getCandidate",
+        "tags": [
+          "candidates"
+        ],
+        "summary": "Get candidate",
+        "description": "Retrieve a candidate. Set include_resume=true only when evidence inspection is required.\n",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/candidateId"
+          },
+          {
+            "name": "include_resume",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Candidate detail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidateDetail"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/gpt/jobs/{job_id}/candidates": {
+      "get": {
+        "operationId": "listJobCandidates",
+        "tags": [
+          "candidates"
+        ],
+        "summary": "List candidates evaluated for a job",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/jobId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Candidates with evaluation summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobCandidatesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/gpt/evaluations": {
+      "get": {
+        "operationId": "listEvaluations",
+        "tags": [
+          "evaluations"
+        ],
+        "summary": "List evaluations",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "candidate_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Evaluation list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluationListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "operationId": "evaluateCandidate",
+        "tags": [
+          "evaluations"
+        ],
+        "summary": "Create or re-evaluate candidate against job",
+        "description": "WRITE. Starts async evaluation. Returns a Task — poll getTask.\nExecute only with clear user intent to evaluate or re-evaluate.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvaluateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Async task created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/gpt/evaluations/{evaluation_id}": {
+      "get": {
+        "operationId": "getEvaluation",
+        "tags": [
+          "evaluations"
+        ],
+        "summary": "Get evaluation",
+        "description": "Retrieve persisted evaluation. Treat final_score as authoritative — do not recalculate.\n",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/evaluationId"
+          },
+          {
+            "name": "include_items",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Evaluation detail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluationDetail"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/gpt/jobs/{job_id}/evaluations/{candidate_id}": {
+      "get": {
+        "operationId": "getJobCandidateEvaluation",
+        "tags": [
+          "evaluations"
+        ],
+        "summary": "Get evaluation by job and candidate",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/jobId"
+          },
+          {
+            "$ref": "#/components/parameters/candidateId"
+          },
+          {
+            "name": "include_items",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Evaluation detail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluationDetail"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/gpt/compensation/prefill/{job_id}": {
+      "get": {
+        "operationId": "prefillCompensationFromJob",
+        "tags": [
+          "compensation"
+        ],
+        "summary": "Prefill compensation research from a job",
+        "description": "Map a stored job into a CompensationResearchRequest-shaped prefill.\nPrefer this when discussing an open job already in the system.\nWorkflow: listJobs → prefillCompensationFromJob(job_id) → researchCompensationWait\nwith the returned fields (`profile`, `location` object, `target_contract`, etc.).\n",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/jobId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Prefill payload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompensationPrefill"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/gpt/compensation/history": {
+      "get": {
+        "operationId": "listCompensationHistory",
+        "tags": [
+          "compensation"
+        ],
+        "summary": "List cached compensation research",
+        "description": "Compact summaries of cached Compensation Intelligence runs.\nPrefer checking history before starting a new research when a recent cache may suffice.\nCache is the default path — do not force refresh unless the user asks.\n",
+        "responses": {
+          "200": {
+            "description": "History list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompensationHistoryListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/gpt/compensation/history/{cache_key}": {
+      "get": {
+        "operationId": "getCompensationHistoryItem",
+        "tags": [
+          "compensation"
+        ],
+        "summary": "Get cached compensation research",
+        "description": "Load cached research by cache_key. Observations omitted by default;\nset include_observations=true to cite individual salary rows.\n",
+        "parameters": [
+          {
+            "name": "cache_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "include_observations",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cached research payload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompensationResearchResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/api/gpt/compensation/research/wait": {
+      "post": {
+        "operationId": "researchCompensationWait",
+        "tags": [
+          "compensation"
+        ],
+        "summary": "Run compensation research and wait for the final result",
+        "description": "Preferred Open WebUI path when tools cannot poll async Tasks reliably.\nRuns research and returns the final CompensationResearchResponse in one call.\n\n**Required body shape (do NOT invent alternate keys):**\n- `profile` (string, required) — role title, e.g. \"Arquiteto OIC\"\n- `location` (object, NOT a string) — `{ \"city\": \"...\", \"state\": \"...\", \"country\": \"BR\" }`\n- `target_contract` — `\"PJ\"` or `\"CLT\"` (not `jobType` / `contractType`)\n- Optional: `skills`, `seniority`, `allocation_model`, `source_job_id`, `force_refresh`\n\n**Wrong (will 422):** `{ \"title\": \"...\", \"location\": \"CPFL, Brazil\", \"jobType\": \"contract\" }`\n**Right:** `{ \"profile\": \"Arquiteto OIC\", \"target_contract\": \"PJ\",\n\"location\": { \"city\": \"Campinas\", \"state\": \"SP\", \"country\": \"BR\" }, \"force_refresh\": false }`\n\nWhen a stored job exists: call `listJobs` → `prefillCompensationFromJob` → pass that\nprefill object (or its fields) into this endpoint.\n\n**Cache policy:** `force_refresh` defaults to **false**. Omit it or send false to use cache.\nSet true **only** on explicit user phrases like \"ignore o cache\", \"force refresh\",\n\"forçar nova pesquisa\", \"sem cache\". Never invent salaries — cite only returned evidence.\n",
+        "parameters": [
+          {
+            "name": "include_observations",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompensationResearchRequest"
+              },
+              "example": {
+                "profile": "Arquiteto OIC",
+                "skills": [
+                  "Oracle Integration Cloud",
+                  "API Management"
+                ],
+                "seniority": "senior",
+                "allocation_model": "hybrid",
+                "target_contract": "PJ",
+                "location": {
+                  "city": "Campinas",
+                  "state": "SP",
+                  "country": "BR"
+                },
+                "force_refresh": false,
+                "source_job_id": "671bb12e8d6c"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Research result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompensationResearchResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/api/gpt/compensation/research/async": {
+      "post": {
+        "operationId": "researchCompensationAsync",
+        "tags": [
+          "compensation"
+        ],
+        "summary": "Start async compensation / market-pay research",
+        "description": "Preferred when the client can poll: returns a Task (`kind=compensation_research`).\nPoll getTask; on success use `task.result`.\n\n**Cache policy:** `force_refresh` defaults to **false**. Use cache unless the user\nexplicitly asks to ignore cache / force a new research. Never invent salaries.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompensationResearchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Async task created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/api/gpt/compensation/research": {
+      "post": {
+        "operationId": "researchCompensation",
+        "tags": [
+          "compensation"
+        ],
+        "summary": "Sync compensation / market-pay research (optional)",
+        "description": "Optional sync path. Prefer `researchCompensationWait` (Open WebUI) or\n`researchCompensationAsync` + `getTask` when polling works.\n\n**Cache policy:** `force_refresh` defaults to **false**.\n",
+        "parameters": [
+          {
+            "name": "include_observations",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompensationResearchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Research result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompensationResearchResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/api/gpt/tasks/{task_id}": {
+      "get": {
+        "operationId": "getTask",
+        "tags": [
+          "tasks"
+        ],
+        "summary": "Poll async task",
+        "description": "Poll evaluate / compensation_research task status.\nWhen completed after researchCompensationAsync, use task.result as the compensation payload.\n",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "Value of PROFESSIONAL_PROFILE_API_KEY (never commit real keys)."
+      },
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Authorization Bearer PROFESSIONAL_PROFILE_API_KEY"
+      }
+    },
+    "parameters": {
+      "jobId": {
+        "name": "job_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "candidateId": {
+        "name": "candidate_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "evaluationId": {
+        "name": "evaluation_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Usually {job_id}_{candidate_id}"
+      }
+    },
+    "responses": {
+      "Unauthorized": {
+        "description": "Missing or invalid API key",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Resource not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string"
+          }
+        }
+      },
+      "JobSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "profile": {
+            "type": "string"
+          },
+          "seniority": {
+            "type": "string"
+          },
+          "work_location": {
+            "type": "string"
+          },
+          "compensation_type": {
+            "type": "string"
+          },
+          "compensation_min": {
+            "type": "number"
+          },
+          "compensation_max": {
+            "type": "number"
+          },
+          "has_analysis": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string"
+          }
+        }
+      },
+      "SkillItem": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "tier": {
+            "type": "string",
+            "enum": [
+              "MUST_HAVE",
+              "CORE",
+              "SUPPORTING",
+              "DIFFERENTIAL",
+              "SOFT"
+            ]
+          },
+          "weight": {
+            "type": "number"
+          },
+          "group": {
+            "type": "string"
+          }
+        }
+      },
+      "JobAnalysis": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer"
+          },
+          "role_intent": {
+            "type": "string"
+          },
+          "role_expectations": {
+            "type": "string"
+          },
+          "context_signals": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "must_have": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SkillItem"
+            }
+          },
+          "core_skills": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SkillItem"
+            }
+          },
+          "supporting_skills": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SkillItem"
+            }
+          },
+          "differentials": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SkillItem"
+            }
+          },
+          "soft_skills": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SkillItem"
+            }
+          }
+        }
+      },
+      "JobDetail": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/JobSummary"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "job_description": {
+                "type": "string"
+              },
+              "ideal_candidate_context": {
+                "type": "string"
+              },
+              "analysis": {
+                "$ref": "#/components/schemas/JobAnalysis"
+              }
+            }
+          }
+        ]
+      },
+      "JobListResponse": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "jobs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JobSummary"
+            }
+          }
+        }
+      },
+      "CandidateSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "reported_role": {
+            "type": "string"
+          },
+          "source_type": {
+            "type": "string"
+          },
+          "source_label": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string"
+          }
+        }
+      },
+      "CandidateDetail": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CandidateSummary"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "resume_available": {
+                "type": "boolean"
+              },
+              "resume_length": {
+                "type": "integer"
+              },
+              "resume_text": {
+                "type": "string",
+                "description": "Present only when include_resume=true"
+              }
+            }
+          }
+        ]
+      },
+      "CandidateListResponse": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "candidates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CandidateSummary"
+            }
+          }
+        }
+      },
+      "JobCandidateRow": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CandidateSummary"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "evaluation_id": {
+                "type": "string"
+              },
+              "final_score": {
+                "type": "number",
+                "nullable": true
+              },
+              "verdict_label": {
+                "type": "string",
+                "nullable": true
+              },
+              "scoring_model_version": {
+                "type": "string",
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "JobCandidatesResponse": {
+        "type": "object",
+        "properties": {
+          "job": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "count": {
+            "type": "integer"
+          },
+          "candidates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JobCandidateRow"
+            }
+          }
+        }
+      },
+      "EvaluationSummary": {
+        "type": "object",
+        "properties": {
+          "evaluation_id": {
+            "type": "string"
+          },
+          "job_id": {
+            "type": "string"
+          },
+          "candidate_id": {
+            "type": "string"
+          },
+          "job_title": {
+            "type": "string"
+          },
+          "candidate_name": {
+            "type": "string"
+          },
+          "final_score": {
+            "type": "number",
+            "nullable": true
+          },
+          "verdict_label": {
+            "type": "string",
+            "nullable": true
+          },
+          "scoring_model_version": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "EvaluationDetail": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EvaluationSummary"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "verdict": {
+                "type": "string"
+              },
+              "profile_summary": {
+                "type": "string"
+              },
+              "strengths": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "gaps": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "interview_validation": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "role_fit": {
+                "type": "number",
+                "nullable": true
+              },
+              "context_fit": {
+                "type": "number",
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "EvaluationListResponse": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "evaluations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EvaluationSummary"
+            }
+          }
+        }
+      },
+      "EvaluateRequest": {
+        "type": "object",
+        "required": [
+          "job_id",
+          "candidate_id"
+        ],
+        "properties": {
+          "job_id": {
+            "type": "string"
+          },
+          "candidate_id": {
+            "type": "string"
+          },
+          "scoring_model": {
+            "type": "string",
+            "enum": [
+              "v1",
+              "v2"
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "Task": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "failed"
+            ]
+          },
+          "progress": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          },
+          "redirect_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "error": {
+            "type": "string",
+            "nullable": true
+          },
+          "result": {
+            "description": "Present when completed (e.g. compensation research payload)",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string"
+          }
+        }
+      },
+      "CompensationLocation": {
+        "type": "object",
+        "description": "Structured location. NEVER pass a free-text string like \"CPFL, Brazil\".\nUse country code BR (not \"Brazil\") when possible.\n",
+        "properties": {
+          "city": {
+            "type": "string",
+            "description": "City name, e.g. Campinas"
+          },
+          "state": {
+            "type": "string",
+            "description": "State/UF, e.g. SP"
+          },
+          "country": {
+            "type": "string",
+            "default": "BR",
+            "description": "ISO-ish country code, default BR"
+          }
+        },
+        "example": {
+          "city": "Campinas",
+          "state": "SP",
+          "country": "BR"
+        }
+      },
+      "CompensationResearchRequest": {
+        "type": "object",
+        "required": [
+          "profile"
+        ],
+        "description": "Body for compensation research. Field names are exact:\nuse `profile` (not title/job), `target_contract` (not contractType/jobType),\nand `location` as an object (not a string).\n",
+        "properties": {
+          "profile": {
+            "type": "string",
+            "minLength": 3,
+            "description": "Required role / profile title for market research.\nExample: \"Arquiteto OIC\". Do not use keys named title, job, or jobTitle.\n"
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "seniority": {
+            "type": "string"
+          },
+          "allocation_model": {
+            "type": "string",
+            "enum": [
+              "onsite",
+              "hybrid",
+              "remote"
+            ],
+            "default": "remote"
+          },
+          "location": {
+            "$ref": "#/components/schemas/CompensationLocation"
+          },
+          "target_contract": {
+            "type": "string",
+            "enum": [
+              "CLT",
+              "PJ"
+            ],
+            "default": "PJ",
+            "description": "Contract type. Use PJ or CLT — not jobType/contractType."
+          },
+          "providers": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "search_engines": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "crawlers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "force_refresh": {
+            "type": "boolean",
+            "default": false,
+            "description": "DEFAULT false — use compensation cache when available.\nSet true ONLY when the user explicitly asks to ignore cache / force a new research\n(e.g. \"ignore o cache\", \"ignore cache\", \"force refresh\", \"force uma nova pesquisa\",\n\"forçar nova pesquisa\", \"não use o cache\", \"sem cache\", \"pesquisa nova obrigatória\").\nDo not set true by default or \"to be thorough\".\n"
+          },
+          "source_job_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional link to a stored job id"
+          }
+        }
+      },
+      "CompensationPrefill": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CompensationResearchRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "source_job_title": {
+                "type": "string",
+                "nullable": true
+              },
+              "job_compensation_min": {
+                "type": "number",
+                "nullable": true
+              },
+              "job_compensation_max": {
+                "type": "number",
+                "nullable": true
+              },
+              "job_compensation_type": {
+                "type": "string",
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "CompensationHistoryItem": {
+        "type": "object",
+        "properties": {
+          "cache_key": {
+            "type": "string"
+          },
+          "research_id": {
+            "type": "string"
+          },
+          "normalized_role": {
+            "type": "string"
+          },
+          "seniority": {
+            "type": "string"
+          },
+          "contract_type": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "median": {
+            "type": "number",
+            "nullable": true
+          },
+          "recommended_min": {
+            "type": "number",
+            "nullable": true
+          },
+          "recommended_max": {
+            "type": "number",
+            "nullable": true
+          },
+          "observations": {
+            "type": "integer"
+          },
+          "sources": {
+            "type": "integer"
+          },
+          "confidence_level": {
+            "type": "string"
+          },
+          "confidence_score": {
+            "type": "number"
+          },
+          "created_at": {
+            "type": "string"
+          }
+        }
+      },
+      "CompensationHistoryListResponse": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CompensationHistoryItem"
+            }
+          }
+        }
+      },
+      "MarketStats": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "contract_type": {
+            "type": "string"
+          },
+          "minimum": {
+            "type": "number",
+            "nullable": true
+          },
+          "p25": {
+            "type": "number",
+            "nullable": true
+          },
+          "median": {
+            "type": "number",
+            "nullable": true
+          },
+          "mean": {
+            "type": "number",
+            "nullable": true
+          },
+          "p75": {
+            "type": "number",
+            "nullable": true
+          },
+          "maximum": {
+            "type": "number",
+            "nullable": true
+          },
+          "monthly_equivalent": {
+            "type": "number",
+            "nullable": true
+          },
+          "recommended_range": {
+            "type": "object",
+            "properties": {
+              "min": {
+                "type": "number",
+                "nullable": true
+              },
+              "max": {
+                "type": "number",
+                "nullable": true
+              }
+            }
+          }
+        }
+      },
+      "CompensationResearchResponse": {
+        "type": "object",
+        "properties": {
+          "research_id": {
+            "type": "string"
+          },
+          "profile": {
+            "type": "object",
+            "properties": {
+              "role_family": {
+                "type": "string"
+              },
+              "normalized_role": {
+                "type": "string"
+              },
+              "seniority": {
+                "type": "string"
+              },
+              "specialization": {
+                "type": "string"
+              },
+              "skills": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "market": {
+            "$ref": "#/components/schemas/MarketStats"
+          },
+          "sample": {
+            "type": "object",
+            "properties": {
+              "observations": {
+                "type": "integer"
+              },
+              "sources": {
+                "type": "integer"
+              }
+            }
+          },
+          "providers": {
+            "type": "object",
+            "properties": {
+              "search_engines_used": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "crawlers_used": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "confidence": {
+            "type": "object",
+            "properties": {
+              "score": {
+                "type": "number"
+              },
+              "level": {
+                "type": "string",
+                "enum": [
+                  "HIGH",
+                  "MEDIUM",
+                  "LOW"
+                ]
+              }
+            }
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "observations": {
+                  "type": "integer"
+                },
+                "retrieved_at": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "observations": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "observations_omitted": {
+            "type": "boolean"
+          },
+          "observations_count": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

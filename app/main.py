@@ -1,16 +1,27 @@
 from __future__ import annotations
 
 import json
+import os
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 import markdown as markdown_lib
 from fastapi import BackgroundTasks, FastAPI, File, Form, HTTPException, Request, UploadFile
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from app.api.compensation import router as compensation_router
+from app.business_settings import (
+    VALUE_TYPES,
+    delete_business_parameter,
+    format_business_context,
+    get_business_settings,
+    save_business_settings,
+    upsert_business_parameter,
+)
 from app.env_loader import load_app_env
 from app.gpt import router as gpt_router
 from app.llm import LocalLLM
@@ -25,7 +36,24 @@ from app.tasks import task_store
 load_app_env()
 configure_logging()
 
+REPO_ROOT = Path(__file__).resolve().parent.parent
+OPENAPI_GPT_SLIM_PATH = REPO_ROOT / "llm-tools" / "tool-openwebui" / "openapi.slim.3.0.json"
+OPENAPI_GPT_SLIM_STATIC = Path(__file__).resolve().parent / "static" / "openapi-gpt-slim.json"
+
 app = FastAPI(title="Professional Profile Analyser")
+
+# Open WebUI User Tool Servers fetch OpenAPI + call APIs from the browser (CORS required).
+# Global Tool Servers call from the Open WebUI container (no CORS needed).
+_cors_raw = (os.getenv("CORS_ALLOW_ORIGINS") or "http://127.0.0.1:3000,http://localhost:3000").strip()
+_cors_origins = [o.strip() for o in _cors_raw.split(",") if o.strip()]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=_cors_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(compensation_router)
 app.include_router(gpt_router)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
@@ -36,6 +64,19 @@ templates.env.filters["markdown"] = lambda value: markdown_lib.markdown(
 )
 templates.env.filters["tojson"] = lambda value: json.dumps(value, ensure_ascii=False)
 llm = LocalLLM()
+
+
+@app.get("/openapi-gpt-slim.json", include_in_schema=False)
+def openapi_gpt_slim() -> FileResponse:
+    """Slim OpenAPI 3.0 for Open WebUI tool servers (URL import).
+
+    Prefer this over FastAPI's full `/openapi.json`, which includes HTML UI routes.
+    Open WebUI default path field is `openapi.json`; set Path to `openapi-gpt-slim.json`.
+    """
+    path = OPENAPI_GPT_SLIM_PATH if OPENAPI_GPT_SLIM_PATH.is_file() else OPENAPI_GPT_SLIM_STATIC
+    if not path.is_file():
+        raise HTTPException(status_code=404, detail="openapi-gpt-slim.json not found")
+    return FileResponse(path, media_type="application/json", filename="openapi-gpt-slim.json")
 
 
 def now_iso() -> str:
@@ -240,6 +281,155 @@ def save_domain(domain_type: str, name: str = Form(...), item_id: str = Form("")
     domains_store.write(domains_data)
     return redirect("/domains")
 
+
+@app.get("/settings")
+def settings_page(request: Request, saved: int = 0):
+    settings = get_business_settings()
+    grouped: dict[str, list] = {}
+    for item in settings["parameters"]:
+        grouped.setdefault(item["category"], []).append(item)
+    return templates.TemplateResponse(
+        request,
+        "settings.html",
+        {
+            "title": "Parâmetros de negócio",
+            "settings": settings,
+            "grouped": grouped,
+            "value_types": VALUE_TYPES,
+            "business_context": format_business_context(settings["parameters"]),
+            "saved": bool(saved),
+            "error": None,
+        },
+    )
+
+
+def _settings_error_response(request: Request, error: str, status_code: int = 400):
+    settings = get_business_settings()
+    grouped: dict[str, list] = {}
+    for item in settings["parameters"]:
+        grouped.setdefault(item["category"], []).append(item)
+    return templates.TemplateResponse(
+        request,
+        "settings.html",
+        {
+            "title": "Parâmetros de negócio",
+            "settings": settings,
+            "grouped": grouped,
+            "value_types": VALUE_TYPES,
+            "business_context": format_business_context(settings["parameters"]),
+            "saved": False,
+            "error": error,
+        },
+        status_code=status_code,
+    )
+
+
+@app.post("/settings")
+async def save_settings_page(request: Request):
+    form = await request.form()
+    ids = form.getlist("id")
+    keys = form.getlist("key")
+    labels = form.getlist("label")
+    values = form.getlist("value")
+    value_types = form.getlist("value_type")
+    categories = form.getlist("category")
+    descriptions = form.getlist("description")
+    count = len(ids)
+    if not (count == len(keys) == len(labels) == len(values) == len(value_types) == len(categories) == len(descriptions)):
+        return _settings_error_response(request, "Formulário inconsistente: recarregue a página e tente de novo.")
+
+    parameters = []
+    for index in range(count):
+        item_id = str(ids[index])
+        parameters.append(
+            {
+                "id": item_id,
+                "key": str(keys[index]),
+                "label": str(labels[index]),
+                "value": values[index],
+                "value_type": str(value_types[index]),
+                "category": str(categories[index]),
+                "description": str(descriptions[index]),
+                "inject_in_prompts": f"inject_{item_id}" in form,
+            }
+        )
+    try:
+        save_business_settings({"parameters": parameters})
+    except ValueError as exc:
+        return _settings_error_response(request, str(exc))
+    return redirect("/settings?saved=1")
+
+
+@app.post("/settings/parameters")
+async def create_settings_parameter(
+    request: Request,
+    key: str = Form(...),
+    label: str = Form(...),
+    value: str = Form(...),
+    value_type: str = Form("text"),
+    category: str = Form("geral"),
+    description: str = Form(""),
+    inject_in_prompts: str = Form(""),
+):
+    try:
+        upsert_business_parameter(
+            {
+                "key": key,
+                "label": label,
+                "value": value,
+                "value_type": value_type,
+                "category": category,
+                "description": description,
+                "inject_in_prompts": bool(inject_in_prompts),
+            }
+        )
+    except ValueError as exc:
+        return _settings_error_response(request, str(exc))
+    return redirect("/settings?saved=1")
+
+
+@app.post("/settings/parameters/{item_id}/delete")
+async def remove_settings_parameter(request: Request, item_id: str):
+    try:
+        delete_business_parameter(item_id)
+    except ValueError as exc:
+        return _settings_error_response(request, str(exc))
+    return redirect("/settings?saved=1")
+
+
+@app.get("/api/v1/settings/business")
+def api_get_business_settings():
+    return get_business_settings()
+
+
+@app.put("/api/v1/settings/business")
+async def api_put_business_settings(request: Request):
+    body = await request.json()
+    if not isinstance(body, dict):
+        raise HTTPException(status_code=400, detail="Payload JSON inválido")
+    try:
+        return save_business_settings(body)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/api/v1/settings/business/parameters")
+async def api_upsert_business_parameter(request: Request):
+    body = await request.json()
+    if not isinstance(body, dict):
+        raise HTTPException(status_code=400, detail="Payload JSON inválido")
+    try:
+        return upsert_business_parameter(body)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.delete("/api/v1/settings/business/parameters/{item_id}")
+def api_delete_business_parameter(item_id: str):
+    try:
+        return delete_business_parameter(item_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
 
 @app.get("/jobs")
 def list_jobs(request: Request):

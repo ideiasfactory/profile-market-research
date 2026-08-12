@@ -62,6 +62,7 @@ Execute only when the user clearly asks for market pay / faixas / remuneração 
 - Prefer job-linked: `prefillCompensationFromJob` then research with `source_job_id`.
 - Free-form profile/skills/seniority/location/contract is OK when no job is in scope.
 - Sync `researchCompensation` only if the user accepts timeout risk.
+- **Cache:** `force_refresh` defaults to **false**. Set true only on explicit user instruction to ignore cache / force a new research.
 
 Examples that **allow** research:
 

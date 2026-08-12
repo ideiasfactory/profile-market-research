@@ -1,18 +1,25 @@
-openapi: 3.1.0
+openapi: 3.0.3
 info:
-  title: Professional Profile Analyser API
+  title: Professional Profile Analyser — Open WebUI Tools
   version: 1.0.0
   description: |
-    JSON API for Custom GPT Actions. System of record for jobs, candidates,
-    evaluations, and Compensation Intelligence research. LLM interprets;
-    this API decides and persists scores / returns market-pay evidence.
+    Slim OpenAPI for Open WebUI Tools pointed at Professional Profile Analyser `/api/gpt/*`.
 
-    Base URL is deployment-specific. Use a publicly reachable HTTPS origin
-    when configuring ChatGPT Actions (e.g. tunnel to local/dev).
+    Principle: **LLM interprets; API decides.** Never invent jobs, candidates, scores, or salaries.
+
+    ## Compensation cache policy (REQUIRED)
+    - Default: **USE CACHE** — send `force_refresh: false` (or omit the field; schema default is false).
+    - Set `force_refresh: true` **only** when the user clearly asks to ignore cache / force a new research
+      (e.g. "ignore o cache", "ignore cache", "force refresh", "force uma nova pesquisa",
+      "forçar nova pesquisa", "não use o cache", "sem cache", "pesquisa nova obrigatória").
+    - Prefer `researchCompensationWait` when the tool layer cannot poll reliably.
+    - Prefer `researchCompensationAsync` + `getTask` when polling works.
 
 servers:
-  - url: https://YOUR_PPA_HOST
-    description: Replace with the deployed Professional Profile Analyser base URL
+  - url: http://host.docker.internal:8000
+    description: PPA on Docker host (Open WebUI in container)
+  - url: http://127.0.0.1:8000
+    description: PPA on localhost (Open WebUI on host)
 
 security:
   - ApiKeyAuth: []
@@ -33,7 +40,7 @@ paths:
       summary: List jobs
       description: |
         List persisted jobs. Optional `q` filters by title, description, profile, or id.
-        Use before answering questions about stored opportunities.
+        Use before answering questions about stored opportunities. Never invent jobs.
       parameters:
         - name: q
           in: query
@@ -57,8 +64,7 @@ paths:
       tags: [jobs]
       summary: Get job
       description: |
-        Retrieve a job including analysis (role intent, must-haves, skill tiers).
-        Prefer this over conversational memory for stored jobs.
+        Retrieve a job including analysis. Prefer this over conversational memory for stored jobs.
       parameters:
         - $ref: "#/components/parameters/jobId"
       responses:
@@ -78,9 +84,7 @@ paths:
       operationId: listCandidates
       tags: [candidates]
       summary: List candidates
-      description: |
-        List candidate index entries without full resume text.
-        Optional `q` filters by name, role, city, or id.
+      description: List candidate index entries. Never invent candidates.
       parameters:
         - name: q
           in: query
@@ -103,8 +107,7 @@ paths:
       tags: [candidates]
       summary: Get candidate
       description: |
-        Retrieve a candidate. Set include_resume=true only when evidence inspection
-        is required. Never invent candidates.
+        Retrieve a candidate. Set include_resume=true only when evidence inspection is required.
       parameters:
         - $ref: "#/components/parameters/candidateId"
         - name: include_resume
@@ -113,7 +116,6 @@ paths:
           schema:
             type: boolean
             default: false
-          description: Include full resume_text when true
       responses:
         "200":
           description: Candidate detail
@@ -131,7 +133,6 @@ paths:
       operationId: listJobCandidates
       tags: [candidates]
       summary: List candidates evaluated for a job
-      description: Return candidates that have a persisted evaluation for the given job.
       parameters:
         - $ref: "#/components/parameters/jobId"
       responses:
@@ -151,7 +152,6 @@ paths:
       operationId: listEvaluations
       tags: [evaluations]
       summary: List evaluations
-      description: List persisted evaluations. Filter by job_id and/or candidate_id.
       parameters:
         - name: job_id
           in: query
@@ -177,9 +177,8 @@ paths:
       tags: [evaluations]
       summary: Create or re-evaluate candidate against job
       description: |
-        WRITE operation. Starts async evaluation via the application scoring engine
-        (default v2). Returns a Task — poll getTask. Execute only with clear user intent
-        to evaluate or re-evaluate.
+        WRITE. Starts async evaluation. Returns a Task — poll getTask.
+        Execute only with clear user intent to evaluate or re-evaluate.
       requestBody:
         required: true
         content:
@@ -198,34 +197,13 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
 
-  /api/gpt/jobs/{job_id}/evaluations:
-    get:
-      operationId: listJobEvaluations
-      tags: [evaluations]
-      summary: List evaluations for a job
-      parameters:
-        - $ref: "#/components/parameters/jobId"
-      responses:
-        "200":
-          description: Job evaluations
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/JobEvaluationsResponse"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "404":
-          $ref: "#/components/responses/NotFound"
-
   /api/gpt/evaluations/{evaluation_id}:
     get:
       operationId: getEvaluation
       tags: [evaluations]
       summary: Get evaluation
       description: |
-        Retrieve persisted evaluation by id (`{job_id}_{candidate_id}`).
-        Treat final_score as authoritative — do not recalculate.
-        Use include_items=true for skill-level evidence.
+        Retrieve persisted evaluation. Treat final_score as authoritative — do not recalculate.
       parameters:
         - $ref: "#/components/parameters/evaluationId"
         - name: include_items
@@ -278,9 +256,10 @@ paths:
       tags: [compensation]
       summary: Prefill compensation research from a job
       description: |
-        Map a stored job into a CompensationResearchRequest-shaped prefill
-        (profile, skills, seniority, allocation, contract, location, source_job_id).
+        Map a stored job into a CompensationResearchRequest-shaped prefill.
         Prefer this when discussing an open job already in the system.
+        Workflow: listJobs → prefillCompensationFromJob(job_id) → researchCompensationWait
+        with the returned fields (`profile`, `location` object, `target_contract`, etc.).
       parameters:
         - $ref: "#/components/parameters/jobId"
       responses:
@@ -302,7 +281,8 @@ paths:
       summary: List cached compensation research
       description: |
         Compact summaries of cached Compensation Intelligence runs.
-        Use before re-running research when a recent cache may suffice.
+        Prefer checking history before starting a new research when a recent cache may suffice.
+        Cache is the default path — do not force refresh unless the user asks.
       responses:
         "200":
           description: History list
@@ -319,8 +299,8 @@ paths:
       tags: [compensation]
       summary: Get cached compensation research
       description: |
-        Load cached research by cache_key. Observations omitted by default
-        (`observations_omitted=true`); set include_observations=true to cite rows.
+        Load cached research by cache_key. Observations omitted by default;
+        set include_observations=true to cite individual salary rows.
       parameters:
         - name: cache_key
           in: path
@@ -345,16 +325,81 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
 
+  /api/gpt/compensation/research/wait:
+    post:
+      operationId: researchCompensationWait
+      tags: [compensation]
+      summary: Run compensation research and wait for the final result
+      description: |
+        Preferred Open WebUI path when tools cannot poll async Tasks reliably.
+        Runs research and returns the final CompensationResearchResponse in one call.
+
+        **Required body shape (do NOT invent alternate keys):**
+        - `profile` (string, required) — role title, e.g. "Arquiteto OIC"
+        - `location` (object, NOT a string) — `{ "city": "...", "state": "...", "country": "BR" }`
+        - `target_contract` — `"PJ"` or `"CLT"` (not `jobType` / `contractType`)
+        - Optional: `skills`, `seniority`, `allocation_model`, `source_job_id`, `force_refresh`
+
+        **Wrong (will 422):** `{ "title": "...", "location": "CPFL, Brazil", "jobType": "contract" }`
+        **Right:** `{ "profile": "Arquiteto OIC", "target_contract": "PJ",
+        "location": { "city": "Campinas", "state": "SP", "country": "BR" }, "force_refresh": false }`
+
+        When a stored job exists: call `listJobs` → `prefillCompensationFromJob` → pass that
+        prefill object (or its fields) into this endpoint.
+
+        **Cache policy:** `force_refresh` defaults to **false**. Omit it or send false to use cache.
+        Set true **only** on explicit user phrases like "ignore o cache", "force refresh",
+        "forçar nova pesquisa", "sem cache". Never invent salaries — cite only returned evidence.
+      parameters:
+        - name: include_observations
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompensationResearchRequest"
+            example:
+              profile: Arquiteto OIC
+              skills:
+                - Oracle Integration Cloud
+                - API Management
+              seniority: senior
+              allocation_model: hybrid
+              target_contract: PJ
+              location:
+                city: Campinas
+                state: SP
+                country: BR
+              force_refresh: false
+              source_job_id: "671bb12e8d6c"
+      responses:
+        "200":
+          description: Research result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompensationResearchResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          description: Validation error
+
   /api/gpt/compensation/research/async:
     post:
       operationId: researchCompensationAsync
       tags: [compensation]
       summary: Start async compensation / market-pay research
       description: |
-        Preferred GPT path for long-running Compensation Intelligence research.
-        Returns a Task (`kind=compensation_research`). Poll getTask; on success
-        use `task.result`. Never invent salaries — cite only returned evidence.
-        Execute only with clear user intent to research market pay.
+        Preferred when the client can poll: returns a Task (`kind=compensation_research`).
+        Poll getTask; on success use `task.result`.
+
+        **Cache policy:** `force_refresh` defaults to **false**. Use cache unless the user
+        explicitly asks to ignore cache / force a new research. Never invent salaries.
       requestBody:
         required: true
         content:
@@ -377,10 +422,12 @@ paths:
     post:
       operationId: researchCompensation
       tags: [compensation]
-      summary: Sync compensation / market-pay research
+      summary: Sync compensation / market-pay research (optional)
       description: |
-        Runs research synchronously. Prefer researchCompensationAsync for GPT Actions —
-        sync often exceeds Action HTTP timeouts. Use only for simple/cached-friendly cases.
+        Optional sync path. Prefer `researchCompensationWait` (Open WebUI) or
+        `researchCompensationAsync` + `getTask` when polling works.
+
+        **Cache policy:** `force_refresh` defaults to **false**.
       parameters:
         - name: include_observations
           in: query
@@ -412,8 +459,7 @@ paths:
       tags: [tasks]
       summary: Poll async task
       description: |
-        Poll analyse/extract/score/compensation_research task status under the gpt resource.
-        When completed after evaluateCandidate, fetch the evaluation via getJobCandidateEvaluation.
+        Poll evaluate / compensation_research task status.
         When completed after researchCompensationAsync, use task.result as the compensation payload.
       parameters:
         - name: task_id
@@ -439,11 +485,11 @@ components:
       type: apiKey
       in: header
       name: X-API-Key
-      description: Set to ${PROFESSIONAL_PROFILE_API_KEY} in GPT Builder (never commit real keys).
+      description: Value of PROFESSIONAL_PROFILE_API_KEY (never commit real keys).
     BearerAuth:
       type: http
       scheme: bearer
-      description: Authorization Bearer ${PROFESSIONAL_PROFILE_API_KEY}
+      description: Authorization Bearer PROFESSIONAL_PROFILE_API_KEY
 
   parameters:
     jobId:
@@ -537,15 +583,6 @@ components:
         soft_skills:
           type: array
           items: { $ref: "#/components/schemas/SkillItem" }
-        skill_groups:
-          type: array
-          items:
-            type: object
-            properties:
-              name: { type: string }
-              skills:
-                type: array
-                items: { type: string }
 
     JobDetail:
       allOf:
@@ -632,65 +669,6 @@ components:
         method: { type: string, nullable: true }
         created_at: { type: string, nullable: true }
 
-    MustHaveCoverage:
-      type: object
-      properties:
-        covered: { type: integer }
-        total: { type: integer }
-        ratio: { type: number }
-        covered_skills:
-          type: array
-          items: { type: string }
-        missing_skills:
-          type: array
-          items: { type: string }
-        min_score: { type: integer }
-
-    ScoreBreakdown:
-      type: object
-      properties:
-        dimensions:
-          type: object
-          additionalProperties: { type: number }
-        weights:
-          type: object
-          additionalProperties: { type: number }
-        final_score: { type: number }
-
-    CriticalGap:
-      type: object
-      properties:
-        name: { type: string }
-        severity:
-          type: string
-          enum: [critical, important, minor, documentation_gap]
-        tier: { type: string }
-        score: { type: number, nullable: true }
-        evidence_status: { type: string }
-        reason: { type: string }
-
-    SkillScoreItem:
-      type: object
-      properties:
-        category: { type: string }
-        name: { type: string }
-        weight: { type: number }
-        tier: { type: string }
-        group: { type: string }
-        score: { type: number, nullable: true }
-        confidence: { type: number, nullable: true }
-        evidence_status:
-          type: string
-          enum: [explicit, inferred, not_found, negative, needs_validation]
-        evidence:
-          type: array
-          items:
-            type: object
-            properties:
-              text: { type: string }
-              source: { type: string }
-        weighted_score: { type: number, nullable: true }
-
     EvaluationDetail:
       allOf:
         - $ref: "#/components/schemas/EvaluationSummary"
@@ -698,11 +676,6 @@ components:
           properties:
             verdict: { type: string }
             profile_summary: { type: string }
-            score_breakdown: { $ref: "#/components/schemas/ScoreBreakdown" }
-            must_have_coverage: { $ref: "#/components/schemas/MustHaveCoverage" }
-            critical_gaps:
-              type: array
-              items: { $ref: "#/components/schemas/CriticalGap" }
             strengths:
               type: array
               items: { type: string }
@@ -714,40 +687,10 @@ components:
               items: { type: string }
             role_fit: { type: number, nullable: true }
             context_fit: { type: number, nullable: true }
-            group_scores:
-              type: array
-              items:
-                type: object
-            candidate:
-              type: object
-              properties:
-                id: { type: string }
-                name: { type: string }
-            job:
-              type: object
-              properties:
-                id: { type: string }
-                title: { type: string }
-            items:
-              type: array
-              items: { $ref: "#/components/schemas/SkillScoreItem" }
 
     EvaluationListResponse:
       type: object
       properties:
-        count: { type: integer }
-        evaluations:
-          type: array
-          items: { $ref: "#/components/schemas/EvaluationSummary" }
-
-    JobEvaluationsResponse:
-      type: object
-      properties:
-        job:
-          type: object
-          properties:
-            id: { type: string }
-            title: { type: string }
         count: { type: integer }
         evaluations:
           type: array
@@ -763,7 +706,6 @@ components:
           type: string
           enum: [v1, v2]
           nullable: true
-          description: Optional override; defaults to server SCORING_MODEL
 
     Task:
       type: object
@@ -781,24 +723,35 @@ components:
           description: Present when completed (e.g. compensation research payload)
           nullable: true
         created_at: { type: string }
-        scoring_model: { type: string }
-        default_scoring_model: { type: string }
 
     CompensationLocation:
       type: object
+      description: |
+        Structured location. NEVER pass a free-text string like "CPFL, Brazil".
+        Use country code BR (not "Brazil") when possible.
       properties:
-        city: { type: string }
-        state: { type: string }
-        country: { type: string, default: BR }
+        city: { type: string, description: "City name, e.g. Campinas" }
+        state: { type: string, description: "State/UF, e.g. SP" }
+        country: { type: string, default: BR, description: "ISO-ish country code, default BR" }
+      example:
+        city: Campinas
+        state: SP
+        country: BR
 
     CompensationResearchRequest:
       type: object
       required: [profile]
+      description: |
+        Body for compensation research. Field names are exact:
+        use `profile` (not title/job), `target_contract` (not contractType/jobType),
+        and `location` as an object (not a string).
       properties:
         profile:
           type: string
           minLength: 3
-          description: Role / profile title for market research
+          description: |
+            Required role / profile title for market research.
+            Example: "Arquiteto OIC". Do not use keys named title, job, or jobTitle.
         skills:
           type: array
           items: { type: string }
@@ -813,6 +766,7 @@ components:
           type: string
           enum: [CLT, PJ]
           default: PJ
+          description: Contract type. Use PJ or CLT — not jobType/contractType.
         providers:
           type: object
           nullable: true
@@ -826,6 +780,12 @@ components:
         force_refresh:
           type: boolean
           default: false
+          description: |
+            DEFAULT false — use compensation cache when available.
+            Set true ONLY when the user explicitly asks to ignore cache / force a new research
+            (e.g. "ignore o cache", "ignore cache", "force refresh", "force uma nova pesquisa",
+            "forçar nova pesquisa", "não use o cache", "sem cache", "pesquisa nova obrigatória").
+            Do not set true by default or "to be thorough".
         source_job_id:
           type: string
           nullable: true
@@ -857,12 +817,6 @@ components:
         sources: { type: integer }
         confidence_level: { type: string }
         confidence_score: { type: number }
-        search_engines_used:
-          type: array
-          items: { type: string }
-        crawlers_used:
-          type: array
-          items: { type: string }
         created_at: { type: string }
 
     CompensationHistoryListResponse:
@@ -943,10 +897,6 @@ components:
         observations:
           type: array
           items: { type: object }
-          description: Salary observation rows (may be empty when observations_omitted)
-        observations_omitted:
-          type: boolean
-          description: True when observation rows were stripped for compact GPT payloads
-        observations_count:
-          type: integer
+        observations_omitted: { type: boolean }
+        observations_count: { type: integer }
         created_at: { type: string }

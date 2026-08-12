@@ -1,0 +1,997 @@
+openapi: 3.1.0
+info:
+  title: Professional Profile Analyser API
+  version: 1.0.0
+  description: |
+    JSON API for Custom GPT Actions. System of record for jobs, candidates,
+    evaluations, and Compensation Intelligence research. LLM interprets;
+    this API decides and persists scores / returns market-pay evidence.
+
+    Base URL is deployment-specific. Use a publicly reachable HTTPS origin
+    when configuring ChatGPT Actions (e.g. tunnel to local/dev).
+
+servers:
+  - url: https://YOUR_PPA_HOST
+    description: Replace with the deployed Professional Profile Analyser base URL
+
+security:
+  - ApiKeyAuth: []
+  - BearerAuth: []
+
+tags:
+  - name: jobs
+  - name: candidates
+  - name: evaluations
+  - name: compensation
+  - name: tasks
+
+paths:
+  /api/gpt/jobs:
+    get:
+      operationId: listJobs
+      tags: [jobs]
+      summary: List jobs
+      description: |
+        List persisted jobs. Optional `q` filters by title, description, profile, or id.
+        Use before answering questions about stored opportunities.
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Case-insensitive search text
+      responses:
+        "200":
+          description: Job list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobListResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/gpt/jobs/{job_id}:
+    get:
+      operationId: getJob
+      tags: [jobs]
+      summary: Get job
+      description: |
+        Retrieve a job including analysis (role intent, must-haves, skill tiers).
+        Prefer this over conversational memory for stored jobs.
+      parameters:
+        - $ref: "#/components/parameters/jobId"
+      responses:
+        "200":
+          description: Job detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobDetail"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/gpt/candidates:
+    get:
+      operationId: listCandidates
+      tags: [candidates]
+      summary: List candidates
+      description: |
+        List candidate index entries without full resume text.
+        Optional `q` filters by name, role, city, or id.
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Candidate list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CandidateListResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/gpt/candidates/{candidate_id}:
+    get:
+      operationId: getCandidate
+      tags: [candidates]
+      summary: Get candidate
+      description: |
+        Retrieve a candidate. Set include_resume=true only when evidence inspection
+        is required. Never invent candidates.
+      parameters:
+        - $ref: "#/components/parameters/candidateId"
+        - name: include_resume
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Include full resume_text when true
+      responses:
+        "200":
+          description: Candidate detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CandidateDetail"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/gpt/jobs/{job_id}/candidates:
+    get:
+      operationId: listJobCandidates
+      tags: [candidates]
+      summary: List candidates evaluated for a job
+      description: Return candidates that have a persisted evaluation for the given job.
+      parameters:
+        - $ref: "#/components/parameters/jobId"
+      responses:
+        "200":
+          description: Candidates with evaluation summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobCandidatesResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/gpt/evaluations:
+    get:
+      operationId: listEvaluations
+      tags: [evaluations]
+      summary: List evaluations
+      description: List persisted evaluations. Filter by job_id and/or candidate_id.
+      parameters:
+        - name: job_id
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: candidate_id
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Evaluation list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EvaluationListResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      operationId: evaluateCandidate
+      tags: [evaluations]
+      summary: Create or re-evaluate candidate against job
+      description: |
+        WRITE operation. Starts async evaluation via the application scoring engine
+        (default v2). Returns a Task — poll getTask. Execute only with clear user intent
+        to evaluate or re-evaluate.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EvaluateRequest"
+      responses:
+        "200":
+          description: Async task created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/gpt/jobs/{job_id}/evaluations:
+    get:
+      operationId: listJobEvaluations
+      tags: [evaluations]
+      summary: List evaluations for a job
+      parameters:
+        - $ref: "#/components/parameters/jobId"
+      responses:
+        "200":
+          description: Job evaluations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JobEvaluationsResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/gpt/evaluations/{evaluation_id}:
+    get:
+      operationId: getEvaluation
+      tags: [evaluations]
+      summary: Get evaluation
+      description: |
+        Retrieve persisted evaluation by id (`{job_id}_{candidate_id}`).
+        Treat final_score as authoritative — do not recalculate.
+        Use include_items=true for skill-level evidence.
+      parameters:
+        - $ref: "#/components/parameters/evaluationId"
+        - name: include_items
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        "200":
+          description: Evaluation detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EvaluationDetail"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/gpt/jobs/{job_id}/evaluations/{candidate_id}:
+    get:
+      operationId: getJobCandidateEvaluation
+      tags: [evaluations]
+      summary: Get evaluation by job and candidate
+      parameters:
+        - $ref: "#/components/parameters/jobId"
+        - $ref: "#/components/parameters/candidateId"
+        - name: include_items
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        "200":
+          description: Evaluation detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EvaluationDetail"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/gpt/compensation/prefill/{job_id}:
+    get:
+      operationId: prefillCompensationFromJob
+      tags: [compensation]
+      summary: Prefill compensation research from a job
+      description: |
+        Map a stored job into a CompensationResearchRequest-shaped prefill
+        (profile, skills, seniority, allocation, contract, location, source_job_id).
+        Prefer this when discussing an open job already in the system.
+      parameters:
+        - $ref: "#/components/parameters/jobId"
+      responses:
+        "200":
+          description: Prefill payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompensationPrefill"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/gpt/compensation/history:
+    get:
+      operationId: listCompensationHistory
+      tags: [compensation]
+      summary: List cached compensation research
+      description: |
+        Compact summaries of cached Compensation Intelligence runs.
+        Use before re-running research when a recent cache may suffice.
+      responses:
+        "200":
+          description: History list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompensationHistoryListResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /api/gpt/compensation/history/{cache_key}:
+    get:
+      operationId: getCompensationHistoryItem
+      tags: [compensation]
+      summary: Get cached compensation research
+      description: |
+        Load cached research by cache_key. Observations omitted by default
+        (`observations_omitted=true`); set include_observations=true to cite rows.
+      parameters:
+        - name: cache_key
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: include_observations
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        "200":
+          description: Cached research payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompensationResearchResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /api/gpt/compensation/research/wait:
+    post:
+      operationId: researchCompensationWait
+      tags: [compensation]
+      summary: Run compensation research and wait for the final result
+      description: |
+        Convenience for clients that cannot poll Tasks reliably (e.g. Open WebUI tools).
+        Runs research and returns the final payload in one call.
+        Cache policy: force_refresh defaults to false — use cache unless the user
+        explicitly asks to ignore cache / force a new research.
+        Prefer researchCompensationAsync + getTask when polling works.
+        Never invent salaries — cite only returned evidence.
+      parameters:
+        - name: include_observations
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompensationResearchRequest"
+      responses:
+        "200":
+          description: Research result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompensationResearchResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          description: Validation error
+
+  /api/gpt/compensation/research/async:
+    post:
+      operationId: researchCompensationAsync
+      tags: [compensation]
+      summary: Start async compensation / market-pay research
+      description: |
+        Preferred GPT path for long-running Compensation Intelligence research.
+        Returns a Task (`kind=compensation_research`). Poll getTask; on success
+        use `task.result`. Never invent salaries — cite only returned evidence.
+        Execute only with clear user intent to research market pay.
+        Cache policy: force_refresh defaults to false; set true only when the user
+        explicitly asks to ignore cache / force a new research.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompensationResearchRequest"
+      responses:
+        "200":
+          description: Async task created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          description: Validation error
+
+  /api/gpt/compensation/research:
+    post:
+      operationId: researchCompensation
+      tags: [compensation]
+      summary: Sync compensation / market-pay research
+      description: |
+        Runs research synchronously. Prefer researchCompensationAsync for GPT Actions —
+        sync often exceeds Action HTTP timeouts. Use researchCompensationWait for
+        Open WebUI-style single-shot tools. Cache policy: force_refresh defaults to false.
+      parameters:
+        - name: include_observations
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompensationResearchRequest"
+      responses:
+        "200":
+          description: Research result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompensationResearchResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          description: Validation error
+
+  /api/gpt/tasks/{task_id}:
+    get:
+      operationId: getTask
+      tags: [tasks]
+      summary: Poll async task
+      description: |
+        Poll analyse/extract/score/compensation_research task status under the gpt resource.
+        When completed after evaluateCandidate, fetch the evaluation via getJobCandidateEvaluation.
+        When completed after researchCompensationAsync, use task.result as the compensation payload.
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Task status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Set to ${PROFESSIONAL_PROFILE_API_KEY} in GPT Builder (never commit real keys).
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: Authorization Bearer ${PROFESSIONAL_PROFILE_API_KEY}
+
+  parameters:
+    jobId:
+      name: job_id
+      in: path
+      required: true
+      schema:
+        type: string
+    candidateId:
+      name: candidate_id
+      in: path
+      required: true
+      schema:
+        type: string
+    evaluationId:
+      name: evaluation_id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Usually {job_id}_{candidate_id}
+
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        detail:
+          type: string
+
+    JobSummary:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string }
+        description: { type: string }
+        profile: { type: string }
+        seniority: { type: string }
+        work_location: { type: string }
+        compensation_type: { type: string }
+        compensation_min: { type: number }
+        compensation_max: { type: number }
+        has_analysis: { type: boolean }
+        created_at: { type: string }
+        updated_at: { type: string }
+
+    SkillItem:
+      type: object
+      properties:
+        name: { type: string }
+        tier:
+          type: string
+          enum: [MUST_HAVE, CORE, SUPPORTING, DIFFERENTIAL, SOFT]
+        weight: { type: number }
+        group: { type: string }
+
+    JobAnalysis:
+      type: object
+      properties:
+        version: { type: integer }
+        role_intent: { type: string }
+        role_expectations: { type: string }
+        context_signals:
+          type: array
+          items: { type: string }
+        must_have:
+          type: array
+          items: { $ref: "#/components/schemas/SkillItem" }
+        core_skills:
+          type: array
+          items: { $ref: "#/components/schemas/SkillItem" }
+        supporting_skills:
+          type: array
+          items: { $ref: "#/components/schemas/SkillItem" }
+        differentials:
+          type: array
+          items: { $ref: "#/components/schemas/SkillItem" }
+        soft_skills:
+          type: array
+          items: { $ref: "#/components/schemas/SkillItem" }
+        skill_groups:
+          type: array
+          items:
+            type: object
+            properties:
+              name: { type: string }
+              skills:
+                type: array
+                items: { type: string }
+
+    JobDetail:
+      allOf:
+        - $ref: "#/components/schemas/JobSummary"
+        - type: object
+          properties:
+            job_description: { type: string }
+            ideal_candidate_context: { type: string }
+            analysis: { $ref: "#/components/schemas/JobAnalysis" }
+
+    JobListResponse:
+      type: object
+      properties:
+        count: { type: integer }
+        jobs:
+          type: array
+          items: { $ref: "#/components/schemas/JobSummary" }
+
+    CandidateSummary:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        city: { type: string }
+        reported_role: { type: string }
+        source_type: { type: string }
+        source_label: { type: string }
+        created_at: { type: string }
+        updated_at: { type: string }
+
+    CandidateDetail:
+      allOf:
+        - $ref: "#/components/schemas/CandidateSummary"
+        - type: object
+          properties:
+            resume_available: { type: boolean }
+            resume_length: { type: integer }
+            resume_text:
+              type: string
+              description: Present only when include_resume=true
+
+    CandidateListResponse:
+      type: object
+      properties:
+        count: { type: integer }
+        candidates:
+          type: array
+          items: { $ref: "#/components/schemas/CandidateSummary" }
+
+    JobCandidateRow:
+      allOf:
+        - $ref: "#/components/schemas/CandidateSummary"
+        - type: object
+          properties:
+            evaluation_id: { type: string }
+            final_score: { type: number, nullable: true }
+            verdict_label: { type: string, nullable: true }
+            scoring_model_version: { type: string, nullable: true }
+
+    JobCandidatesResponse:
+      type: object
+      properties:
+        job:
+          type: object
+          properties:
+            id: { type: string }
+            title: { type: string }
+        count: { type: integer }
+        candidates:
+          type: array
+          items: { $ref: "#/components/schemas/JobCandidateRow" }
+
+    EvaluationSummary:
+      type: object
+      properties:
+        evaluation_id: { type: string }
+        job_id: { type: string }
+        candidate_id: { type: string }
+        job_title: { type: string }
+        candidate_name: { type: string }
+        final_score: { type: number, nullable: true }
+        verdict_label: { type: string, nullable: true }
+        scoring_model_version: { type: string }
+        method: { type: string, nullable: true }
+        created_at: { type: string, nullable: true }
+
+    MustHaveCoverage:
+      type: object
+      properties:
+        covered: { type: integer }
+        total: { type: integer }
+        ratio: { type: number }
+        covered_skills:
+          type: array
+          items: { type: string }
+        missing_skills:
+          type: array
+          items: { type: string }
+        min_score: { type: integer }
+
+    ScoreBreakdown:
+      type: object
+      properties:
+        dimensions:
+          type: object
+          additionalProperties: { type: number }
+        weights:
+          type: object
+          additionalProperties: { type: number }
+        final_score: { type: number }
+
+    CriticalGap:
+      type: object
+      properties:
+        name: { type: string }
+        severity:
+          type: string
+          enum: [critical, important, minor, documentation_gap]
+        tier: { type: string }
+        score: { type: number, nullable: true }
+        evidence_status: { type: string }
+        reason: { type: string }
+
+    SkillScoreItem:
+      type: object
+      properties:
+        category: { type: string }
+        name: { type: string }
+        weight: { type: number }
+        tier: { type: string }
+        group: { type: string }
+        score: { type: number, nullable: true }
+        confidence: { type: number, nullable: true }
+        evidence_status:
+          type: string
+          enum: [explicit, inferred, not_found, negative, needs_validation]
+        evidence:
+          type: array
+          items:
+            type: object
+            properties:
+              text: { type: string }
+              source: { type: string }
+        weighted_score: { type: number, nullable: true }
+
+    EvaluationDetail:
+      allOf:
+        - $ref: "#/components/schemas/EvaluationSummary"
+        - type: object
+          properties:
+            verdict: { type: string }
+            profile_summary: { type: string }
+            score_breakdown: { $ref: "#/components/schemas/ScoreBreakdown" }
+            must_have_coverage: { $ref: "#/components/schemas/MustHaveCoverage" }
+            critical_gaps:
+              type: array
+              items: { $ref: "#/components/schemas/CriticalGap" }
+            strengths:
+              type: array
+              items: { type: string }
+            gaps:
+              type: array
+              items: { type: string }
+            interview_validation:
+              type: array
+              items: { type: string }
+            role_fit: { type: number, nullable: true }
+            context_fit: { type: number, nullable: true }
+            group_scores:
+              type: array
+              items:
+                type: object
+            candidate:
+              type: object
+              properties:
+                id: { type: string }
+                name: { type: string }
+            job:
+              type: object
+              properties:
+                id: { type: string }
+                title: { type: string }
+            items:
+              type: array
+              items: { $ref: "#/components/schemas/SkillScoreItem" }
+
+    EvaluationListResponse:
+      type: object
+      properties:
+        count: { type: integer }
+        evaluations:
+          type: array
+          items: { $ref: "#/components/schemas/EvaluationSummary" }
+
+    JobEvaluationsResponse:
+      type: object
+      properties:
+        job:
+          type: object
+          properties:
+            id: { type: string }
+            title: { type: string }
+        count: { type: integer }
+        evaluations:
+          type: array
+          items: { $ref: "#/components/schemas/EvaluationSummary" }
+
+    EvaluateRequest:
+      type: object
+      required: [job_id, candidate_id]
+      properties:
+        job_id: { type: string }
+        candidate_id: { type: string }
+        scoring_model:
+          type: string
+          enum: [v1, v2]
+          nullable: true
+          description: Optional override; defaults to server SCORING_MODEL
+
+    Task:
+      type: object
+      properties:
+        task_id: { type: string }
+        kind: { type: string }
+        status:
+          type: string
+          enum: [queued, running, completed, failed]
+        progress: { type: integer }
+        message: { type: string }
+        redirect_url: { type: string, nullable: true }
+        error: { type: string, nullable: true }
+        result:
+          description: Present when completed (e.g. compensation research payload)
+          nullable: true
+        created_at: { type: string }
+        scoring_model: { type: string }
+        default_scoring_model: { type: string }
+
+    CompensationLocation:
+      type: object
+      properties:
+        city: { type: string }
+        state: { type: string }
+        country: { type: string, default: BR }
+
+    CompensationResearchRequest:
+      type: object
+      required: [profile]
+      properties:
+        profile:
+          type: string
+          minLength: 3
+          description: Role / profile title for market research
+        skills:
+          type: array
+          items: { type: string }
+        seniority: { type: string }
+        allocation_model:
+          type: string
+          enum: [onsite, hybrid, remote]
+          default: remote
+        location:
+          $ref: "#/components/schemas/CompensationLocation"
+        target_contract:
+          type: string
+          enum: [CLT, PJ]
+          default: PJ
+        providers:
+          type: object
+          nullable: true
+          properties:
+            search_engines:
+              type: array
+              items: { type: string }
+            crawlers:
+              type: array
+              items: { type: string }
+        force_refresh:
+          type: boolean
+          default: false
+          description: |
+            DEFAULT false — use compensation cache when available.
+            Set true ONLY when the user explicitly asks to ignore cache / force a new research
+            (e.g. "ignore o cache", "ignore cache", "force refresh", "forçar nova pesquisa",
+            "sem cache"). Do not set true by default.
+        source_job_id:
+          type: string
+          nullable: true
+          description: Optional link to a stored job id
+
+    CompensationPrefill:
+      allOf:
+        - $ref: "#/components/schemas/CompensationResearchRequest"
+        - type: object
+          properties:
+            source_job_title: { type: string, nullable: true }
+            job_compensation_min: { type: number, nullable: true }
+            job_compensation_max: { type: number, nullable: true }
+            job_compensation_type: { type: string, nullable: true }
+
+    CompensationHistoryItem:
+      type: object
+      properties:
+        cache_key: { type: string }
+        research_id: { type: string }
+        normalized_role: { type: string }
+        seniority: { type: string }
+        contract_type: { type: string }
+        unit: { type: string }
+        median: { type: number, nullable: true }
+        recommended_min: { type: number, nullable: true }
+        recommended_max: { type: number, nullable: true }
+        observations: { type: integer }
+        sources: { type: integer }
+        confidence_level: { type: string }
+        confidence_score: { type: number }
+        search_engines_used:
+          type: array
+          items: { type: string }
+        crawlers_used:
+          type: array
+          items: { type: string }
+        created_at: { type: string }
+
+    CompensationHistoryListResponse:
+      type: object
+      properties:
+        count: { type: integer }
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/CompensationHistoryItem" }
+
+    MarketStats:
+      type: object
+      properties:
+        currency: { type: string }
+        unit: { type: string }
+        contract_type: { type: string }
+        minimum: { type: number, nullable: true }
+        p25: { type: number, nullable: true }
+        median: { type: number, nullable: true }
+        mean: { type: number, nullable: true }
+        p75: { type: number, nullable: true }
+        maximum: { type: number, nullable: true }
+        monthly_equivalent: { type: number, nullable: true }
+        recommended_range:
+          type: object
+          properties:
+            min: { type: number, nullable: true }
+            max: { type: number, nullable: true }
+
+    CompensationResearchResponse:
+      type: object
+      properties:
+        research_id: { type: string }
+        profile:
+          type: object
+          properties:
+            role_family: { type: string }
+            normalized_role: { type: string }
+            seniority: { type: string }
+            specialization: { type: string }
+            skills:
+              type: array
+              items: { type: string }
+        market: { $ref: "#/components/schemas/MarketStats" }
+        sample:
+          type: object
+          properties:
+            observations: { type: integer }
+            sources: { type: integer }
+        providers:
+          type: object
+          properties:
+            search_engines_used:
+              type: array
+              items: { type: string }
+            crawlers_used:
+              type: array
+              items: { type: string }
+        confidence:
+          type: object
+          properties:
+            score: { type: number }
+            level:
+              type: string
+              enum: [HIGH, MEDIUM, LOW]
+        sources:
+          type: array
+          items:
+            type: object
+            properties:
+              name: { type: string }
+              url: { type: string }
+              observations: { type: integer }
+              retrieved_at: { type: string }
+        warnings:
+          type: array
+          items: { type: string }
+        observations:
+          type: array
+          items: { type: object }
+          description: Salary observation rows (may be empty when observations_omitted)
+        observations_omitted:
+          type: boolean
+          description: True when observation rows were stripped for compact GPT payloads
+        observations_count:
+          type: integer
+        created_at: { type: string }

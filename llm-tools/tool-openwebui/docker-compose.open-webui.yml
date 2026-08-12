@@ -1,0 +1,52 @@
+# Overlay: Open WebUI as conversational frontend for Professional Profile Analyser.
+# PPA itself is expected to run separately (e.g. uvicorn on the host :8000).
+#
+# Usage (from repo root):
+#   docker compose \
+#     --env-file llm-tools/tool-openwebui/.env \
+#     -f llm-tools/tool-openwebui/docker-compose.open-webui.yml \
+#     up -d --force-recreate
+#
+# Logs (note: -f for the compose file comes BEFORE the subcommand; logs -f = follow):
+#   docker compose \
+#     -f llm-tools/tool-openwebui/docker-compose.open-webui.yml \
+#     logs -f
+#
+# Env for compose substitution (recommended):
+#   copy llm-tools/tool-openwebui/.env.example → llm-tools/tool-openwebui/.env
+#   set GPU_SERVER_IP to the LAN IP of gpu-server-01
+#
+# Then configure Tools via Admin Settings → Integrations (Global Tool Server):
+#   URL  http://host.docker.internal:8000
+#   Path openapi-gpt-slim.json
+#   Auth none (or Bearer / X-API-Key if PPA has PROFESSIONAL_PROFILE_API_KEY)
+# Do NOT import openapi.slim.json under Workspace → Tools (expects Python tools).
+# Fallback Python tool: llm-tools/tool-openwebui/tools/ppa_tools.py
+# See llm-tools/tool-openwebui/README.md.
+
+# Stable project name so the data volume is not recreated when the folder path changes.
+name: open-webui
+
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: ppa-open-webui
+    ports:
+      - "${OPEN_WEBUI_PORT:-3000}:8080"
+    environment:
+      # Default: GPU lab host. Override for local Ollama (see README mode B).
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://gpu-server-01:11434}
+      # Optional: set to true and create an admin on first visit.
+      WEBUI_AUTH: ${WEBUI_AUTH:-false}
+    volumes:
+      - open-webui-data:/app/backend/data
+    extra_hosts:
+      # Reach PPA (and local Ollama) on the Docker host from the container (Docker Desktop / Mac).
+      - "host.docker.internal:host-gateway"
+      # Map hostname used by OLLAMA_BASE_URL when DNS inside the container cannot resolve it.
+      # Set GPU_SERVER_IP (or OLLAMA_HOST_IP) in llm-tools/tool-openwebui/.env — empty → 127.0.0.1 (usually wrong for remote GPU).
+      - "gpu-server-01:${GPU_SERVER_IP:-${OLLAMA_HOST_IP:-127.0.0.1}}"
+    restart: unless-stopped
+
+volumes:
+  open-webui-data:

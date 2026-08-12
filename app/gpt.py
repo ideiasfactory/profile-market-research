@@ -479,11 +479,13 @@ def get_compensation_history_item(
     operation_id="researchCompensationAsync",
     summary="Start async compensation / market-pay research",
     description=(
-        "WRITE-like operation (external search + cache). Preferred path for GPT Actions: "
+        "WRITE-like operation (external search + cache). Preferred path when the client can poll: "
         "long-running Compensation Intelligence research. Returns a Task (kind=compensation_research). "
         "Poll getTask until completed/failed; on success, task.result holds the research payload. "
-        "Execute only when the user clearly asks for market pay / compensation research. "
-        "Never invent salaries — cite only returned market stats, sources, observations, and warnings."
+        "Cache policy: leave force_refresh=false (default) unless the user explicitly asks to ignore "
+        "cache / force a new research. Execute only when the user clearly asks for market pay / "
+        "compensation research. Never invent salaries — cite only returned market stats, sources, "
+        "observations, and warnings."
     ),
 )
 async def research_compensation_async(
@@ -498,14 +500,39 @@ async def research_compensation_async(
 
 
 @router.post(
+    "/compensation/research/wait",
+    operation_id="researchCompensationWait",
+    summary="Run compensation research and wait for the final result",
+    description=(
+        "WRITE-like convenience for conversational frontends (e.g. Open WebUI) that struggle with "
+        "async Task + poll loops. Runs Compensation Intelligence research and returns the final "
+        "payload in one HTTP call. Cache policy: force_refresh defaults to false — reuse cache "
+        "unless the user explicitly asks to ignore cache / force refresh. Prefer this over raw "
+        "async+poll when the tool layer cannot poll reliably; prefer async+getTask when it can. "
+        "Never invent salaries from training data."
+    ),
+)
+async def research_compensation_wait(
+    body: CompensationResearchRequest,
+    include_observations: bool = Query(
+        default=True,
+        description="Include observation rows in the response. Set false for a compact summary.",
+    ),
+) -> dict[str, Any]:
+    result = await CompensationResearchOrchestrator().research(body)
+    payload = result.model_dump(mode="json")
+    return _compensation_payload_for_gpt(payload, include_observations=include_observations)
+
+
+@router.post(
     "/compensation/research",
     operation_id="researchCompensation",
     summary="Sync compensation / market-pay research",
     description=(
         "WRITE-like operation. Runs Compensation Intelligence research synchronously and returns the "
-        "full result. Prefer researchCompensationAsync for GPT Actions — sync calls often exceed "
-        "Action HTTP timeouts. Use only for simple/cached-friendly cases or when the user accepts "
-        "timeout risk. Never invent salaries from training data."
+        "full result. Prefer researchCompensationAsync (+ getTask) when the client can poll, or "
+        "researchCompensationWait for Open WebUI-style single-shot tools. Cache policy: "
+        "force_refresh defaults to false. Never invent salaries from training data."
     ),
 )
 async def research_compensation_sync(

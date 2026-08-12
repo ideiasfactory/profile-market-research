@@ -84,14 +84,21 @@ Edite esses arquivos para ajustar o comportamento da análise sem alterar o cód
 - Análise da vaga com job understanding v2 + compatibilidade hard/soft/desired.
 - Score candidato-vaga v1 (flat) ou v2 (composto), com evidência estruturada e explainability.
 - Resumo do perfil do candidato e veredito gerados junto com o score.
-- JSON API `/api/gpt` dedicada ao Custom GPT Actions (jobs, candidates, evaluations).
-- Pacote de configuração do Custom GPT em `app-custom-gpt/` (Git = source of truth dos artefatos).
+- JSON API `/api/gpt` dedicada ao Custom GPT Actions (jobs, candidates, evaluations, compensation).
+- Pacote de configuração do Custom GPT em `llm-tools/custom-gpt/` (Git = source of truth dos artefatos).
+- Integração Open WebUI (tools OpenAPI + tool Python + system prompt + compose) em `llm-tools/tool-openwebui/`.
 
 ### API GPT (`/api/gpt`)
 
-Endpoints de leitura para vagas, candidatos e avaliações, mais `POST /api/gpt/evaluations` (assíncrono) e `GET /api/gpt/tasks/{task_id}`.  
+Endpoints de leitura para vagas, candidatos e avaliações, mais `POST /api/gpt/evaluations` (assíncrono), compensation research (`/async`, `/wait`, sync) e `GET /api/gpt/tasks/{task_id}`.  
 Autenticação opcional via `PROFESSIONAL_PROFILE_API_KEY` (Bearer ou `X-API-Key`).  
-Detalhes e OpenAPI para o GPT: `app-custom-gpt/actions/`.
+Detalhes e OpenAPI para o GPT: `llm-tools/custom-gpt/actions/`.
+
+### Open WebUI
+
+Frontend conversacional self-hosted (Ollama em `gpu-server-01:11434`) com tools apontando para `/api/gpt/*`.  
+Guia, OpenAPI slim, system prompt e docker-compose: [`llm-tools/tool-openwebui/`](llm-tools/tool-openwebui/).  
+Política de cache na conversa: `force_refresh` padrão **false** (só true se o usuário pedir para ignorar o cache).
 
 ### Entrada de currículo
 
@@ -149,4 +156,4 @@ Configuração: `config/providers.yaml`, `config/source_registry.yaml`, `.env.ex
 
 Persistência: `data/research_history.jsonl`, `data/observations.jsonl`, `data/compensation_cache/`.
 
-Docs: `docs/architecture.md`, `docs/api-contract.md`, `docs/adr/` (ADR-001 … ADR-015).
+Docs: `docs/architecture.md`, `docs/api-contract.md`, `docs/adr/` (ADR-001 … ADR-016).

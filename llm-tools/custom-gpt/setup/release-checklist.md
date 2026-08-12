@@ -36,6 +36,6 @@ Version Custom GPT independently from the application.
 
 ## Post-release
 
-- [ ] Tag git: `app-custom-gpt-v0.2.0`
+- [ ] Tag git: `llm-tools-custom-gpt-v0.2.0` (legacy alias: `app-custom-gpt-v0.2.0`)
 - [ ] Note GPT Builder update date
 - [ ] Communicate changes to users

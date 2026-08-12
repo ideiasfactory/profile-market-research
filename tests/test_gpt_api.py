@@ -158,20 +158,19 @@ class GptApiTests(unittest.TestCase):
         self.assertFalse(full_body.get("observations_omitted"))
         self.assertIsInstance(full_body.get("observations"), list)
 
-    def test_compensation_research_async_queues_task(self):
-        from unittest.mock import AsyncMock, patch
+    def _fake_compensation_response(self):
+        from datetime import datetime, timezone
 
         from app.compensation.domain.schemas import (
             CompensationResearchResponse,
             ConfidenceSummary,
             MarketStats,
             NormalizedProfile,
-            SampleSummary,
             ProviderSummary,
+            SampleSummary,
         )
-        from datetime import datetime, timezone
 
-        fake = CompensationResearchResponse(
+        return CompensationResearchResponse(
             research_id="test-research",
             profile=NormalizedProfile(normalized_role="Test Role"),
             market=MarketStats(),
@@ -183,6 +182,17 @@ class GptApiTests(unittest.TestCase):
             observations=[],
             created_at=datetime.now(timezone.utc),
         )
+
+    def test_compensation_research_request_force_refresh_defaults_false(self):
+        from app.compensation.domain.schemas import CompensationResearchRequest
+
+        req = CompensationResearchRequest(profile="Arquiteto de Soluções Senior Cloud")
+        self.assertIs(req.force_refresh, False)
+
+    def test_compensation_research_async_queues_task(self):
+        from unittest.mock import AsyncMock, patch
+
+        fake = self._fake_compensation_response()
 
         with patch(
             "app.compensation.services.orchestrator.CompensationResearchOrchestrator.research",
@@ -212,6 +222,33 @@ class GptApiTests(unittest.TestCase):
             self.assertEqual(polled_body["status"], "completed")
             self.assertIsNotNone(polled_body.get("result"))
             self.assertEqual(polled_body["result"]["research_id"], "test-research")
+
+    def test_compensation_research_wait_returns_result_with_cache_default(self):
+        from unittest.mock import AsyncMock, patch
+
+        fake = self._fake_compensation_response()
+
+        with patch(
+            "app.compensation.services.orchestrator.CompensationResearchOrchestrator.research",
+            new=AsyncMock(return_value=fake),
+        ) as mocked:
+            response = self.client.post(
+                "/api/gpt/compensation/research/wait",
+                json={
+                    "profile": "Arquiteto de Soluções Senior Cloud",
+                    "skills": ["Azure"],
+                    "seniority": "senior",
+                    "allocation_model": "hybrid",
+                    "location": {"city": "Campinas", "state": "SP", "country": "BR"},
+                    "target_contract": "PJ",
+                },
+            )
+            self.assertEqual(response.status_code, 200)
+            body = response.json()
+            self.assertEqual(body["research_id"], "test-research")
+            mocked.assert_awaited_once()
+            called_request = mocked.await_args.args[0]
+            self.assertIs(called_request.force_refresh, False)
 
 
 if __name__ == "__main__":

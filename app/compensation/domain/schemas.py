@@ -43,7 +43,14 @@ class CompensationResearchRequest(BaseModel):
     location: Location = Field(default_factory=Location)
     target_contract: ContractType = ContractType.PJ
     providers: ProviderOverride | None = None
-    force_refresh: bool = False
+    force_refresh: bool = Field(
+        default=False,
+        description=(
+            "Default false: reuse compensation cache when available. "
+            "Set true only when the user explicitly asks to ignore cache / force a new research "
+            "(e.g. 'ignore o cache', 'force refresh', 'forçar nova pesquisa', 'sem cache')."
+        ),
+    )
     source_job_id: str | None = None
 
     @field_validator("skills")
